@@ -1,0 +1,14 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    // Guava is used by com.kazurayam.materialstore.filesystem.TemplateReady
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    implementation libs.guava
+
+    // Gson is used by com.kazurayam.materialstore.util.JsonUtil
+    // which is used almost all data classes in this subproject
+    implementation libs.gson
+
+}

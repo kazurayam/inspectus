@@ -11,4 +11,6 @@ dependencies {
     // which is used almost all data classes in this subproject
     implementation libs.gson
 
+    implementation libs.materialstore
+
 }

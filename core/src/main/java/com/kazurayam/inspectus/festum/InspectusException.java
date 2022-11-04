@@ -1,4 +1,4 @@
-package com.kazurayam.inspectus.core;
+package com.kazurayam.inspectus.festum;
 
 public final class InspectusException extends Exception {
 

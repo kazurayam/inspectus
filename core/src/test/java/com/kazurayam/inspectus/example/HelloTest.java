@@ -1,7 +1,7 @@
 package com.kazurayam.inspectus.example;
 
-import com.kazurayam.inspectus.core.Festum;
-import com.kazurayam.inspectus.core.InspectusException;
+import com.kazurayam.inspectus.festum.Festum;
+import com.kazurayam.inspectus.festum.InspectusException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -17,5 +17,10 @@ public class HelloTest {
         assertTrue(obj instanceof String);
         String msg = (String)obj;
         assertTrue(msg.startsWith("Hello"));
+    }
+
+    @Test
+    public void test_call_Hello_indirectly_via_Service() throws InspectusException {
+
     }
 }

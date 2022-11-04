@@ -1,8 +1,8 @@
 package com.kazurayam.inspectus.katalon;
 
 
-import com.kazurayam.inspectus.core.Festum;
-import com.kazurayam.inspectus.core.InspectusException;
+import com.kazurayam.inspectus.festum.Festum;
+import com.kazurayam.inspectus.festum.InspectusException;
 
 //import static com.kms.katalon.core.testcase.TestCaseFactory.findTestCase
 //import com.kms.katalon.core.keyword.internal.KeywordExecutor

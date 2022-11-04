@@ -1,4 +1,4 @@
-package com.kazurayam.inspectus.core;
+package com.kazurayam.inspectus.festum;
 
 import java.util.Map;
 

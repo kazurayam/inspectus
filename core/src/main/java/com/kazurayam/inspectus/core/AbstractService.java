@@ -5,6 +5,7 @@ import com.kazurayam.inspectus.festum.InspectusException;
 import com.kazurayam.inspectus.util.GsonHelper;
 import com.kazurayam.materialstore.base.manage.StoreCleaner;
 import com.kazurayam.materialstore.base.manage.StoreExport;
+import com.kazurayam.materialstore.base.reduce.MaterialProductGroup;
 import com.kazurayam.materialstore.base.report.IndexCreator;
 import com.kazurayam.materialstore.core.filesystem.JobName;
 import com.kazurayam.materialstore.core.filesystem.JobTimestamp;
@@ -19,7 +20,7 @@ import java.util.Objects;
 
 public abstract class AbstractService implements Inspectus {
 
-    public AbstractService(Map<String, Object> parameters) {
+    public AbstractService() {
         super();
     }
 
@@ -97,10 +98,11 @@ public abstract class AbstractService implements Inspectus {
 
     //-------------------------------------------------------------------------
 
+    public static final String KEY_store = "store";
     protected static Store getStore(Map<String, Object> p)
             throws InspectusException {
         Objects.requireNonNull(p);
-        String k = "store";
+        String k = KEY_store;
         if (!p.containsKey(k)) {
             throw new InspectusException(msg1(k, p));
         }
@@ -111,10 +113,11 @@ public abstract class AbstractService implements Inspectus {
         return (Store)p.get(k);
     }
 
+    public static final String KEY_backup = "backup";
     protected static Store getBackup(Map<String, Object> p)
             throws InspectusException {
         Objects.requireNonNull(p);
-        String k = "backup";
+        String k = KEY_backup;
         if (!p.containsKey(k)) {
             throw new InspectusException(msg1(k, p));
         }
@@ -125,10 +128,11 @@ public abstract class AbstractService implements Inspectus {
         return (Store)p.get(k);
     }
 
+    public static final String KEY_jobName = "jobName";
     protected static JobName getJobName(Map<String, Object> p)
             throws InspectusException {
         Objects.requireNonNull(p);
-        String k = "jobName";
+        String k = KEY_jobName;
         if (!p.containsKey(k)) {
             throw new InspectusException(msg1(k, p));
         }
@@ -139,10 +143,11 @@ public abstract class AbstractService implements Inspectus {
         return (JobName)p.get(k);
     }
 
+    public static final String KEY_jobTimestamp = "jobTimestamp";
     protected static JobTimestamp getJobTimestamp(Map<String, Object> p)
             throws InspectusException {
         Objects.requireNonNull(p);
-        String k = "jobTimestamp";
+        String k = KEY_jobTimestamp;
         if (!p.containsKey(k)) {
             throw new InspectusException(msg1(k, p));
         }
@@ -153,10 +158,11 @@ public abstract class AbstractService implements Inspectus {
         return (JobTimestamp)p.get(k);
     }
 
+    public static final String KEY_materialList = "materialList";
     protected static MaterialList getMaterialList(Map<String, Object> p)
             throws InspectusException {
         Objects.requireNonNull(p);
-        String k = "materialList";
+        String k = KEY_materialList;
         if (!p.containsKey(k)) {
             throw new InspectusException(msg1(k, p));
         }
@@ -167,9 +173,10 @@ public abstract class AbstractService implements Inspectus {
         return (MaterialList)p.get(k);
     }
 
+    public static final String KEY_sortKeys = "sortKeys";
     protected static SortKeys getSortKeys(Map<String, Object> p) throws InspectusException {
         Objects.requireNonNull(p);
-        String k = "sortKeys";
+        String k = KEY_sortKeys;
         if (!p.containsKey(k)) {
             throw new InspectusException(msg1(k, p));
         }
@@ -178,6 +185,35 @@ public abstract class AbstractService implements Inspectus {
                     msg2(k, p.get(k), SortKeys.class, p.get(k).getClass()));
         }
         return (SortKeys)p.get(k);
+    }
+
+    public static final String KEY_MaterialProductGroup = "materialProductGroup";
+    protected static MaterialProductGroup getMaterialProductGroup(Map<String, Object> p)
+        throws InspectusException {
+        Objects.requireNonNull(p);
+        String k = KEY_MaterialProductGroup;
+        if (!p.containsKey(k)) {
+            throw new InspectusException(msg1(k, p));
+        }
+        if (!(p.get(k) instanceof MaterialProductGroup)) {
+            throw new InspectusException(
+                    msg2(k, p.get(k), MaterialProductGroup.class, p.get(k).getClass()));
+        }
+        return (MaterialProductGroup)p.get(k);
+    }
+
+    public static final String KEY_criteria = "criteria";
+    protected static Double getCriteria(Map<String, Object> p) throws InspectusException {
+        Objects.requireNonNull(p);
+        String k = KEY_criteria;
+        if (!p.containsKey(k)) {
+            throw new InspectusException(msg1(k, p));
+        }
+        if (!(p.get(k) instanceof MaterialProductGroup)) {
+            throw new InspectusException(
+                    msg2(k, p.get(k), MaterialProductGroup.class, p.get(k).getClass()));
+        }
+        return (Double)p.get(k);
     }
 
     private static String msg1(String key, Map<String, Object> parameters) {

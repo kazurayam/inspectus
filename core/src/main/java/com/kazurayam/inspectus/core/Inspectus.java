@@ -1,7 +1,5 @@
 package com.kazurayam.inspectus.core;
 
-import com.kazurayam.inspectus.festum.InspectusException;
-
 import java.util.Map;
 
 public interface Inspectus {

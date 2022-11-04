@@ -1,6 +1,5 @@
 package com.kazurayam.inspectus.core;
 
-import com.kazurayam.inspectus.festum.InspectusException;
 import com.kazurayam.materialstore.base.inspector.Inspector;
 import com.kazurayam.materialstore.base.reduce.MaterialProductGroup;
 import com.kazurayam.materialstore.core.filesystem.MaterialstoreException;

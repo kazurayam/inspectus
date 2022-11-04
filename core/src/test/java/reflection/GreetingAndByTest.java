@@ -22,6 +22,6 @@ public class GreetingAndByTest {
         // the 1st arg to invoke must be null when we invoke a static method
         Object result = method.invoke(null, "Eric");
         // Assert
-        assertEquals("Hey Eric, nice to meet you", result);
+        assertEquals("Hey Eric, nice to meet you!", result);
     }
 }

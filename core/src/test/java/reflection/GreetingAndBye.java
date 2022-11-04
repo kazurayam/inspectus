@@ -12,4 +12,5 @@ public class GreetingAndBye {
     public static String goodBye(String name) {
         return String.format("Bye %s, see you next time.", name);
     }
+
 }

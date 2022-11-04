@@ -1,8 +1,6 @@
 package com.kazurayam.inspectus.example;
 
 import com.google.gson.Gson;
-import com.kazurayam.inspectus.festum.Festum;
-import com.kazurayam.inspectus.festum.InspectusException;
 import com.kazurayam.inspectus.util.GsonHelper;
 
 import java.util.Map;

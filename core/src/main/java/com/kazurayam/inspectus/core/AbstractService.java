@@ -1,7 +1,6 @@
 package com.kazurayam.inspectus.core;
 
 import com.google.gson.Gson;
-import com.kazurayam.inspectus.festum.InspectusException;
 import com.kazurayam.inspectus.util.GsonHelper;
 import com.kazurayam.materialstore.base.manage.StoreCleaner;
 import com.kazurayam.materialstore.base.manage.StoreExport;

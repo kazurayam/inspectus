@@ -7,20 +7,20 @@ import com.kazurayam.materialstore.core.filesystem.SortKeys;
 import com.kazurayam.materialstore.core.filesystem.Store;
 
 import java.nio.file.Path;
-import java.util.Map;
 
 public abstract class AbstractDiffService extends AbstractService {
 
     @Override
-    public void step4_report(Map<String, Object> parameters, Map<String, Object> intermediates)
+    public void step4_report(Parameters parameters, Intermediates intermediates)
             throws InspectusException {
-        Store store = getStore(parameters);
-        MaterialProductGroup materialProductGroup = getMaterialProductGroup(intermediates);
+        listener.stepStarted("step4_report");
+        Store store = parameters.getStore();
+        MaterialProductGroup materialProductGroup = intermediates.getMaterialProductGroup();
         if ( !materialProductGroup.isReadyToReport()) {
-            throw new InspectusException(AbstractService.KEY_MaterialProductGroup + " is not ready to report");
+            throw new InspectusException("MaterialProductGroup is not ready to report");
         }
-        SortKeys sortKeys = getSortKeys(intermediates);
-        Double criteria = getCriteria(intermediates);
+        SortKeys sortKeys = intermediates.getSortKeys();
+        Double criteria = intermediates.getCriteria();
         //
         Inspector inspector = Inspector.newInstance(store);
         inspector.setSortKeys(sortKeys);
@@ -30,5 +30,6 @@ public abstract class AbstractDiffService extends AbstractService {
         } catch (MaterialstoreException e) {
             throw new InspectusException(e);
         }
+        listener.stepFinished("step4_report");
     }
 }

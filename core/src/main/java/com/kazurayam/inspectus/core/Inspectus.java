@@ -1,20 +1,17 @@
 package com.kazurayam.inspectus.core;
 
-import java.util.Map;
-
 public interface Inspectus {
-
-    default void execute(Map<String, Object> parameters) throws InspectusException {
+    default void execute(Parameters parameters) throws InspectusException {
         // ante festum
         preProcess(parameters);
         // in festum
-        Map<String, Object> intermediates = process(parameters);
+        Intermediates intermediates = process(parameters);
         // post festum
         postProcess(parameters, intermediates);
     }
 
-    public void preProcess(Map<String, Object> parameters) throws InspectusException;
-    public Map<String, Object> process(Map<String, Object> parameters) throws InspectusException;
-    public void postProcess(Map<String, Object> parameters, Map<String, Object> intermediates) throws InspectusException;
+    public void preProcess(Parameters parameters) throws InspectusException;
+    public Intermediates process(Parameters parameters) throws InspectusException;
+    public void postProcess(Parameters parameters, Intermediates intermediates) throws InspectusException;
 }
 

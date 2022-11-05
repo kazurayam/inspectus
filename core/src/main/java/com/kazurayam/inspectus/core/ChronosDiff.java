@@ -1,15 +1,12 @@
 package com.kazurayam.inspectus.core;
 
-import java.util.Map;
-
-public class ChronosDiff extends AbstractDiffService {
+public abstract class ChronosDiff extends AbstractDiffService {
 
     @Override
-    public Map<String, Object> process(Map<String, Object> parameters) throws InspectusException {
+    public Intermediates process(Parameters parameters) throws InspectusException {
         return step2_materialize(parameters);
     }
 
-    protected Map<String, Object> step2_materialize(Map<String, Object> parameters) throws InspectusException {
-        throw new RuntimeException("TODO");
-    }
+    public abstract Intermediates step2_materialize(Parameters parameters) throws InspectusException;
+
 }

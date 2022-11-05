@@ -6,31 +6,31 @@ import com.kazurayam.materialstore.core.filesystem.MaterialList;
 import com.kazurayam.materialstore.core.filesystem.MaterialstoreException;
 import com.kazurayam.materialstore.core.filesystem.SortKeys;
 import com.kazurayam.materialstore.core.filesystem.Store;
+
 import java.nio.file.Path;
 
-import java.util.Map;
-
-public class Shootings extends AbstractService {
+public abstract class Shootings extends AbstractService {
 
     public Shootings() { super(); }
 
     @Override
-    public Map<String, Object> process(Map<String, Object> parameters) throws InspectusException {
-        return step2_materialize(parameters);
+    public Intermediates process(Parameters parameters) throws InspectusException {
+        Intermediates intermediates = step2_materialize(parameters);
+        return intermediates;
     }
 
-    protected Map<String, Object> step2_materialize(Map<String, Object> parameters) throws InspectusException {
-        throw new RuntimeException("TODO");
-    }
+    public abstract Intermediates step2_materialize(Parameters parameters) throws InspectusException;
 
     @Override
-    public void step4_report(Map<String, Object> parameters, Map<String, Object> intermediates)
+    public void step4_report(Parameters parameters, Intermediates intermediates)
             throws InspectusException {
-        Store store = getStore(parameters);
-        JobName jobName = getJobName(parameters);
-        Store backup = getBackup(parameters);
-        MaterialList materialList = getMaterialList(intermediates);
-        SortKeys sortKeys = getSortKeys(intermediates);
+        listener.stepStarted("step4_report");
+        Store store = parameters.getStore();
+        JobName jobName = parameters.getJobName();
+        Store backup = parameters.getBackup();
+        //
+        MaterialList materialList = intermediates.getMaterialList();
+        SortKeys sortKeys = intermediates.getSortKeys();
         //
         Inspector inspector = Inspector.newInstance(store);
         inspector.setSortKeys(sortKeys);
@@ -39,5 +39,6 @@ public class Shootings extends AbstractService {
         } catch (MaterialstoreException e) {
             throw new InspectusException(e);
         }
+        listener.stepFinished("step4_report");
     }
 }

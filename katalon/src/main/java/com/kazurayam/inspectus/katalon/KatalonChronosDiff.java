@@ -2,15 +2,18 @@ package com.kazurayam.inspectus.katalon;
 
 import com.kazurayam.inspectus.core.ChronosDiff;
 import com.kazurayam.inspectus.core.InspectusException;
-
-import java.util.Map;
+import com.kazurayam.inspectus.core.Intermediates;
+import com.kazurayam.inspectus.core.Parameters;
 
 public final class KatalonChronosDiff extends ChronosDiff implements ITestCaseCaller {
 
     @Override
-    public Map<String, Object> step2_materialize(Map<String, Object> parameters)
+    public Intermediates step2_materialize(Parameters parameters)
             throws InspectusException {
-        String testCaseName = getTestCaseName(parameters);
-        return callTestCase(testCaseName, parameters);
+        listener.stepStarted("step2_materialize");
+        String materializeScriptName = parameters.getMaterializeScriptName();
+        Intermediates intermediates = callTestCase(materializeScriptName, parameters);
+        listener.stepFinished("step2_materialize");
+        return intermediates;
     }
 }

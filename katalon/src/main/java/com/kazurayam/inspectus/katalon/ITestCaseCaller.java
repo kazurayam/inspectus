@@ -1,15 +1,16 @@
 package com.kazurayam.inspectus.katalon;
 
-
-//import static com.kms.katalon.core.testcase.TestCaseFactory.findTestCase
-//import com.kms.katalon.core.keyword.internal.KeywordExecutor
-//import com.kms.katalon.core.testcase.TestCase
+import com.kazurayam.inspectus.core.InspectusException;
+import com.kazurayam.inspectus.core.Intermediates;
+import com.kazurayam.inspectus.core.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
-import com.kazurayam.inspectus.core.InspectusException;
+
 /**
  * A mimic of "WebUI.callTestCase(TestCase, Map)". It is implemented by
  * com.kms.katalon.core.keyword.builtin.CallTestCaseKeyword#callTestCase()
@@ -21,41 +22,47 @@ import com.kazurayam.inspectus.core.InspectusException;
  */
 public interface ITestCaseCaller {
 
+    static final Logger logger = LoggerFactory.getLogger(ITestCaseCaller.class);
+
     public static String KEY_result = "result";
 
-    default Map<String, Object> callTestCase(String calleeName, Map<String, Object> binding) throws InspectusException {
-        try {
-            // verify if the Katalon classes are available in the current classpath
-            Class<?> clazz = Class.forName(
-                    "com.kms.katalon.core.keyword.internal.KeywordExecutor");
-            assert clazz.getSimpleName().equals("KeywordExecutor");
-        } catch (Exception e) {
-            throw new InspectusException(
-                    "com.kms.katalon.core.* classes are not available in the current classpath.",
-                    e);
-        }
+    default Intermediates callTestCase(String calleeName, Parameters parameters) throws InspectusException {
+        // check if the Katalon classes are available
+        KeywordExecutor.validateKatalonClasspath();
 
+        // now run the specified Test Case script; possibly for materializing = taking screenshots etc.
+        Object result;
         try {
-            // now run the specified Test Case script; possibly for materializing = taking screenshots etc.
-            Object result = callKatalonTestCase(calleeName, binding);
-
-            Map<String, Object> m = new LinkedHashMap<>();
-            m.put(KEY_result, result);
-            return m;
+            Object calledTestCase = findTestCase(calleeName);
+            Object[] params = new Object[2];
+            params[0] = calledTestCase;
+            params[1] = parameters.toMap();
+            result = KeywordExecutor.executeKeywordForPlatform(getPLATFORM_BUILT_IN(),
+                    "callTestCase", params);
         } catch (Exception e) {
             e.printStackTrace();
             throw new InspectusException(e);
         }
-    }
 
-    /**
-     *
-     */
-    static Object callKatalonTestCase(String testCaseName, Map<String, Object> binding) throws Exception {
-        Object calledTestCase = findTestCase(testCaseName);
-        return executeKeywordForPlatform(
-                getPLATFORM_BUILT_IN(),
-                "callTestCase", calledTestCase, binding);
+        // convert an Object instance returned from the Katalon Test Case
+        // into an instance of Intermediates
+        if (result instanceof Map<?, ?>) {
+            Map<String, Object> m = new LinkedHashMap<String, Object>();
+            Map<?, ?> casted = (Map<?, ?>)result;
+            for (Object k : casted.keySet()) {
+                if (k instanceof String) {
+                    m.put((String)k, casted.get(k));
+                } else {
+                    logger.error(String.format("in the intermediates returned by a Test Case" +
+                            ", found a key '%s' which is not a String", k.toString()));
+                }
+            }
+            return new Intermediates.Builder(m).build();
+        } else {
+            throw new InspectusException(String.format(
+                    "Test Case '%s' must return an instance of Map but actually returned %s",
+                    calleeName, result.getClass().getSimpleName()));
+        }
     }
 
     static Object findTestCase(String testCaseName) throws InspectusException {
@@ -64,36 +71,6 @@ public interface ITestCaseCaller {
             Class<?> clazz = Class.forName("com.kms.katalon.core.testcase.TestCaseFactory");
             Method method = clazz.getMethod("findTestCase", String.class);
             return method.invoke(null, testCaseName);
-        } catch (Exception e) {
-            throw new InspectusException(e);
-        }
-    }
-
-    /**
-     * This method mimics com.kms.katalon.core.keyword.internal.KeywordExecutor#executeKeywordForPlatform() method, of which
-     * method signature is:
-     * ```
-     * public static Object executeKeywordForPlatform(String platform, String keyword, Object ...params)
-     * ```
-     */
-    static Object executeKeywordForPlatform(
-            String platform, String keyword, Object calledTestCase,
-            Map<String, Object> binding) throws InspectusException {
-        Objects.requireNonNull(platform);
-        Objects.requireNonNull(keyword);  // will be "callTestCase" always
-        Objects.requireNonNull(calledTestCase);
-        Objects.requireNonNull(binding);
-        try {
-            Class<?> clazz = Class.forName("com.kms.katalon.core.keyword.internal.KeywordExecutor");
-            Class<?>[] args = new Class[3];
-            args[0] = String.class;
-            args[1] = String.class;
-            args[2] = Object[].class;
-            Method method = clazz.getMethod("executeKeywordForPlatform", args);
-            Object[] params = new Object[2];
-            params[0] = calledTestCase;
-            params[1] = binding;
-            return method.invoke(null, platform, keyword, params);
         } catch (Exception e) {
             throw new InspectusException(e);
         }

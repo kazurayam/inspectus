@@ -1,16 +1,19 @@
 package com.kazurayam.inspectus.katalon;
 
 import com.kazurayam.inspectus.core.InspectusException;
+import com.kazurayam.inspectus.core.Intermediates;
+import com.kazurayam.inspectus.core.Parameters;
 import com.kazurayam.inspectus.core.TwinsDiff;
-
-import java.util.Map;
 
 public final class KatalonTwinsDiff extends TwinsDiff implements ITestCaseCaller {
 
     @Override
-    public Map<String, Object> step2_materialize(Map<String, Object> parameters)
+    public Intermediates step2_materialize(Parameters parameters)
             throws InspectusException {
-        String testCaseName = getTestCaseName(parameters);
-        return callTestCase(testCaseName, parameters);
+        listener.stepStarted("step2_materialize");
+        String materializeScriptName = parameters.getMaterializeScriptName();
+        Intermediates intermediates = callTestCase(materializeScriptName, parameters);
+        listener.stepFinished("step2_materialize");
+        return intermediates;
     }
 }

@@ -6,9 +6,10 @@ package com.kazurayam.inspectus.katalon;
 //import com.kms.katalon.core.testcase.TestCase
 
 import java.lang.reflect.Method;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
-
+import com.kazurayam.inspectus.core.InspectusException;
 /**
  * A mimic of "WebUI.callTestCase(TestCase, Map)". It is implemented by
  * com.kms.katalon.core.keyword.builtin.CallTestCaseKeyword#callTestCase()
@@ -18,26 +19,29 @@ import java.util.Objects;
  * This class uses Java Reflection API to link to Katalon runtime.
  *
  */
-public class KatalonTestCaseCaller implements Festum {
+public interface ITestCaseCaller {
 
-    public KatalonTestCaseCaller() {}
+    public static String KEY_result = "result";
 
-    @Override
-    public Object call(String calleeName, Map<String, Object> binding) throws InspectusException {
+    default Map<String, Object> callTestCase(String calleeName, Map<String, Object> binding) throws InspectusException {
         try {
             // verify if the Katalon classes are available in the current classpath
             Class<?> clazz = Class.forName(
                     "com.kms.katalon.core.keyword.internal.KeywordExecutor");
             assert clazz.getSimpleName().equals("KeywordExecutor");
         } catch (Exception e) {
-            throw new InspectusException(e,
-                    "com.kms.katalon.core.* classes are not available in the current classpath.");
+            throw new InspectusException(
+                    "com.kms.katalon.core.* classes are not available in the current classpath.",
+                    e);
         }
 
         try {
             // now run the specified Test Case script; possibly for materializing = taking screenshots etc.
-            return callKatalonTestCase(calleeName, binding);
+            Object result = callKatalonTestCase(calleeName, binding);
 
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put(KEY_result, result);
+            return m;
         } catch (Exception e) {
             e.printStackTrace();
             throw new InspectusException(e);

@@ -2,6 +2,7 @@ package com.kazurayam.inspectus.core;
 
 import com.kazurayam.materialstore.base.inspector.Inspector;
 import com.kazurayam.materialstore.core.filesystem.JobName;
+import com.kazurayam.materialstore.core.filesystem.JobTimestamp;
 import com.kazurayam.materialstore.core.filesystem.MaterialList;
 import com.kazurayam.materialstore.core.filesystem.MaterialstoreException;
 import com.kazurayam.materialstore.core.filesystem.SortKeys;
@@ -27,14 +28,14 @@ public abstract class Shootings extends AbstractService {
         listener.stepStarted("step4_report");
         Store store = parameters.getStore();
         JobName jobName = parameters.getJobName();
-        Store backup = parameters.getBackup();
+        JobTimestamp jobTimestamp = parameters.getJobTimestamp();
         //
-        MaterialList materialList = intermediates.getMaterialList();
-        SortKeys sortKeys = parameters.getSortKeys();
-        //
-        Inspector inspector = Inspector.newInstance(store);
-        inspector.setSortKeys(sortKeys);
         try {
+            MaterialList materialList = store.select(jobName, jobTimestamp);
+            SortKeys sortKeys = parameters.getSortKeys();
+            //
+            Inspector inspector = Inspector.newInstance(store);
+            inspector.setSortKeys(sortKeys);
             Path report = inspector.report(materialList);
         } catch (MaterialstoreException e) {
             throw new InspectusException(e);

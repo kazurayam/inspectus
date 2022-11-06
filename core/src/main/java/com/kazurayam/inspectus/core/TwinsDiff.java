@@ -15,8 +15,7 @@ import java.util.Collections;
 public abstract class TwinsDiff extends AbstractDiffService {
 
     @Override
-    public Intermediates process(Parameters parameters)
-            throws InspectusException {
+    public Intermediates process(Parameters parameters) throws InspectusException {
         Intermediates im2 = step2_materialize(parameters);
         return step3_reduceTwins(parameters, im2);
     }

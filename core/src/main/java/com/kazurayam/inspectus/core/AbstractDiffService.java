@@ -19,8 +19,8 @@ public abstract class AbstractDiffService extends AbstractService {
         if ( !materialProductGroup.isReadyToReport()) {
             throw new InspectusException("MaterialProductGroup is not ready to report");
         }
-        SortKeys sortKeys = intermediates.getSortKeys();
-        Double criteria = intermediates.getCriteria();
+        SortKeys sortKeys = parameters.getSortKeys();
+        Double criteria = parameters.getCriteria();
         //
         Inspector inspector = Inspector.newInstance(store);
         inspector.setSortKeys(sortKeys);

@@ -30,7 +30,7 @@ public abstract class Shootings extends AbstractService {
         Store backup = parameters.getBackup();
         //
         MaterialList materialList = intermediates.getMaterialList();
-        SortKeys sortKeys = intermediates.getSortKeys();
+        SortKeys sortKeys = parameters.getSortKeys();
         //
         Inspector inspector = Inspector.newInstance(store);
         inspector.setSortKeys(sortKeys);

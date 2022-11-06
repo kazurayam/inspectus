@@ -11,6 +11,9 @@ public final class KatalonChronosDiff extends ChronosDiff implements ITestCaseCa
     public Intermediates step2_materialize(Parameters parameters)
             throws InspectusException {
         listener.stepStarted("step2_materialize");
+        if (!parameters.containsMaterializeScriptName()) {
+            throw new InspectusException("materializeScriptName is not specified");
+        }
         String materializeScriptName = parameters.getMaterializeScriptName();
         Intermediates intermediates = callTestCase(materializeScriptName, parameters);
         listener.stepFinished("step2_materialize");

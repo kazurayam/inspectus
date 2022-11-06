@@ -20,6 +20,9 @@ public final class KatalonShootings extends Shootings implements ITestCaseCaller
     public Intermediates step2_materialize(Parameters parameters)
             throws InspectusException {
         listener.stepStarted("step2_materialize");
+        if (!parameters.containsMaterializeScriptName()) {
+            throw new InspectusException("materializeScriptName is not specified");
+        }
         String materializeScriptName = parameters.getMaterializeScriptName();
         Intermediates intermediates = callTestCase(materializeScriptName, parameters);
         // The Test Case must return a MaterialList

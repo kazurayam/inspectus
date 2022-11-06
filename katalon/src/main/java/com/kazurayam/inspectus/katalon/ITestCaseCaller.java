@@ -47,9 +47,9 @@ public interface ITestCaseCaller {
         // convert an Object instance returned from the Katalon Test Case
         // into an instance of Intermediates
         if (result == null) {
-            throw new InspectusException(String.format(
-                    "Test Case '%s' must return an instance of Map but actually returned null",
+            logger.warn(String.format("Test Case '%s' may return an instance of Map<?, ?> class; actually returned null",
                     calleeName));
+            return null;
         } else if (result instanceof Map<?, ?>) {
             Map<String, Object> m = new LinkedHashMap<String, Object>();
             Map<?, ?> casted = (Map<?, ?>)result;

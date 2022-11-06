@@ -20,7 +20,7 @@ public abstract class AbstractService implements Inspectus {
     protected StepListener listener;
 
     public AbstractService() {
-        listener = new DefaultStepListener();
+        listener = new StdStepListener();
     }
 
     /**

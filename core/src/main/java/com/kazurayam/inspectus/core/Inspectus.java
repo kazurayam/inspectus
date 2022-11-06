@@ -1,5 +1,7 @@
 package com.kazurayam.inspectus.core;
 
+import java.util.function.Function;
+
 public interface Inspectus {
     default void execute(Parameters parameters) throws InspectusException {
         // ante festum
@@ -10,8 +12,10 @@ public interface Inspectus {
         postProcess(parameters, intermediates);
     }
 
-    public void preProcess(Parameters parameters) throws InspectusException;
-    public Intermediates process(Parameters parameters) throws InspectusException;
-    public void postProcess(Parameters parameters, Intermediates intermediates) throws InspectusException;
+    void preProcess(Parameters parameters) throws InspectusException;
+
+    Intermediates process(Parameters parameters) throws InspectusException;
+
+    void postProcess(Parameters parameters, Intermediates intermediates) throws InspectusException;
 }
 

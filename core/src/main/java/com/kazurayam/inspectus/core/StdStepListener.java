@@ -1,6 +1,6 @@
 package com.kazurayam.inspectus.core;
 
-public class DefaultStepListener implements StepListener {
+public class StdStepListener implements StepListener {
 
     @Override
     public void stepStarted(String stepName) {

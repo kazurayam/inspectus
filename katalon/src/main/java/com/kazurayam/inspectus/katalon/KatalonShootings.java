@@ -12,8 +12,7 @@ public final class KatalonShootings extends Shootings implements ITestCaseCaller
 
     @Override
     public Intermediates process(Parameters parameters) throws InspectusException {
-        Intermediates intermediates = step2_materialize(parameters);
-        return intermediates;
+        return step2_materialize(parameters);
     }
 
     @Override

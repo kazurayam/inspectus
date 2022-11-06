@@ -5,11 +5,13 @@ import com.kazurayam.materialstore.core.filesystem.JobTimestamp;
 import com.kazurayam.materialstore.core.filesystem.SortKeys;
 import com.kazurayam.materialstore.core.filesystem.Store;
 
+import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public final class Parameters {
 
+    private final Path baseDir;
     private final Store store;
     private final Store backup;
     private final JobName jobName;
@@ -18,6 +20,7 @@ public final class Parameters {
     private final SortKeys sortKeys;
     private final Double criteria;
 
+    public static final String KEY_baseDir = "baseDir";
     public static final String KEY_store = "store";
     public static final String KEY_backup = "backup";
     public static final String KEY_jobName = "jobName";
@@ -27,6 +30,7 @@ public final class Parameters {
     public static final String KEY_criteria = "criteria";
 
     private Parameters(Builder b) {
+        this.baseDir = b.baseDir;
         this.store = b.store;
         this.backup = b.backup;
         this.jobName = b.jobName;
@@ -35,6 +39,7 @@ public final class Parameters {
         this.sortKeys = b.sortKeys;
         this.criteria = b.criteria;
     }
+    public Boolean containsBaseDir() { return baseDir != null; }
     public Boolean containsStore() { return store != Store.NULL_OBJECT; }
     public Boolean containsBackup() { return backup != Store.NULL_OBJECT;}
     public Boolean containsJobName() { return jobName != JobName.NULL_OBJECT; }
@@ -43,6 +48,7 @@ public final class Parameters {
         return ! materializeScriptName.equals("");
     }
 
+    public Path getBaseDir() { return baseDir; }
     public Store getStore() { return store; }
     public Store getBackup() { return backup; }
     public JobName getJobName() { return jobName; }
@@ -56,6 +62,7 @@ public final class Parameters {
 
     public Map<String, Object> toMap() {
         Map<String, Object> m = new LinkedHashMap<>();
+        m.put(KEY_baseDir, baseDir);
         m.put(KEY_store, store);
         m.put(KEY_backup, backup);
         m.put(KEY_jobName, jobName);
@@ -67,6 +74,7 @@ public final class Parameters {
     }
 
     public static class Builder {
+        private Path baseDir;
         private Store store;
         private Store backup;
         private JobName jobName;
@@ -76,6 +84,7 @@ public final class Parameters {
         private Double criteria;
 
         public Builder() {
+            this.baseDir = null;
             this.store = Store.NULL_OBJECT;
             this.backup = Store.NULL_OBJECT;
             this.jobName = JobName.NULL_OBJECT;
@@ -83,6 +92,10 @@ public final class Parameters {
             this.materializeScriptName = "";
             this.sortKeys = SortKeys.NULL_OBJECT;
             this.criteria = 0.0;
+        }
+        public Builder baseDir(Path baseDir) {
+            this.baseDir = baseDir;
+            return this;
         }
         public Builder store(Store store) {
             this.store = store;

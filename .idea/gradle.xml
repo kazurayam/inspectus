@@ -10,6 +10,18 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/katalon" />
+            <option value="$PROJECT_DIR$/selenium" />
+            <option value="$PROJECT_DIR$/selenium4" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/selenium" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/selenium" />
           </set>
         </option>
       </GradleProjectSettings>

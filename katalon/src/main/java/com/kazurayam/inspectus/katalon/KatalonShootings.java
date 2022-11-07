@@ -8,7 +8,16 @@ import com.kazurayam.inspectus.core.Shootings;
 import com.kazurayam.inspectus.util.GsonHelper;
 import com.kazurayam.materialstore.core.filesystem.MaterialList;
 
+import java.util.Objects;
+
 public final class KatalonShootings extends Shootings implements ITestCaseCaller {
+
+    private String materializeTestCaseName = null;
+
+    public KatalonShootings(String materializeTestCaseName) {
+        Objects.requireNonNull(materializeTestCaseName);
+        this.materializeTestCaseName = materializeTestCaseName;
+    }
 
     @Override
     public Intermediates process(Parameters parameters) throws InspectusException {
@@ -19,19 +28,10 @@ public final class KatalonShootings extends Shootings implements ITestCaseCaller
     public Intermediates step2_materialize(Parameters parameters)
             throws InspectusException {
         listener.stepStarted("step2_materialize");
-        if (!parameters.containsMaterializeScriptName()) {
-            throw new InspectusException("materializeScriptName is not specified");
+        if (materializeTestCaseName == null) {
+            throw new InspectusException("materializeTestCaseName is not specified");
         }
-        String materializeScriptName = parameters.getMaterializeScriptName();
-        Intermediates intermediates = callTestCase(materializeScriptName, parameters);
-        // The Test Case must return a MaterialList
-        if ( intermediates.getMaterialList() == MaterialList.NULL_OBJECT) {
-            Gson gson = GsonHelper.createGson(true);
-            String json = gson.toJson(intermediates);
-            throw new InspectusException(String.format(
-                    "Test Case '%s' did not return '%s'. The intermediates returned was %s",
-                    materializeScriptName, "materialList", json));
-        }
+        Intermediates intermediates = callTestCase(materializeTestCaseName, parameters);
         listener.stepFinished("step2_materialize");
         return intermediates;
     }

@@ -16,7 +16,6 @@ public final class Parameters {
     private final Store backup;
     private final JobName jobName;
     private final JobTimestamp jobTimestamp;
-    private final String materializeScriptName;
     private final SortKeys sortKeys;
     private final Double criteria;
 
@@ -35,25 +34,21 @@ public final class Parameters {
         this.backup = b.backup;
         this.jobName = b.jobName;
         this.jobTimestamp = b.jobTimestamp;
-        this.materializeScriptName = b.materializeScriptName;
         this.sortKeys = b.sortKeys;
         this.criteria = b.criteria;
     }
     public Boolean containsBaseDir() { return baseDir != null; }
+    public Boolean containsCriteria() { return criteria >= 0.0; }
     public Boolean containsStore() { return store != Store.NULL_OBJECT; }
     public Boolean containsBackup() { return backup != Store.NULL_OBJECT;}
     public Boolean containsJobName() { return jobName != JobName.NULL_OBJECT; }
     public Boolean containsJobTimestamp() { return jobTimestamp != JobTimestamp.NULL_OBJECT; }
-    public Boolean containsMaterializeScriptName() {
-        return ! materializeScriptName.equals("");
-    }
 
     public Path getBaseDir() { return baseDir; }
     public Store getStore() { return store; }
     public Store getBackup() { return backup; }
     public JobName getJobName() { return jobName; }
     public JobTimestamp getJobTimestamp() { return jobTimestamp; }
-    public String getMaterializeScriptName() { return materializeScriptName; }
     public SortKeys getSortKeys() { return sortKeys; }
     public Double getCriteria() {
         return criteria;
@@ -67,7 +62,6 @@ public final class Parameters {
         m.put(KEY_backup, backup);
         m.put(KEY_jobName, jobName);
         m.put(KEY_jobTimestamp, jobTimestamp);
-        m.put(KEY_materializeScriptName, materializeScriptName);
         m.put(KEY_sortKeys, sortKeys);
         m.put(KEY_criteria, criteria);
         return m;
@@ -79,7 +73,6 @@ public final class Parameters {
         private Store backup;
         private JobName jobName;
         private JobTimestamp jobTimestamp;
-        private String materializeScriptName;
         private SortKeys sortKeys;
         private Double criteria;
 
@@ -89,7 +82,6 @@ public final class Parameters {
             this.backup = Store.NULL_OBJECT;
             this.jobName = JobName.NULL_OBJECT;
             this.jobTimestamp = JobTimestamp.NULL_OBJECT;
-            this.materializeScriptName = "";
             this.sortKeys = SortKeys.NULL_OBJECT;
             this.criteria = 0.0;
         }
@@ -113,15 +105,14 @@ public final class Parameters {
             this.jobTimestamp = jobTimestamp;
             return this;
         }
-        public Builder materializeScriptName(String materializeScriptName) {
-            this.materializeScriptName = materializeScriptName;
-            return this;
-        }
         public Builder sortKeys(SortKeys sortKeys) {
             this.sortKeys = sortKeys;
             return this;
         }
-        public Builder criteria(Double criteria) {
+        public Builder criteria(Double criteria) throws InspectusException {
+            if (criteria < 0.0) {
+                throw new InspectusException("criteria must be >= 0.0");
+            }
             this.criteria = criteria;
             return this;
         }

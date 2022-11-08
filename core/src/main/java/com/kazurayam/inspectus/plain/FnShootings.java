@@ -3,7 +3,7 @@ package com.kazurayam.inspectus.plain;
 import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;
 import com.kazurayam.inspectus.core.Parameters;
-import com.kazurayam.inspectus.core.Shootings;
+import com.kazurayam.inspectus.core.internal.Shootings;
 import java.util.function.Function;
 
 public final class FnShootings extends Shootings {

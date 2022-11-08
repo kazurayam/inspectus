@@ -1,5 +1,9 @@
-package com.kazurayam.inspectus.core;
+package com.kazurayam.inspectus.core.internal;
 
+import com.kazurayam.inspectus.core.InspectusException;
+import com.kazurayam.inspectus.core.Intermediates;
+import com.kazurayam.inspectus.core.Parameters;
+import com.kazurayam.inspectus.core.StdStepListener;
 import com.kazurayam.materialstore.base.manage.StoreCleaner;
 import com.kazurayam.materialstore.base.manage.StoreExport;
 import com.kazurayam.materialstore.base.manage.StoreImport;

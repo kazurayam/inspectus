@@ -1,5 +1,8 @@
-package com.kazurayam.inspectus.core;
+package com.kazurayam.inspectus.core.internal;
 
+import com.kazurayam.inspectus.core.InspectusException;
+import com.kazurayam.inspectus.core.Intermediates;
+import com.kazurayam.inspectus.core.Parameters;
 import com.kazurayam.materialstore.base.inspector.Inspector;
 import com.kazurayam.materialstore.core.filesystem.JobName;
 import com.kazurayam.materialstore.core.filesystem.JobTimestamp;

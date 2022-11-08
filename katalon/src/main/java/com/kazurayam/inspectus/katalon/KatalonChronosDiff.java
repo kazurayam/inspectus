@@ -1,6 +1,6 @@
 package com.kazurayam.inspectus.katalon;
 
-import com.kazurayam.inspectus.core.ChronosDiff;
+import com.kazurayam.inspectus.core.internal.ChronosDiff;
 import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;
 import com.kazurayam.inspectus.core.Parameters;

@@ -1,12 +1,9 @@
 package com.kazurayam.inspectus.katalon;
 
-import com.google.gson.Gson;
 import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;
 import com.kazurayam.inspectus.core.Parameters;
-import com.kazurayam.inspectus.core.Shootings;
-import com.kazurayam.inspectus.util.GsonHelper;
-import com.kazurayam.materialstore.core.filesystem.MaterialList;
+import com.kazurayam.inspectus.core.internal.Shootings;
 
 import java.util.Objects;
 

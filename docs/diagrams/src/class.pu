@@ -3,18 +3,38 @@ abstract class "AbstractDiffService"
 abstract class "AbstractService"
 abstract class "ChronosDiff"
 interface "Inspectus"
+Inspectus : execute()
 class "InspectusException"
 class "Intermediates"
-class "Parameters"
+class "Parameters" {
+  Path baseDir
+  Store store
+  JobName jobName
+  JobTimestamp jobTimestamp
+  SortKeys sortKeys
+  Double criteria
+}
 abstract class "Shootings"
 class "StdStepListener"
 interface "StepListener"
 abstract class "TwinsDiff"
-class "FnShootings"
+class "FnShootings" {
+  Parameters p
+  void execute()
+}
 interface "ITestCaseCaller"
-class "KatalonChronosDiff"
-class "KatalonShootings"
-class "KatalonTwinsDiff"
+class "KatalonChronosDiff" {
+  Parameters p
+  void execute()
+}
+class "KatalonShootings" {
+  Parameters p
+  void execute()
+}
+class "KatalonTwinsDiff" {
+  Parameters p
+  void execute()
+}
 class "KeywordExecutor"
 
 AbstractService ..|> Inspectus

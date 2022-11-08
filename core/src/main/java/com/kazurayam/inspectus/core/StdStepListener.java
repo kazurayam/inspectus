@@ -1,5 +1,7 @@
 package com.kazurayam.inspectus.core;
 
+import com.kazurayam.inspectus.core.internal.StepListener;
+
 public class StdStepListener implements StepListener {
 
     @Override

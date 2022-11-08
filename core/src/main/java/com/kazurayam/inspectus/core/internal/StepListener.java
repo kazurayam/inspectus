@@ -1,4 +1,4 @@
-package com.kazurayam.inspectus.core;
+package com.kazurayam.inspectus.core.internal;
 
 public interface StepListener {
 

@@ -3,7 +3,7 @@ package com.kazurayam.inspectus.katalon;
 import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;
 import com.kazurayam.inspectus.core.Parameters;
-import com.kazurayam.inspectus.core.TwinsDiff;
+import com.kazurayam.inspectus.core.internal.TwinsDiff;
 
 import java.util.Objects;
 

@@ -1,6 +1,6 @@
 package com.kazurayam.inspectus.selenium;
 
-import com.kazurayam.inspectus.core.StepListener;
+import com.kazurayam.inspectus.core.internal.StepListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

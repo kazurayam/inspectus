@@ -1,0 +1,38 @@
+@startuml
+abstract class "AbstractDiffService"
+abstract class "AbstractService"
+abstract class "ChronosDiff"
+interface "Inspectus"
+class "InspectusException"
+class "Intermediates"
+class "Parameters"
+abstract class "Shootings"
+class "StdStepListener"
+interface "StepListener"
+abstract class "TwinsDiff"
+class "FnShootings"
+interface "ITestCaseCaller"
+class "KatalonChronosDiff"
+class "KatalonShootings"
+class "KatalonTwinsDiff"
+class "KeywordExecutor"
+
+AbstractService ..|> Inspectus
+AbstractDiffService --|> AbstractService
+Shootings --|> AbstractService
+FnShootings --|> Shootings
+ChronosDiff --|> AbstractDiffService
+TwinsDiff --|> AbstractDiffService
+KatalonShootings --|> Shootings
+KatalonChronosDiff --|> ChronosDiff
+KatalonTwinsDiff --|> TwinsDiff
+StdStepListener ..|> StepListener
+ITestCaseCaller -- KeywordExecutor
+KatalonChronosDiff ..|> ITestCaseCaller
+KatalonTwinsDiff ..|> ITestCaseCaller
+KatalonShootings ..|> ITestCaseCaller
+FnShootings -- StdStepListener
+KatalonChronosDiff -- StdStepListener
+KatalonTwinsDiff -- StdStepListener
+KatalonShootings -- StdStepListener
+@enduml

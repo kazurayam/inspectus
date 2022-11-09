@@ -1,0 +1,6 @@
+= inspectus
+
+
+*inspectŭs* --- Latin, masculine noun IV declension, "looking at, inspection, examination"
+
+include::./OrganizingMaterialsWithInspectus.adoc[]

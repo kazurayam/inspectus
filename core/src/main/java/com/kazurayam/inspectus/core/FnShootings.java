@@ -1,4 +1,4 @@
-package com.kazurayam.inspectus.plain;
+package com.kazurayam.inspectus.core;
 
 import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;

@@ -1,5 +1,6 @@
 package com.kazurayam.inspectus.plain;
 
+import com.kazurayam.inspectus.core.FnShootings;
 import com.kazurayam.inspectus.core.TestHelper;
 import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;

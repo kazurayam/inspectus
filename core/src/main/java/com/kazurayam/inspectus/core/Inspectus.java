@@ -1,8 +1,4 @@
-package com.kazurayam.inspectus.core.internal;
-
-import com.kazurayam.inspectus.core.InspectusException;
-import com.kazurayam.inspectus.core.Intermediates;
-import com.kazurayam.inspectus.core.Parameters;
+package com.kazurayam.inspectus.core;
 
 public interface Inspectus {
     default void execute(Parameters parameters) throws InspectusException {

@@ -1,5 +1,6 @@
 package com.kazurayam.inspectus.core.internal;
 
+import com.kazurayam.inspectus.core.Inspectus;
 import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;
 import com.kazurayam.inspectus.core.Parameters;

@@ -11,6 +11,7 @@ import java.util.Map;
 
 public final class Parameters {
 
+    public static final Parameters NULL_OBJECT = new Parameters.Builder().build();
     private final Path baseDir;
     private final Store store;
     private final Store backup;

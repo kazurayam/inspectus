@@ -9,6 +9,8 @@ import java.util.Map;
 
 public class Intermediates {
 
+    public static final Intermediates NULL_OBJECT = new Intermediates.Builder().build();
+
     private final MaterialList materialList;
     private final MaterialProductGroup materialProductGroup;
     private final String profileLeft;

@@ -1,4 +1,4 @@
-package com.kazurayam.inspectus.core;
+package com.kazurayam.inspectus.fn;
 
 import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;
@@ -13,6 +13,7 @@ public final class FnShootings extends Shootings {
     public FnShootings(Function<Parameters, Intermediates> fn) {
         this.fn = fn;
     }
+
     @Override
     public Intermediates step2_materialize(Parameters parameters) throws InspectusException {
         return fn.apply(parameters);

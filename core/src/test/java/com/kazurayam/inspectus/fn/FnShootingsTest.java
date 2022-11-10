@@ -1,10 +1,10 @@
-package com.kazurayam.inspectus.core;
+package com.kazurayam.inspectus.fn;
 
-import com.kazurayam.inspectus.core.FnShootings;
-import com.kazurayam.inspectus.core.TestHelper;
+import com.kazurayam.inspectus.core.Inspectus;
 import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;
 import com.kazurayam.inspectus.core.Parameters;
+import com.kazurayam.inspectus.core.TestHelper;
 import com.kazurayam.materialstore.core.filesystem.FileType;
 import com.kazurayam.materialstore.core.filesystem.JobName;
 import com.kazurayam.materialstore.core.filesystem.JobTimestamp;
@@ -43,27 +43,28 @@ public class FnShootingsTest {
         Parameters parameters = new Parameters.Builder()
                 .baseDir(baseDir).store(store)
                 .jobName(jobName).jobTimestamp(jobTimestamp).build();
-        // define the materializing Function object
-        Function<Parameters, Intermediates> fn = p -> {
-            Store st = p.getStore();
-            JobName jn = p.getJobName();
-            JobTimestamp jt = p.getJobTimestamp();
-            Metadata md = new Metadata.Builder().build();
-            try {
-                st.write(jn, jt, FileType.TXT, md, "Hello, world!");
-                MaterialList ml = st.select(jn, jt);
-                Intermediates im = new Intermediates.Builder()
-                        .materialList(ml).build();
-                return im;
-            } catch (MaterialstoreException e) {
-                throw new RuntimeException(e);
-            }
-        };
         // Action
-        FnShootings sh = new FnShootings(fn);
-        Intermediates im = sh.process(parameters);
-        // Assert
-        assertNotNull(im);
-        assertTrue(im.containsMaterialList());
+        Inspectus sh = new FnShootings(fn);
+        sh.execute(parameters);
     }
+
+    /**
+     * Function object that creates a fileTree "store/jobName/jobTimestamp"
+     * where 1 text file is written
+     */
+    private Function<Parameters, Intermediates> fn = p -> {
+        Store st = p.getStore();
+        JobName jn = p.getJobName();
+        JobTimestamp jt = p.getJobTimestamp();
+        Metadata md = new Metadata.Builder().build();
+        try {
+            st.write(jn, jt, FileType.TXT, md, "Hello, world!");
+            MaterialList ml = st.select(jn, jt);
+            Intermediates im = new Intermediates.Builder()
+                    .materialList(ml).build();
+            return im;
+        } catch (MaterialstoreException e) {
+            throw new RuntimeException(e);
+        }
+    };
 }

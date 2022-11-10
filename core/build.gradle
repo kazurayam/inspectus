@@ -13,4 +13,9 @@ dependencies {
 
     implementation libs.materialstore
 
+    implementation libs.freemarker
+
+    implementation libs.ashot
+
+    implementation libs.jsoup
 }

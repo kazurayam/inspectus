@@ -47,15 +47,19 @@ public class FnTwinsDiffTest {
                 .sortKeys(sortKeys)
                 .build();
         // Action
-        Inspectus td = new FnTwinsDiff(fn);
-        td.execute(parameters);
+        Inspectus fnTwinsDiff = new FnTwinsDiff(fn);
+        fnTwinsDiff.execute(parameters);
         // Assert
-
+        try {
+            assertTrue(store.contains(jobName, jobTimestamp));
+        } catch (MaterialstoreException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
      * Function object that create 2 fileTree "store/jobName/leftJobTimestamp"
-     * and "store/jobName/RightJobTimestamp", each of which contains 3 PNG image
+     * and "store/jobName/RightJobTimestamp", each of which contains 3 PNG images
      * files.
      */
     private Function<Parameters, Intermediates> fn = p -> {
@@ -72,7 +76,7 @@ public class FnTwinsDiffTest {
         JobTimestamp jt1 = p.getJobTimestamp();
         JobTimestamp jt2 = JobTimestamp.laterThan(jt1);
         try {
-            // 1st time of shooting
+            // 1st set of shooting
             st.write(jn, jt1, FileType.PNG, Metadata.builder()
                     .put("profile", profLeft)
                     .put("imageOf", "apple")
@@ -85,7 +89,7 @@ public class FnTwinsDiffTest {
                     .put("profile", profLeft)
                     .put("imageOf", "cash")
                     .build(), money);
-            // 2nd time of shooting
+            // 2nd set of shooting
             st.write(jn, jt2, FileType.PNG, Metadata.builder()
                     .put("profile", profRight)
                     .put("imageOf", "apple")

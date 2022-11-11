@@ -23,13 +23,13 @@ public abstract class AbstractDiffService extends AbstractService {
             throw new InspectusException("MaterialProductGroup is not ready to report");
         }
         SortKeys sortKeys = parameters.getSortKeys();
-        Double criteria = parameters.getCriteria();
+        Double threshold = parameters.getThreshold();
         //
         Inspector inspector = Inspector.newInstance(store);
         inspector.setSortKeys(sortKeys);
         try {
-            Path report = inspector.report(materialProductGroup, criteria);
-            int warnings = materialProductGroup.countWarnings(criteria);
+            Path report = inspector.report(materialProductGroup, threshold);
+            int warnings = materialProductGroup.countWarnings(threshold);
         } catch (MaterialstoreException e) {
             throw new InspectusException(e);
         }

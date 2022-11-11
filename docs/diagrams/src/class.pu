@@ -12,7 +12,7 @@ class "Parameters" {
   JobName jobName
   JobTimestamp jobTimestamp
   SortKeys sortKeys
-  Double criteria
+  Double threshold
 }
 abstract class "Shootings"
 class "StdStepListener"

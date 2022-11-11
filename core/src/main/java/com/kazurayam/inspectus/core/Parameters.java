@@ -18,16 +18,15 @@ public final class Parameters {
     private final JobName jobName;
     private final JobTimestamp jobTimestamp;
     private final SortKeys sortKeys;
-    private final Double criteria;
+    private final Double threshold;
 
     public static final String KEY_baseDir = "baseDir";
     public static final String KEY_store = "store";
     public static final String KEY_backup = "backup";
     public static final String KEY_jobName = "jobName";
     public static final String KEY_jobTimestamp = "jobTimestamp";
-    public static final String KEY_materializeScriptName = "materializeScriptName";
     public static final String KEY_sortKeys = "sortKeys";
-    public static final String KEY_criteria = "criteria";
+    public static final String KEY_threshold = "threshold";
 
     private Parameters(Builder b) {
         this.baseDir = b.baseDir;
@@ -36,10 +35,10 @@ public final class Parameters {
         this.jobName = b.jobName;
         this.jobTimestamp = b.jobTimestamp;
         this.sortKeys = b.sortKeys;
-        this.criteria = b.criteria;
+        this.threshold = b.threshold;
     }
     public Boolean containsBaseDir() { return baseDir != null; }
-    public Boolean containsCriteria() { return criteria >= 0.0; }
+    public Boolean containsThreshold() { return threshold >= 0.0; }
     public Boolean containsStore() { return store != Store.NULL_OBJECT; }
     public Boolean containsBackup() { return backup != Store.NULL_OBJECT;}
     public Boolean containsJobName() { return jobName != JobName.NULL_OBJECT; }
@@ -51,8 +50,8 @@ public final class Parameters {
     public JobName getJobName() { return jobName; }
     public JobTimestamp getJobTimestamp() { return jobTimestamp; }
     public SortKeys getSortKeys() { return sortKeys; }
-    public Double getCriteria() {
-        return criteria;
+    public Double getThreshold() {
+        return threshold;
     }
 
 
@@ -64,7 +63,7 @@ public final class Parameters {
         m.put(KEY_jobName, jobName);
         m.put(KEY_jobTimestamp, jobTimestamp);
         m.put(KEY_sortKeys, sortKeys);
-        m.put(KEY_criteria, criteria);
+        m.put(KEY_threshold, threshold);
         return m;
     }
 
@@ -75,7 +74,7 @@ public final class Parameters {
         private JobName jobName;
         private JobTimestamp jobTimestamp;
         private SortKeys sortKeys;
-        private Double criteria;
+        private Double threshold;
 
         public Builder() {
             this.baseDir = null;
@@ -84,7 +83,7 @@ public final class Parameters {
             this.jobName = JobName.NULL_OBJECT;
             this.jobTimestamp = JobTimestamp.NULL_OBJECT;
             this.sortKeys = SortKeys.NULL_OBJECT;
-            this.criteria = 0.0;
+            this.threshold = 0.0;
         }
         public Builder baseDir(Path baseDir) {
             this.baseDir = baseDir;
@@ -110,11 +109,11 @@ public final class Parameters {
             this.sortKeys = sortKeys;
             return this;
         }
-        public Builder criteria(Double criteria) throws InspectusException {
-            if (criteria < 0.0) {
-                throw new InspectusException("criteria must be >= 0.0");
+        public Builder threshold(Double threshold) throws InspectusException {
+            if (threshold < 0.0) {
+                throw new InspectusException("threshold must be >= 0.0");
             }
-            this.criteria = criteria;
+            this.threshold = threshold;
             return this;
         }
         public Parameters build() {

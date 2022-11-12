@@ -116,4 +116,15 @@ public abstract class AbstractService implements Inspectus {
         }
         listener.stepFinished("step7_index");
     }
+
+    protected boolean isSubprocessjAvailable() {
+        String className = "com.kazurayam.subprocessj.Subprocess";
+        try {
+            Class<?> clazz = Class.forName(className);
+            return clazz.getSimpleName().equals("Subprocess");
+        } catch (Exception e) {
+            logger.info(className + " is not available in the classpath");
+            return false;
+        }
+    }
 }

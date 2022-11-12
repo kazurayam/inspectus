@@ -5,19 +5,28 @@ import com.kazurayam.inspectus.core.Intermediates;
 import com.kazurayam.inspectus.core.Parameters;
 import com.kazurayam.materialstore.base.inspector.Inspector;
 import com.kazurayam.materialstore.base.reduce.MaterialProductGroup;
+import com.kazurayam.materialstore.core.filesystem.FileType;
 import com.kazurayam.materialstore.core.filesystem.JobName;
 import com.kazurayam.materialstore.core.filesystem.JobTimestamp;
+import com.kazurayam.materialstore.core.filesystem.Material;
 import com.kazurayam.materialstore.core.filesystem.MaterialList;
 import com.kazurayam.materialstore.core.filesystem.MaterialstoreException;
+import com.kazurayam.materialstore.core.filesystem.Metadata;
 import com.kazurayam.materialstore.core.filesystem.QueryOnMetadata;
 import com.kazurayam.materialstore.core.filesystem.SortKeys;
 import com.kazurayam.materialstore.core.filesystem.Store;
 import com.kazurayam.materialstore.core.filesystem.metadata.IgnoreMetadataKeys;
+import com.kazurayam.materialstore.diagram.dot.DotGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.Collections;
 
 public abstract class TwinsDiff extends AbstractDiffService {
+
+    private Logger logger = LoggerFactory.getLogger(TwinsDiff.class);
 
     @Override
     public Intermediates process(Parameters parameters) throws InspectusException {
@@ -64,7 +73,6 @@ public abstract class TwinsDiff extends AbstractDiffService {
         }
         JobTimestamp jobTimestampRight = intermediates.getJobTimestampRight();
 
-
         try {
             // get the MaterialList of the left (Production Environment)
             MaterialList left = store.select(jobName, jobTimestampLeft,
@@ -80,17 +88,50 @@ public abstract class TwinsDiff extends AbstractDiffService {
 
             // weave 2 MaterialList objects into a MaterialProductGroup,
             // which is a List of pairs of corresponding Material
+
+
             MaterialProductGroup reduced =
                     MaterialProductGroup.builder(left, right)
-                            .ignoreKey("profile")
+                            .ignoreKeys("profile", "URL.host")
                             .ignoreKeys(parameters.getIgnoreMetadataKeys())
                             .build();
+
+            // logger.info("parameters.getIgnoreMetadataKeys=" + parameters.getIgnoreMetadataKeys().toString());
+            // logger.info("reduced.getIgnoreMetadataKeys=" + reduced.getIgnoreMetadataKeys().toString());
+
             Inspector inspector = Inspector.newInstance(store);
             inspector.setSortKeys(sortKeys);
 
             // take diff, measure the difference, sort them
-            MaterialProductGroup inspected =
-                    inspector.reduceAndSort(reduced);
+            MaterialProductGroup inspected;
+            try {
+                inspected = inspector.reduceAndSort(reduced);
+            } catch (MaterialstoreException e) {
+                /*
+                 * if any problem occurred while taking diff,
+                 * create a diagram of the MaterialProductGroup object
+                 * and store it in a new JobTimestamp for debugging.
+                 */
+                /* before calling the DotGenerator.generateDot() we will check if
+                 * the com.kazurayam.subprocessj.Subprocess class is available
+                 * in the classpath as DotGenerator depends on the GraphViz dot command.
+                 * If not, skip generating the diagram.
+                 */
+                if (isSubprocessjAvailable()) {
+
+                    String dotText = DotGenerator.generateDot(reduced);
+                    //                                        ^^^^^^^
+                    BufferedImage bi = DotGenerator.toImage(dotText);
+                    JobTimestamp jt = JobTimestamp.now();
+                    Material dotMat =
+                            store.write(jobName, jt, FileType.PNG,
+                                    Metadata.NULL_OBJECT, bi);
+                    logger.info(String.format("look at %s/%s for the diagram of MaterialProductGroup: %s",
+                            jobName, jt, reduced.getShortID()));
+                }
+                // rethrow it
+                throw e;
+            }
 
             // we will pass the MaterialProductGroup object to
             // the reporting step that follows

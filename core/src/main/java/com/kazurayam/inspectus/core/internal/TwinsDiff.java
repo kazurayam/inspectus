@@ -12,7 +12,9 @@ import com.kazurayam.materialstore.core.filesystem.MaterialstoreException;
 import com.kazurayam.materialstore.core.filesystem.QueryOnMetadata;
 import com.kazurayam.materialstore.core.filesystem.SortKeys;
 import com.kazurayam.materialstore.core.filesystem.Store;
+import com.kazurayam.materialstore.core.filesystem.metadata.IgnoreMetadataKeys;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 public abstract class TwinsDiff extends AbstractDiffService {
@@ -40,15 +42,17 @@ public abstract class TwinsDiff extends AbstractDiffService {
         }
         JobName jobName = parameters.getJobName();
 
-        if (!intermediates.containsProfileLeft()) {
-            throw new InspectusException(Intermediates.KEY_profileLeft + " is not given in the intermediates object");
+        if (!parameters.containsProfileLeft()) {
+            throw new InspectusException(Parameters.KEY_profileLeft + " is not given in the parameters");
         }
-        String profileLeft = intermediates.getProfileLeft();
 
-        if (!intermediates.containsProfileRight()) {
-            throw new InspectusException(Intermediates.KEY_profileRight + " is not given in the intermediates object");
+        if (!parameters.containsProfileRight()) {
+            throw new InspectusException(Parameters.KEY_profileRight + " is not given in the parameters");
         }
-        String profileRight = intermediates.getProfileRight();
+
+        SortKeys sortKeys = parameters.getSortKeys();
+
+        //------------ values passed through Intermediates object --------------------------
 
         if (!intermediates.containsJobTimestampLeft()) {
             throw new InspectusException(Intermediates.KEY_jobTimestampLeft + " is not given in the intermediates object");
@@ -60,26 +64,26 @@ public abstract class TwinsDiff extends AbstractDiffService {
         }
         JobTimestamp jobTimestampRight = intermediates.getJobTimestampRight();
 
+
         try {
             // get the MaterialList of the left (Production Environment)
             MaterialList left = store.select(jobName, jobTimestampLeft,
                     QueryOnMetadata.builder(
-                            Collections.singletonMap("profile", profileLeft)
+                            Collections.singletonMap("profile", parameters.getProfileLeft())
                     ).build());
 
             // get the MaterialList of the right (Development Envrionment)
             MaterialList right = store.select(jobName, jobTimestampRight,
                     QueryOnMetadata.builder(
-                            Collections.singletonMap("profile", profileRight)
+                            Collections.singletonMap("profile", parameters.getProfileRight())
                     ).build());
-            SortKeys sortKeys = new SortKeys();
 
             // weave 2 MaterialList objects into a MaterialProductGroup,
             // which is a List of pairs of corresponding Material
             MaterialProductGroup reduced =
                     MaterialProductGroup.builder(left, right)
-                            .ignoreKeys("profile", "URL.host", "URL.port")
-                            .sort("step")
+                            .ignoreKey("profile")
+                            .ignoreKeys(parameters.getIgnoreMetadataKeys())
                             .build();
             Inspector inspector = Inspector.newInstance(store);
             inspector.setSortKeys(sortKeys);

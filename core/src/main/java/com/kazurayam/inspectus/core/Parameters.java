@@ -4,6 +4,7 @@ import com.kazurayam.materialstore.core.filesystem.JobName;
 import com.kazurayam.materialstore.core.filesystem.JobTimestamp;
 import com.kazurayam.materialstore.core.filesystem.SortKeys;
 import com.kazurayam.materialstore.core.filesystem.Store;
+import com.kazurayam.materialstore.core.filesystem.metadata.IgnoreMetadataKeys;
 
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
@@ -17,16 +18,22 @@ public final class Parameters {
     private final Store backup;
     private final JobName jobName;
     private final JobTimestamp jobTimestamp;
+    private final String profileLeft;
+    private final String profileRight;
     private final SortKeys sortKeys;
     private final Double threshold;
+    private final IgnoreMetadataKeys ignoreMetadataKeys;
 
     public static final String KEY_baseDir = "baseDir";
     public static final String KEY_store = "store";
     public static final String KEY_backup = "backup";
     public static final String KEY_jobName = "jobName";
     public static final String KEY_jobTimestamp = "jobTimestamp";
+    public static final String KEY_profileLeft = "profileLeft";
+    public static final String KEY_profileRight = "profileRight";
     public static final String KEY_sortKeys = "sortKeys";
     public static final String KEY_threshold = "threshold";
+    public static final String KEY_ignoreMetadataKeys = "ignoreMetadataKeys";
 
     private Parameters(Builder b) {
         this.baseDir = b.baseDir;
@@ -34,35 +41,49 @@ public final class Parameters {
         this.backup = b.backup;
         this.jobName = b.jobName;
         this.jobTimestamp = b.jobTimestamp;
+        this.profileLeft = b.profileLeft;
+        this.profileRight = b.profileRight;
         this.sortKeys = b.sortKeys;
         this.threshold = b.threshold;
+        this.ignoreMetadataKeys = b.ignoreMetadataKeys;
     }
-    public Boolean containsBaseDir() { return baseDir != null; }
-    public Boolean containsThreshold() { return threshold >= 0.0; }
-    public Boolean containsStore() { return store != Store.NULL_OBJECT; }
     public Boolean containsBackup() { return backup != Store.NULL_OBJECT;}
+    public Boolean containsBaseDir() { return baseDir != null; }
+    public Boolean containsIgnoreMetadataKeys() { return ignoreMetadataKeys != IgnoreMetadataKeys.NULL_OBJECT; }
     public Boolean containsJobName() { return jobName != JobName.NULL_OBJECT; }
     public Boolean containsJobTimestamp() { return jobTimestamp != JobTimestamp.NULL_OBJECT; }
+    public Boolean containsProfileLeft() { return ! this.profileLeft.equals(""); }
+    public Boolean containsProfileRight() {
+        return ! this.profileRight.equals("");
+    }
+    public Boolean containsSortKeys() { return sortKeys != null; }
+    public Boolean containsStore() { return store != Store.NULL_OBJECT; }
+    public Boolean containsThreshold() { return threshold >= 0.0; }
 
-    public Path getBaseDir() { return baseDir; }
-    public Store getStore() { return store; }
     public Store getBackup() { return backup; }
+    public Path getBaseDir() { return baseDir; }
+    public IgnoreMetadataKeys getIgnoreMetadataKeys() { return ignoreMetadataKeys; }
     public JobName getJobName() { return jobName; }
     public JobTimestamp getJobTimestamp() { return jobTimestamp; }
+    public String getProfileLeft() { return profileLeft; }
+    public String getProfileRight() { return profileRight; }
     public SortKeys getSortKeys() { return sortKeys; }
+    public Store getStore() { return store; }
     public Double getThreshold() {
         return threshold;
     }
 
-
     public Map<String, Object> toMap() {
         Map<String, Object> m = new LinkedHashMap<>();
-        m.put(KEY_baseDir, baseDir);
-        m.put(KEY_store, store);
         m.put(KEY_backup, backup);
+        m.put(KEY_baseDir, baseDir);
+        m.put(KEY_ignoreMetadataKeys, ignoreMetadataKeys);
         m.put(KEY_jobName, jobName);
         m.put(KEY_jobTimestamp, jobTimestamp);
+        m.put(KEY_profileLeft, profileLeft);
+        m.put(KEY_profileRight, profileRight);
         m.put(KEY_sortKeys, sortKeys);
+        m.put(KEY_store, store);
         m.put(KEY_threshold, threshold);
         return m;
     }
@@ -73,8 +94,11 @@ public final class Parameters {
         private Store backup;
         private JobName jobName;
         private JobTimestamp jobTimestamp;
+        private String profileLeft;
+        private String profileRight;
         private SortKeys sortKeys;
         private Double threshold;
+        private IgnoreMetadataKeys ignoreMetadataKeys;
 
         public Builder() {
             this.baseDir = null;
@@ -82,8 +106,11 @@ public final class Parameters {
             this.backup = Store.NULL_OBJECT;
             this.jobName = JobName.NULL_OBJECT;
             this.jobTimestamp = JobTimestamp.NULL_OBJECT;
+            this.profileLeft = "";
+            this.profileRight = "";
             this.sortKeys = SortKeys.NULL_OBJECT;
             this.threshold = 0.0;
+            this.ignoreMetadataKeys = IgnoreMetadataKeys.NULL_OBJECT;
         }
         public Builder baseDir(Path baseDir) {
             this.baseDir = baseDir;
@@ -105,6 +132,14 @@ public final class Parameters {
             this.jobTimestamp = jobTimestamp;
             return this;
         }
+        public Builder profileLeft(String pf) {
+            this.profileLeft = pf;
+            return this;
+        }
+        public Builder profileRight(String pf) {
+            this.profileRight = pf;
+            return this;
+        }
         public Builder sortKeys(SortKeys sortKeys) {
             this.sortKeys = sortKeys;
             return this;
@@ -114,6 +149,10 @@ public final class Parameters {
                 throw new InspectusException("threshold must be >= 0.0");
             }
             this.threshold = threshold;
+            return this;
+        }
+        public Builder ignoreMetadataKeys(IgnoreMetadataKeys ignoreMetadataKeys) {
+            this.ignoreMetadataKeys = ignoreMetadataKeys;
             return this;
         }
         public Parameters build() {

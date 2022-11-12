@@ -44,6 +44,8 @@ public class FnTwinsDiffTest {
         Parameters parameters = new Parameters.Builder()
                 .baseDir(baseDir).store(store).jobName(jobName)
                 .jobTimestamp(jobTimestamp)
+                .profileLeft("Production")
+                .profileRight("Development")
                 .sortKeys(sortKeys)
                 .build();
         // Action
@@ -71,43 +73,39 @@ public class FnTwinsDiffTest {
         Path money = images.resolve("money.png");
         Store st = p.getStore();
         JobName jn = p.getJobName();
-        String profLeft = "Production";
-        String profRight = "Development";
         JobTimestamp jt1 = p.getJobTimestamp();
         JobTimestamp jt2 = JobTimestamp.laterThan(jt1);
         try {
             // 1st set of shooting
             st.write(jn, jt1, FileType.PNG, Metadata.builder()
-                    .put("profile", profLeft)
+                    .put("profile", p.getProfileLeft())
                     .put("imageOf", "apple")
                     .build(), apple);
             st.write(jn, jt1, FileType.PNG, Metadata.builder()
-                    .put("profile", profLeft)
+                    .put("profile", p.getProfileLeft())
                     .put("imageOf", "orange")
                     .build(), mikan);
             st.write(jn, jt1, FileType.PNG, Metadata.builder()
-                    .put("profile", profLeft)
+                    .put("profile", p.getProfileLeft())
                     .put("imageOf", "cash")
                     .build(), money);
             // 2nd set of shooting
             st.write(jn, jt2, FileType.PNG, Metadata.builder()
-                    .put("profile", profRight)
+                    .put("profile", p.getProfileRight())
                     .put("imageOf", "apple")
                     .build(), greenApple);
             st.write(jn, jt2, FileType.PNG, Metadata.builder()
-                    .put("profile", profRight)
+                    .put("profile", p.getProfileRight())
                     .put("imageOf", "orange")
                     .build(), mikan);
             st.write(jn, jt2, FileType.PNG, Metadata.builder()
-                    .put("profile", profRight)
+                    .put("profile", p.getProfileRight())
                     .put("imageOf", "cash")
                     .build(), money);
         } catch (MaterialstoreException e) {
             throw new RuntimeException(e);
         }
         return new Intermediates.Builder()
-                .profileLeft("Production")
-                .profileRight("Development")
                 .jobTimestampLeft(jt1)
                 .jobTimestampRight(jt2)
                 .build();

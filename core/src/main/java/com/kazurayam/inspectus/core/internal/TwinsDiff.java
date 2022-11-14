@@ -80,7 +80,7 @@ public abstract class TwinsDiff extends AbstractDiffService {
                             Collections.singletonMap("profile", parameters.getProfileLeft())
                     ).build());
 
-            // get the MaterialList of the right (Development Envrionment)
+            // get the MaterialList of the right (Development Environment)
             MaterialList right = store.select(jobName, jobTimestampRight,
                     QueryOnMetadata.builder(
                             Collections.singletonMap("profile", parameters.getProfileRight())

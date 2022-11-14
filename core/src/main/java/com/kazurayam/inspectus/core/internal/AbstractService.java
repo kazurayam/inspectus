@@ -97,7 +97,8 @@ public abstract class AbstractService implements Inspectus {
         JobName jobName = parameters.getJobName();
         try {
             StoreCleaner cleaner = StoreCleaner.newInstance(store);
-            cleaner.cleanup(jobName, JobTimestamp.now().minusHours(3));
+            cleaner.cleanup(jobName,
+                    parameters.getCleanOlderThan());  // default: JobTimestamp.now().minusHours(3)
         } catch (MaterialstoreException e) {
             throw new InspectusException(e);
         }

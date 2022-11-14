@@ -23,10 +23,12 @@ public final class Parameters {
     private final SortKeys sortKeys;
     private final Double threshold;
     private final IgnoreMetadataKeys ignoreMetadataKeys;
+    private final JobTimestamp cleanOlderThan;
 
     public static final String KEY_baseDir = "baseDir";
     public static final String KEY_store = "store";
     public static final String KEY_backup = "backup";
+    public static final String KEY_cleanOlderThan = "cleanOlderThan";
     public static final String KEY_jobName = "jobName";
     public static final String KEY_jobTimestamp = "jobTimestamp";
     public static final String KEY_profileLeft = "profileLeft";
@@ -46,9 +48,11 @@ public final class Parameters {
         this.sortKeys = b.sortKeys;
         this.threshold = b.threshold;
         this.ignoreMetadataKeys = b.ignoreMetadataKeys;
+        this.cleanOlderThan = b.cleanOlderThan;
     }
     public Boolean containsBackup() { return backup != Store.NULL_OBJECT;}
     public Boolean containsBaseDir() { return baseDir != null; }
+    public Boolean containsCleanOlderThan() { return cleanOlderThan != JobTimestamp.NULL_OBJECT; }
     public Boolean containsIgnoreMetadataKeys() { return ignoreMetadataKeys != IgnoreMetadataKeys.NULL_OBJECT; }
     public Boolean containsJobName() { return jobName != JobName.NULL_OBJECT; }
     public Boolean containsJobTimestamp() { return jobTimestamp != JobTimestamp.NULL_OBJECT; }
@@ -62,6 +66,7 @@ public final class Parameters {
 
     public Store getBackup() { return backup; }
     public Path getBaseDir() { return baseDir; }
+    public JobTimestamp getCleanOlderThan() { return cleanOlderThan; }
     public IgnoreMetadataKeys getIgnoreMetadataKeys() { return ignoreMetadataKeys; }
     public JobName getJobName() { return jobName; }
     public JobTimestamp getJobTimestamp() { return jobTimestamp; }
@@ -77,6 +82,7 @@ public final class Parameters {
         Map<String, Object> m = new LinkedHashMap<>();
         m.put(KEY_backup, backup);
         m.put(KEY_baseDir, baseDir);
+        m.put(KEY_cleanOlderThan, cleanOlderThan);
         m.put(KEY_ignoreMetadataKeys, ignoreMetadataKeys);
         m.put(KEY_jobName, jobName);
         m.put(KEY_jobTimestamp, jobTimestamp);
@@ -99,6 +105,7 @@ public final class Parameters {
         private SortKeys sortKeys;
         private Double threshold;
         private IgnoreMetadataKeys ignoreMetadataKeys;
+        private JobTimestamp cleanOlderThan;
 
         public Builder() {
             this.baseDir = null;
@@ -111,6 +118,7 @@ public final class Parameters {
             this.sortKeys = SortKeys.NULL_OBJECT;
             this.threshold = 0.0;
             this.ignoreMetadataKeys = IgnoreMetadataKeys.NULL_OBJECT;
+            this.cleanOlderThan = JobTimestamp.now().minusHours(3);
         }
         public Builder baseDir(Path baseDir) {
             this.baseDir = baseDir;
@@ -153,6 +161,10 @@ public final class Parameters {
         }
         public Builder ignoreMetadataKeys(IgnoreMetadataKeys ignoreMetadataKeys) {
             this.ignoreMetadataKeys = ignoreMetadataKeys;
+            return this;
+        }
+        public Builder cleanOlderThan(JobTimestamp cleanOlderThan) {
+            this.cleanOlderThan = cleanOlderThan;
             return this;
         }
         public Parameters build() {

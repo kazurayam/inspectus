@@ -14,6 +14,7 @@ public final class Parameters {
 
     public static final Parameters NULL_OBJECT = new Parameters.Builder().build();
     private final Path baseDir;
+    private final JobTimestamp baselinePriorTo;
     private final Store store;
     private final Store backup;
     private final JobName jobName;
@@ -26,6 +27,7 @@ public final class Parameters {
     private final JobTimestamp cleanOlderThan;
 
     public static final String KEY_baseDir = "baseDir";
+    public static final String KEY_baselinePriorTo = "baselinePriorTo";
     public static final String KEY_store = "store";
     public static final String KEY_backup = "backup";
     public static final String KEY_cleanOlderThan = "cleanOlderThan";
@@ -43,6 +45,7 @@ public final class Parameters {
 
     private Parameters(Builder b) {
         this.baseDir = b.baseDir;
+        this.baselinePriorTo = b.baselinePriorTo;
         this.store = b.store;
         this.backup = b.backup;
         this.jobName = b.jobName;
@@ -56,6 +59,7 @@ public final class Parameters {
     }
     public Boolean containsBackup() { return backup != Store.NULL_OBJECT;}
     public Boolean containsBaseDir() { return baseDir != null; }
+    public Boolean containsBaselinePriorTo() { return baselinePriorTo != JobTimestamp.NULL_OBJECT; }
     public Boolean containsCleanOlderThan() { return cleanOlderThan != JobTimestamp.NULL_OBJECT; }
     public Boolean containsIgnoreMetadataKeys() { return ignoreMetadataKeys != IgnoreMetadataKeys.NULL_OBJECT; }
     public Boolean containsJobName() { return jobName != JobName.NULL_OBJECT; }
@@ -70,6 +74,7 @@ public final class Parameters {
 
     public Store getBackup() { return backup; }
     public Path getBaseDir() { return baseDir; }
+    public JobTimestamp getBaselinePriorTo() { return baselinePriorTo; }
     public JobTimestamp getCleanOlderThan() { return cleanOlderThan; }
     public IgnoreMetadataKeys getIgnoreMetadataKeys() { return ignoreMetadataKeys; }
     public JobName getJobName() { return jobName; }
@@ -86,6 +91,7 @@ public final class Parameters {
         Map<String, Object> m = new LinkedHashMap<>();
         m.put(KEY_backup, backup);
         m.put(KEY_baseDir, baseDir);
+        m.put(KEY_baselinePriorTo, baselinePriorTo);
         m.put(KEY_cleanOlderThan, cleanOlderThan);
         m.put(KEY_ignoreMetadataKeys, ignoreMetadataKeys);
         m.put(KEY_jobName, jobName);
@@ -100,6 +106,7 @@ public final class Parameters {
 
     public static class Builder {
         private Path baseDir;
+        private JobTimestamp baselinePriorTo;
         private Store store;
         private Store backup;
         private JobName jobName;
@@ -113,6 +120,7 @@ public final class Parameters {
 
         public Builder() {
             this.baseDir = null;
+            this.baselinePriorTo = JobTimestamp.NULL_OBJECT;
             this.store = Store.NULL_OBJECT;
             this.backup = Store.NULL_OBJECT;
             this.jobName = JobName.NULL_OBJECT;
@@ -126,6 +134,10 @@ public final class Parameters {
         }
         public Builder baseDir(Path baseDir) {
             this.baseDir = baseDir;
+            return this;
+        }
+        public Builder baselinePriorTo(JobTimestamp baselinePriorTo) {
+            this.baselinePriorTo = baselinePriorTo;
             return this;
         }
         public Builder store(Store store) {

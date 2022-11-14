@@ -79,6 +79,55 @@ public class FnChronosDiffTest {
     }
 
     /**
+     * In this test, we will execute FnChronosDiff 3 times.
+     * The 1st execution is to create a baseline JobTimestamp.
+     * The 2nd execution is to create the latest previous JobTimestamp.
+     * As for the 3rd execution, we will specify the "baselinePriorTo" in the Parameters
+     * to set (the 1st JobTimestamp + 1 second) as the baseline.
+     * We will assert the 3rd JobTimestamp is compared against the 1st JobTimestamp,
+     * rather than the 2nd JobTimestamp.
+     */
+    @Test
+    public void test_baselinePriorTo() throws InterruptedException, InspectusException, MaterialstoreException {
+        // setup
+        JobName jobName = new JobName("test_baselinePriorTo");
+        // 1st execution
+        JobTimestamp jt1 = JobTimestamp.now();
+        Parameters p1 = Parameters.builder()
+                .baseDir(baseDir).store(store).jobName(jobName)
+                .jobTimestamp(jt1).build();
+        try {
+            Inspectus fnChronosDiff = new FnChronosDiff(fn);
+            fnChronosDiff.execute(p1);
+        } catch (Exception e) {
+            System.out.println("1st execution failed. We will continue");
+        }
+        // 2nd execution
+        Thread.sleep(3000);
+        JobTimestamp jt2 = JobTimestamp.now();
+        Parameters p2 = Parameters.builder()
+                .baseDir(baseDir).store(store).jobName(jobName)
+                .jobTimestamp(jt2)
+                .cleanOlderThan(jt1)   // we will retain the jt1
+                .build();
+        Inspectus fnChronosDiff = new FnChronosDiff(fn);
+        fnChronosDiff.execute(p2);
+        // 3rd execution
+        Thread.sleep(3000);
+        JobTimestamp jt3 = JobTimestamp.now();
+        Parameters p3 = Parameters.builder()
+                .baseDir(baseDir).store(store).jobName(jobName)
+                .jobTimestamp(jt3)
+                .baselinePriorTo(jt1.plusSeconds(1))  // compare the jt3 against the jt1
+                .cleanOlderThan(jt1)
+                .build();
+        fnChronosDiff.execute(p3);
+        // assert
+        assertTrue(store.contains(jobName, jt1));
+        assertTrue(store.contains(jobName, jt3));
+    }
+
+    /**
      * Function object that create a fileTree "store/jobName/jobTimestamp",
      * each of which contains 3 PNG images.
      *

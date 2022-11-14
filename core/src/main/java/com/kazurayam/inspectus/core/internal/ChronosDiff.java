@@ -58,7 +58,15 @@ public abstract class ChronosDiff extends AbstractDiffService {
         try {
             MaterialList currentMaterialList = store.select(jobName, jobTimestamp);
             //
-            MaterialProductGroup reduced = Reducer.chronos(store, currentMaterialList);
+            MaterialProductGroup reduced;
+            if (parameters.containsBaselinePriorTo()) {
+                // compare the current JobTimestamp against the baseline specified as parameter
+                reduced = Reducer.chronos(store, currentMaterialList,
+                        parameters.getBaselinePriorTo());
+            } else {
+                // take the previous-latest JobTimestamp as the baseline to compare the current one against
+                reduced = Reducer.chronos(store, currentMaterialList);
+            }
             //
             Inspector inspector = Inspector.newInstance(store);
             inspector.setSortKeys(sortKeys);

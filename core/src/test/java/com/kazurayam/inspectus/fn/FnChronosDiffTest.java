@@ -8,6 +8,7 @@ import com.kazurayam.inspectus.core.TestHelper;
 import com.kazurayam.materialstore.core.filesystem.FileType;
 import com.kazurayam.materialstore.core.filesystem.JobName;
 import com.kazurayam.materialstore.core.filesystem.JobTimestamp;
+import com.kazurayam.materialstore.core.filesystem.MaterialList;
 import com.kazurayam.materialstore.core.filesystem.MaterialstoreException;
 import com.kazurayam.materialstore.core.filesystem.Metadata;
 import com.kazurayam.materialstore.core.filesystem.SortKeys;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.Function;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FnChronosDiffTest {
@@ -95,7 +97,8 @@ public class FnChronosDiffTest {
         JobTimestamp jt1 = JobTimestamp.now();
         Parameters p1 = Parameters.builder()
                 .baseDir(baseDir).store(store).jobName(jobName)
-                .jobTimestamp(jt1).build();
+                .jobTimestamp(jt1)
+                .build();
         try {
             Inspectus fnChronosDiff = new FnChronosDiff(fn);
             fnChronosDiff.execute(p1);
@@ -108,7 +111,6 @@ public class FnChronosDiffTest {
         Parameters p2 = Parameters.builder()
                 .baseDir(baseDir).store(store).jobName(jobName)
                 .jobTimestamp(jt2)
-                .cleanOlderThan(jt1)   // we will retain the jt1
                 .build();
         Inspectus fnChronosDiff = new FnChronosDiff(fn);
         fnChronosDiff.execute(p2);
@@ -118,13 +120,21 @@ public class FnChronosDiffTest {
         Parameters p3 = Parameters.builder()
                 .baseDir(baseDir).store(store).jobName(jobName)
                 .jobTimestamp(jt3)
-                .baselinePriorTo(jt1.plusSeconds(1))  // compare the jt3 against the jt1
+                .baselinePriorToOrEqualTo(jt1)  // compare the jt3 against the jt1
                 .cleanOlderThan(jt1)
                 .build();
         fnChronosDiff.execute(p3);
         // assert
         assertTrue(store.contains(jobName, jt1));
         assertTrue(store.contains(jobName, jt3));
+        //
+        JobTimestamp jtLatest = store.findLatestJobTimestamp(jobName);
+        MaterialList ml = store.select(jobName, jtLatest);
+        ml.forEach ( material -> {
+            assertTrue(material.getMetadata().containsCategoryDiff());
+            assertEquals(jt1, material.getMetadata().getMaterialLocatorLeft().getJobTimestamp());
+            assertEquals(jt3, material.getMetadata().getMaterialLocatorRight().getJobTimestamp());
+        });
     }
 
     /**

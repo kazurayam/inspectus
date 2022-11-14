@@ -19,6 +19,11 @@ public class Intermediates {
     public static final String KEY_materialProductGroup = "materialProductGroup";
     public static final String KEY_jobTimestampLeft = "jobTimestampLeft";
     public static final String KEY_jobTimestampRight = "jobTimestampRight";
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
     private Intermediates(Builder b) {
         this.materialList = b.materialList;
         this.materialProductGroup = b.materialProductGroup;

@@ -23,7 +23,7 @@ public class ParametersTest {
     }
 
     @Test
-    public void test_baselinePriorTo() {
+    public void test_baselinePriorTo() throws InspectusException {
         LocalDateTime ldt = LocalDateTime.of(2022, 11, 14, 9, 46, 20);
         JobTimestamp baseline = JobTimestamp.create(ldt);
         Parameters p = new Parameters.Builder().baselinePriorTo(baseline).build();
@@ -32,7 +32,7 @@ public class ParametersTest {
     }
 
     @Test
-    public void test_baselinePriorToOrEqualTo() {
+    public void test_baselinePriorToOrEqualTo() throws InspectusException {
         LocalDateTime ldt = LocalDateTime.of(2022, 11, 14, 9, 46, 20);
         JobTimestamp baseline = JobTimestamp.create(ldt);
         Parameters p = new Parameters.Builder().baselinePriorToOrEqualTo(baseline).build();
@@ -41,7 +41,7 @@ public class ParametersTest {
     }
 
     @Test
-    public void test_cleanOlderThan() {
+    public void test_cleanOlderThan() throws InspectusException {
         JobTimestamp olderThan = JobTimestamp.now().minusMinutes(30);
         Parameters p = new Parameters.Builder().cleanOlderThan(olderThan).build();
         assertNotNull(p.getCleanOlderThan());

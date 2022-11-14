@@ -136,12 +136,25 @@ public final class Parameters {
             this.baseDir = baseDir;
             return this;
         }
-        public Builder baselinePriorTo(JobTimestamp baselinePriorTo) {
+        public Builder baselinePriorTo(JobTimestamp baselinePriorTo) throws InspectusException {
+            if (baselinePriorTo.compareTo(JobTimestamp.now()) > 0) {
+                throw new InspectusException(
+                        String.format("baselinePriorTo=%s must not be newer the current timestamp=%s",
+                                baselinePriorTo, JobTimestamp.now().toString())
+                );
+            }
             this.baselinePriorTo = baselinePriorTo;
+
+            // FIXME:
+            // making cleanOlderThan to be equal to baselinePriorTo will be
+            // not preciese, but will be effective to reduce unnecessarily
+            // large amount of file copies
+            this.cleanOlderThan = baselinePriorTo;
+
             return this;
         }
 
-        public Builder baselinePriorToOrEqualTo(JobTimestamp jt) {
+        public Builder baselinePriorToOrEqualTo(JobTimestamp jt) throws InspectusException {
             return this.baselinePriorTo(jt.plusSeconds(1));
         }
 
@@ -184,7 +197,13 @@ public final class Parameters {
             this.ignoreMetadataKeys = ignoreMetadataKeys;
             return this;
         }
-        public Builder cleanOlderThan(JobTimestamp cleanOlderThan) {
+        public Builder cleanOlderThan(JobTimestamp cleanOlderThan) throws InspectusException {
+            if (cleanOlderThan.compareTo(JobTimestamp.now()) > 0) {
+                throw new InspectusException(
+                        String.format("cleanOlderThan=% must not be newer than the current timestamp",
+                                cleanOlderThan, JobTimestamp.now())
+                );
+            }
             this.cleanOlderThan = cleanOlderThan;
             return this;
         }

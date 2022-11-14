@@ -140,6 +140,11 @@ public final class Parameters {
             this.baselinePriorTo = baselinePriorTo;
             return this;
         }
+
+        public Builder baselinePriorToOrEqualTo(JobTimestamp jt) {
+            return this.baselinePriorTo(jt.plusSeconds(1));
+        }
+
         public Builder store(Store store) {
             this.store = store;
             return this;

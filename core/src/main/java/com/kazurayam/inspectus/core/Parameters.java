@@ -37,6 +37,10 @@ public final class Parameters {
     public static final String KEY_threshold = "threshold";
     public static final String KEY_ignoreMetadataKeys = "ignoreMetadataKeys";
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     private Parameters(Builder b) {
         this.baseDir = b.baseDir;
         this.store = b.store;

@@ -2,7 +2,7 @@ package com.kazurayam.inspectus.core;
 
 import java.util.Objects;
 
-public class Environment {
+public class Environment implements Comparable<Environment> {
 
     public static final Environment NULL_OBJECT = new Environment("");
 
@@ -34,5 +34,10 @@ public class Environment {
     @Override
     public int hashCode() {
         return value.hashCode();
+    }
+
+    @Override
+    public int compareTo(Environment other) {
+        return this.getValue().compareTo(other.getValue());
     }
 }

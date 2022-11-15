@@ -146,7 +146,7 @@ public class FnChronosDiffTest {
      * if the second is odd then choose the red image,
      * if the second is even then choose the green image.
      */
-    private Function<Parameters, Intermediates> fn = p -> {
+    private final Function<Parameters, Intermediates> fn = p -> {
         Path bd = p.getBaseDir();
         Path images = bd.resolve("src/test/fixtures/images");
         Path apple = images.resolve("apple.png");

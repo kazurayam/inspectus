@@ -1,5 +1,6 @@
 package com.kazurayam.inspectus.fn;
 
+import com.kazurayam.inspectus.core.Environment;
 import com.kazurayam.inspectus.core.Inspectus;
 import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.Function;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -40,18 +42,28 @@ public class FnTwinsDiffTest {
     public void test_smoke() throws InspectusException {
         JobName jobName = new JobName("test_smoke");
         JobTimestamp jobTimestamp = JobTimestamp.now();
-        SortKeys sortKeys = new SortKeys("imageOf");
         Parameters parameters = new Parameters.Builder()
                 .baseDir(baseDir).store(store).jobName(jobName)
                 .jobTimestamp(jobTimestamp)
-                .sortKeys(sortKeys)
+                .sortKeys(new SortKeys("imageOf"))
                 .build();
         // Action
-        Inspectus fnTwinsDiff = new FnTwinsDiff(fn, "ProductionEnv", "DevelopmentEnv");
+        Inspectus fnTwinsDiff =
+                new FnTwinsDiff(fn,
+                        new Environment("ProductionEnv"),
+                        new Environment("DevelopmentEnv"));
         fnTwinsDiff.execute(parameters);
+
         // Assert
         try {
             assertTrue(store.contains(jobName, jobTimestamp));
+            assertNotNull(store.selectSingle(jobName, jobTimestamp));
+            assertTrue(store.selectSingle(jobName, jobTimestamp).getMetadata()
+                    .containsKey(Parameters.KEY_environmentLeft));
+            assertEquals("ProductionEnv",
+                    store.selectSingle(jobName, jobTimestamp).getMetadata()
+                            .get(Parameters.KEY_environmentLeft));
+            //
         } catch (MaterialstoreException e) {
             throw new RuntimeException(e);
         }
@@ -62,7 +74,7 @@ public class FnTwinsDiffTest {
      * and "store/jobName/RightJobTimestamp", each of which contains 3 PNG images
      * files.
      */
-    private Function<Parameters, Intermediates> fn = p -> {
+    private final Function<Parameters, Intermediates> fn = p -> {
         Path bd = p.getBaseDir();
         Path images = bd.resolve("src/test/fixtures/images");
         Path apple = images.resolve("apple.png");
@@ -71,42 +83,49 @@ public class FnTwinsDiffTest {
         Path money = images.resolve("money.png");
         Store st = p.getStore();
         JobName jn = p.getJobName();
-        JobTimestamp jt1 = p.getJobTimestamp();
-        JobTimestamp jt2 = JobTimestamp.laterThan(jt1);
         try {
             // 1st set of shooting
-            st.write(jn, jt1, FileType.PNG, Metadata.builder()
-                    .put("profile", p.getProfileLeft())
-                    .put("imageOf", "apple")
-                    .build(), apple);
-            st.write(jn, jt1, FileType.PNG, Metadata.builder()
-                    .put("profile", p.getProfileLeft())
-                    .put("imageOf", "orange")
-                    .build(), mikan);
-            st.write(jn, jt1, FileType.PNG, Metadata.builder()
-                    .put("profile", p.getProfileLeft())
-                    .put("imageOf", "cash")
-                    .build(), money);
+            JobTimestamp jt1 = p.getJobTimestamp();
+            st.write(jn, jt1, FileType.PNG,
+                    Metadata.builder()
+                            .put("environment", p.getEnvironmentLeft().toString())
+                            .put("imageOf", "apple")
+                            .build(), apple);
+            st.write(jn, jt1, FileType.PNG,
+                    Metadata.builder()
+                            .put("environment", p.getEnvironmentLeft().toString())
+                            .put("imageOf", "orange")
+                            .build(), mikan);
+            st.write(jn, jt1, FileType.PNG,
+                    Metadata.builder()
+                            .put("environment", p.getEnvironmentLeft().toString())
+                            .put("imageOf", "cash")
+                            .build(), money);
+
             // 2nd set of shooting
-            st.write(jn, jt2, FileType.PNG, Metadata.builder()
-                    .put("profile", p.getProfileRight())
-                    .put("imageOf", "apple")
-                    .build(), greenApple);
-            st.write(jn, jt2, FileType.PNG, Metadata.builder()
-                    .put("profile", p.getProfileRight())
-                    .put("imageOf", "orange")
-                    .build(), mikan);
-            st.write(jn, jt2, FileType.PNG, Metadata.builder()
-                    .put("profile", p.getProfileRight())
-                    .put("imageOf", "cash")
-                    .build(), money);
-        } catch (MaterialstoreException e) {
+            JobTimestamp jt2 = JobTimestamp.laterThan(jt1);
+            st.write(jn, jt2, FileType.PNG,
+                    Metadata.builder()
+                            .put("environment", p.getEnvironmentRight().toString())
+                            .put("imageOf", "apple")
+                            .build(), greenApple);
+            st.write(jn, jt2, FileType.PNG,
+                    Metadata.builder()
+                            .put("environment", p.getEnvironmentRight().toString())
+                            .put("imageOf", "orange")
+                            .build(), mikan);
+            st.write(jn, jt2, FileType.PNG,
+                    Metadata.builder()
+                            .put("environment", p.getEnvironmentRight().toString())
+                            .put("imageOf", "cash")
+                            .build(), money);
+
+            return new Intermediates.Builder()
+                    .jobTimestampLeft(jt1)
+                    .jobTimestampRight(jt2)
+                    .build();
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return new Intermediates.Builder()
-                .jobTimestampLeft(jt1)
-                .jobTimestampRight(jt2)
-                .build();
     };
-
 }

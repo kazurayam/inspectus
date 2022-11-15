@@ -44,13 +44,19 @@ public abstract class TwinsDiff extends AbstractDiffService {
         if (environmentRight == Environment.NULL_OBJECT) {
             throw new InspectusException("environmentRight must be set");
         }
-        Intermediates im = step2_materialize(parameters);
-        Intermediates decorated =
+        Parameters decoParameters =
+                Parameters.builder(parameters)
+                        .environmentLeft(environmentLeft)
+                        .environmentRight(environmentRight).build();
+
+        Intermediates im = step2_materialize(decoParameters);
+
+        Intermediates decoIntermediates =
                 Intermediates.builder(im)
                         .environmentLeft(environmentLeft)
                         .environmentRight(environmentRight)
                         .build();
-        return step3_reduceTwins(parameters, decorated);
+        return step3_reduceTwins(decoParameters, decoIntermediates);
     }
 
     public abstract Intermediates step2_materialize(Parameters parameters)
@@ -86,26 +92,17 @@ public abstract class TwinsDiff extends AbstractDiffService {
 
         try {
             // get the MaterialList of the left (Production Environment)
-            MaterialList left = store.select(jobName, jobTimestampLeft,
-                    QueryOnMetadata.builder(
-                            Collections.singletonMap("profile",
-                                    intermediates.getEnvironmentLeft().toString())
-                    ).build());
+            MaterialList left = store.select(jobName, jobTimestampLeft, QueryOnMetadata.ANY);
 
             // get the MaterialList of the right (Development Environment)
-            MaterialList right = store.select(jobName, jobTimestampRight,
-                    QueryOnMetadata.builder(
-                            Collections.singletonMap("profile",
-                                    intermediates.getEnvironmentRight().toString())
-                    ).build());
+            MaterialList right = store.select(jobName, jobTimestampRight, QueryOnMetadata.ANY);
 
             // weave 2 MaterialList objects into a MaterialProductGroup,
             // which is a List of pairs of corresponding Material
 
-
             MaterialProductGroup reduced =
                     MaterialProductGroup.builder(left, right)
-                            .ignoreKeys("profile", "URL.host")
+                            .ignoreKeys("environment", "URL.host")
                             .ignoreKeys(parameters.getIgnoreMetadataKeys())
                             .build();
 

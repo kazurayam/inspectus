@@ -10,6 +10,7 @@ import com.kazurayam.materialstore.base.manage.StoreExport;
 import com.kazurayam.materialstore.base.manage.StoreImport;
 import com.kazurayam.materialstore.base.report.IndexCreator;
 import com.kazurayam.materialstore.core.filesystem.JobName;
+import com.kazurayam.materialstore.core.filesystem.JobTimestamp;
 import com.kazurayam.materialstore.core.filesystem.MaterialstoreException;
 import com.kazurayam.materialstore.core.filesystem.Store;
 import org.slf4j.Logger;
@@ -56,13 +57,19 @@ public abstract class AbstractService implements Inspectus {
         Store backup = parameters.getBackup();
         Store store = parameters.getStore();
         JobName jobName = parameters.getJobName();
+        JobTimestamp newerThanOrEqualTo = parameters.getJobTimestamp();
         try {
-            if (backup.contains(jobName)) {
-                StoreImport importer = StoreImport.newInstance(backup, store);
-                importer.importReports(jobName);
+            if (backup != Store.NULL_OBJECT) {
+                if (backup.contains(jobName)) {
+                    StoreImport importer = StoreImport.newInstance(backup, store);
+                    importer.importReports(jobName, newerThanOrEqualTo);
+                } else {
+                    logger.warn(String.format("JobName %s is not found in the backup store %s",
+                            jobName, backup.toString()));
+                }
             } else {
-                logger.warn(String.format("JobName %s is not found in the backup store %s",
-                        jobName, backup.toString()));
+                logger.warn("backup is not specified in the parameters." +
+                        " will skip restoring the previous JobTimestamp directories from the backup store.");
             }
         } catch (MaterialstoreException e) {
             throw new InspectusException(e);
@@ -79,10 +86,16 @@ public abstract class AbstractService implements Inspectus {
         listener.stepStarted("step5_backupLatest");
         Store store = parameters.getStore();
         JobName jobName = parameters.getJobName();
+        JobTimestamp newerThanOrEqualTo = parameters.getJobTimestamp();
         Store backup = parameters.getBackup();
         try {
-            StoreExport export = StoreExport.newInstance(store, backup);
-            export.exportReports(jobName);
+            if (backup != Store.NULL_OBJECT) {
+                StoreExport export = StoreExport.newInstance(store, backup);
+                export.exportReports(jobName, newerThanOrEqualTo);
+            } else {
+                logger.warn("backup is not specified." +
+                        " will skip exporting the JobTimestamp directories into backup");
+            }
         } catch (MaterialstoreException e) {
             throw new InspectusException(e);
         }

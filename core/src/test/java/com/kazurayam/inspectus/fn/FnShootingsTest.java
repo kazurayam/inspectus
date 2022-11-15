@@ -51,7 +51,7 @@ public class FnShootingsTest {
      * Function object that creates a fileTree "store/jobName/jobTimestamp"
      * where 1 text file is written
      */
-    private Function<Parameters, Intermediates> fn = p -> {
+    private final Function<Parameters, Intermediates> fn = p -> {
         Store st = p.getStore();
         JobName jn = p.getJobName();
         JobTimestamp jt = p.getJobTimestamp();

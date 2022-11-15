@@ -1,5 +1,6 @@
 package com.kazurayam.inspectus.katalon;
 
+import com.kazurayam.inspectus.core.Environment;
 import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;
 import com.kazurayam.inspectus.core.Parameters;
@@ -12,14 +13,14 @@ public final class KatalonTwinsDiff extends TwinsDiff implements ITestCaseCaller
     private String materializeTestCaseName = null;
 
     public KatalonTwinsDiff(String materializeTestCaseName,
-                            String profileLeft,
-                            String profileRight) {
+                            Environment environmentLeft,
+                            Environment environmentRight) {
         Objects.requireNonNull(materializeTestCaseName);
-        Objects.requireNonNull(profileLeft);
-        Objects.requireNonNull(profileRight);
+        Objects.requireNonNull(environmentLeft);
+        Objects.requireNonNull(environmentRight);
         this.materializeTestCaseName = materializeTestCaseName;
-        this.profileLeft = profileLeft;
-        this.profileRight = profileRight;
+        this.environmentLeft = environmentLeft;
+        this.environmentRight = environmentRight;
     }
     @Override
     public Intermediates step2_materialize(Parameters parameters)
@@ -28,7 +29,12 @@ public final class KatalonTwinsDiff extends TwinsDiff implements ITestCaseCaller
         if (materializeTestCaseName == null) {
             throw new InspectusException("materializeTestCaseName is not specified");
         }
-        Intermediates intermediates = callTestCase(materializeTestCaseName, parameters);
+        Parameters decoratedParameters =
+                Parameters.builder(parameters)
+                        .environmentLeft(environmentLeft)
+                        .environmentRight(environmentRight)
+                        .build();
+        Intermediates intermediates = callTestCase(materializeTestCaseName, decoratedParameters);
         listener.stepFinished("step2_materialize");
         return intermediates;
     }

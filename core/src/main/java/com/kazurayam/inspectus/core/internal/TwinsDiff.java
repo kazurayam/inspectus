@@ -1,5 +1,6 @@
 package com.kazurayam.inspectus.core.internal;
 
+import com.kazurayam.inspectus.core.Environment;
 import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;
 import com.kazurayam.inspectus.core.Parameters;
@@ -15,23 +16,41 @@ import com.kazurayam.materialstore.core.filesystem.Metadata;
 import com.kazurayam.materialstore.core.filesystem.QueryOnMetadata;
 import com.kazurayam.materialstore.core.filesystem.SortKeys;
 import com.kazurayam.materialstore.core.filesystem.Store;
-import com.kazurayam.materialstore.core.filesystem.metadata.IgnoreMetadataKeys;
 import com.kazurayam.materialstore.diagram.dot.DotGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
 import java.util.Collections;
 
 public abstract class TwinsDiff extends AbstractDiffService {
 
-    private Logger logger = LoggerFactory.getLogger(TwinsDiff.class);
+    private final Logger logger = LoggerFactory.getLogger(TwinsDiff.class);
+
+    protected Environment environmentLeft = Environment.NULL_OBJECT;
+    protected Environment environmentRight = Environment.NULL_OBJECT;
 
     @Override
     public Intermediates process(Parameters parameters) throws InspectusException {
-        Intermediates im2 = step2_materialize(parameters);
-        return step3_reduceTwins(parameters, im2);
+        if (environmentLeft == null) {
+            throw new InspectusException("environmentLeft must not be null");
+        }
+        if (environmentLeft == Environment.NULL_OBJECT) {
+            throw new InspectusException("environmentLeft must be set");
+        }
+        if (environmentRight == null) {
+            throw new InspectusException("environmentRight must not be null");
+        }
+        if (environmentRight == Environment.NULL_OBJECT) {
+            throw new InspectusException("environmentRight must be set");
+        }
+        Intermediates im = step2_materialize(parameters);
+        Intermediates decorated =
+                Intermediates.builder(im)
+                        .environmentLeft(environmentLeft)
+                        .environmentRight(environmentRight)
+                        .build();
+        return step3_reduceTwins(parameters, decorated);
     }
 
     public abstract Intermediates step2_materialize(Parameters parameters)
@@ -51,14 +70,6 @@ public abstract class TwinsDiff extends AbstractDiffService {
         }
         JobName jobName = parameters.getJobName();
 
-        if (!parameters.containsProfileLeft()) {
-            throw new InspectusException(Parameters.KEY_profileLeft + " is not given in the parameters");
-        }
-
-        if (!parameters.containsProfileRight()) {
-            throw new InspectusException(Parameters.KEY_profileRight + " is not given in the parameters");
-        }
-
         SortKeys sortKeys = parameters.getSortKeys();
 
         //------------ values passed through Intermediates object --------------------------
@@ -77,13 +88,15 @@ public abstract class TwinsDiff extends AbstractDiffService {
             // get the MaterialList of the left (Production Environment)
             MaterialList left = store.select(jobName, jobTimestampLeft,
                     QueryOnMetadata.builder(
-                            Collections.singletonMap("profile", parameters.getProfileLeft())
+                            Collections.singletonMap("profile",
+                                    intermediates.getEnvironmentLeft().toString())
                     ).build());
 
             // get the MaterialList of the right (Development Environment)
             MaterialList right = store.select(jobName, jobTimestampRight,
                     QueryOnMetadata.builder(
-                            Collections.singletonMap("profile", parameters.getProfileRight())
+                            Collections.singletonMap("profile",
+                                    intermediates.getEnvironmentRight().toString())
                     ).build());
 
             // weave 2 MaterialList objects into a MaterialProductGroup,

@@ -10,7 +10,6 @@ import com.kazurayam.materialstore.base.manage.StoreExport;
 import com.kazurayam.materialstore.base.manage.StoreImport;
 import com.kazurayam.materialstore.base.report.IndexCreator;
 import com.kazurayam.materialstore.core.filesystem.JobName;
-import com.kazurayam.materialstore.core.filesystem.JobTimestamp;
 import com.kazurayam.materialstore.core.filesystem.MaterialstoreException;
 import com.kazurayam.materialstore.core.filesystem.Store;
 import org.slf4j.Logger;

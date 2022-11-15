@@ -44,12 +44,10 @@ public class FnTwinsDiffTest {
         Parameters parameters = new Parameters.Builder()
                 .baseDir(baseDir).store(store).jobName(jobName)
                 .jobTimestamp(jobTimestamp)
-                .profileLeft("Production")
-                .profileRight("Development")
                 .sortKeys(sortKeys)
                 .build();
         // Action
-        Inspectus fnTwinsDiff = new FnTwinsDiff(fn);
+        Inspectus fnTwinsDiff = new FnTwinsDiff(fn, "ProductionEnv", "DevelopmentEnv");
         fnTwinsDiff.execute(parameters);
         // Assert
         try {

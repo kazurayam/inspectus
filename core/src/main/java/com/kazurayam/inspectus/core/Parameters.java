@@ -19,8 +19,6 @@ public final class Parameters {
     private final Store backup;
     private final JobName jobName;
     private final JobTimestamp jobTimestamp;
-    private final String profileLeft;
-    private final String profileRight;
     private final SortKeys sortKeys;
     private final Double threshold;
     private final IgnoreMetadataKeys ignoreMetadataKeys;
@@ -33,8 +31,6 @@ public final class Parameters {
     public static final String KEY_cleanOlderThan = "cleanOlderThan";
     public static final String KEY_jobName = "jobName";
     public static final String KEY_jobTimestamp = "jobTimestamp";
-    public static final String KEY_profileLeft = "profileLeft";
-    public static final String KEY_profileRight = "profileRight";
     public static final String KEY_sortKeys = "sortKeys";
     public static final String KEY_threshold = "threshold";
     public static final String KEY_ignoreMetadataKeys = "ignoreMetadataKeys";
@@ -50,8 +46,6 @@ public final class Parameters {
         this.backup = b.backup;
         this.jobName = b.jobName;
         this.jobTimestamp = b.jobTimestamp;
-        this.profileLeft = b.profileLeft;
-        this.profileRight = b.profileRight;
         this.sortKeys = b.sortKeys;
         this.threshold = b.threshold;
         this.ignoreMetadataKeys = b.ignoreMetadataKeys;
@@ -64,10 +58,6 @@ public final class Parameters {
     public Boolean containsIgnoreMetadataKeys() { return ignoreMetadataKeys != IgnoreMetadataKeys.NULL_OBJECT; }
     public Boolean containsJobName() { return jobName != JobName.NULL_OBJECT; }
     public Boolean containsJobTimestamp() { return jobTimestamp != JobTimestamp.NULL_OBJECT; }
-    public Boolean containsProfileLeft() { return ! this.profileLeft.equals(""); }
-    public Boolean containsProfileRight() {
-        return ! this.profileRight.equals("");
-    }
     public Boolean containsSortKeys() { return sortKeys != null; }
     public Boolean containsStore() { return store != Store.NULL_OBJECT; }
     public Boolean containsThreshold() { return threshold >= 0.0; }
@@ -79,8 +69,6 @@ public final class Parameters {
     public IgnoreMetadataKeys getIgnoreMetadataKeys() { return ignoreMetadataKeys; }
     public JobName getJobName() { return jobName; }
     public JobTimestamp getJobTimestamp() { return jobTimestamp; }
-    public String getProfileLeft() { return profileLeft; }
-    public String getProfileRight() { return profileRight; }
     public SortKeys getSortKeys() { return sortKeys; }
     public Store getStore() { return store; }
     public Double getThreshold() {
@@ -96,8 +84,6 @@ public final class Parameters {
         m.put(KEY_ignoreMetadataKeys, ignoreMetadataKeys);
         m.put(KEY_jobName, jobName);
         m.put(KEY_jobTimestamp, jobTimestamp);
-        m.put(KEY_profileLeft, profileLeft);
-        m.put(KEY_profileRight, profileRight);
         m.put(KEY_sortKeys, sortKeys);
         m.put(KEY_store, store);
         m.put(KEY_threshold, threshold);
@@ -111,8 +97,6 @@ public final class Parameters {
         private Store backup;
         private JobName jobName;
         private JobTimestamp jobTimestamp;
-        private String profileLeft;
-        private String profileRight;
         private SortKeys sortKeys;
         private Double threshold;
         private IgnoreMetadataKeys ignoreMetadataKeys;
@@ -125,8 +109,6 @@ public final class Parameters {
             this.backup = Store.NULL_OBJECT;
             this.jobName = JobName.NULL_OBJECT;
             this.jobTimestamp = JobTimestamp.NULL_OBJECT;
-            this.profileLeft = "";
-            this.profileRight = "";
             this.sortKeys = SortKeys.NULL_OBJECT;
             this.threshold = 0.0;
             this.ignoreMetadataKeys = IgnoreMetadataKeys.NULL_OBJECT;
@@ -172,14 +154,6 @@ public final class Parameters {
         }
         public Builder jobTimestamp(JobTimestamp jobTimestamp) {
             this.jobTimestamp = jobTimestamp;
-            return this;
-        }
-        public Builder profileLeft(String pf) {
-            this.profileLeft = pf;
-            return this;
-        }
-        public Builder profileRight(String pf) {
-            this.profileRight = pf;
             return this;
         }
         public Builder sortKeys(SortKeys sortKeys) {

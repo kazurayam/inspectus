@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class KeywordExecutor {
 
-    /**
+    /*
      * This method invokes the executeKeywordForPlatform method of
      * the com.kms.katalon.core.keyword.internal.KeywordExecutor class
      * using Java Reflection API.

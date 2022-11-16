@@ -132,6 +132,8 @@ public abstract class TwinsDiff extends AbstractDiffService {
                     MaterialProductGroup.builder(left, right)
                             .ignoreKeys("environment", "URL.host")
                             .ignoreKeys(parameters.getIgnoreMetadataKeys())
+                            .environmentLeft(environmentLeft.getValue())
+                            .environmentRight(environmentRight.getValue())
                             .build();
 
             // logger.info("parameters.getIgnoreMetadataKeys=" + parameters.getIgnoreMetadataKeys().toString());

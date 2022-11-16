@@ -28,7 +28,7 @@ public abstract class AbstractService implements Inspectus {
         listener = new StdStepListener();
     }
 
-    /**
+    /*
      * import the lastest artifacts from the remote/backup store
      * into the local/current store
      * @param parameters must contain the keys of "store", "back" and "jobName"

@@ -23,9 +23,7 @@ public final class Parameters {
     private final Double threshold;
     private final IgnoreMetadataKeys ignoreMetadataKeys;
     private final JobTimestamp cleanOlderThan;
-    private final Environment environmentLeft;
-    private final Environment environmentRight;
-
+    private final Environment environment;
 
     public static final String KEY_baseDir = "baseDir";
     public static final String KEY_baselinePriorTo = "baselinePriorTo";
@@ -37,8 +35,7 @@ public final class Parameters {
     public static final String KEY_sortKeys = "sortKeys";
     public static final String KEY_threshold = "threshold";
     public static final String KEY_ignoreMetadataKeys = "ignoreMetadataKeys";
-    public static final String KEY_environmentLeft = "environmentLeft";
-    public static final String KEY_environmentRight = "environmentRight";
+    public static final String KEY_environment = "environment";
 
     public static Builder builder() {
         return new Builder();
@@ -59,8 +56,7 @@ public final class Parameters {
         this.threshold = b.threshold;
         this.ignoreMetadataKeys = b.ignoreMetadataKeys;
         this.cleanOlderThan = b.cleanOlderThan;
-        this.environmentLeft = b.environmentLeft;
-        this.environmentRight = b.environmentRight;
+        this.environment = b.environment;
     }
     public Boolean containsBackup() { return backup != Store.NULL_OBJECT;}
     public Boolean containsBaseDir() { return baseDir != null; }
@@ -72,9 +68,7 @@ public final class Parameters {
     public Boolean containsSortKeys() { return sortKeys != null; }
     public Boolean containsStore() { return store != Store.NULL_OBJECT; }
     public Boolean containsThreshold() { return threshold >= 0.0; }
-    public Boolean containsEnvironmentLeft() { return environmentLeft != Environment.NULL_OBJECT; }
-    public Boolean containsEnvironmentRight() { return environmentRight != Environment.NULL_OBJECT; }
-
+    public Boolean containsEnvironment() { return environment != Environment.NULL_OBJECT; }
 
     public Store getBackup() { return backup; }
     public Path getBaseDir() { return baseDir; }
@@ -88,8 +82,8 @@ public final class Parameters {
     public Double getThreshold() {
         return threshold;
     }
-    public Environment getEnvironmentLeft() { return environmentLeft; }
-    public Environment getEnvironmentRight() { return environmentRight; }
+    public Environment getEnvironment() { return environment; }
+
     public Map<String, Object> toMap() {
         Map<String, Object> m = new LinkedHashMap<>();
         m.put(KEY_backup, backup);
@@ -102,8 +96,7 @@ public final class Parameters {
         m.put(KEY_sortKeys, sortKeys);
         m.put(KEY_store, store);
         m.put(KEY_threshold, threshold);
-        m.put(KEY_environmentLeft, environmentLeft);
-        m.put(KEY_environmentRight, environmentRight);
+        m.put(KEY_environment, environment);
         return m;
     }
 
@@ -118,8 +111,7 @@ public final class Parameters {
         private Double threshold;
         private IgnoreMetadataKeys ignoreMetadataKeys;
         private JobTimestamp cleanOlderThan;
-        private Environment environmentLeft;
-        private Environment environmentRight;
+        private Environment environment;
 
         public Builder() {
             this.baseDir = null;
@@ -132,8 +124,7 @@ public final class Parameters {
             this.threshold = 0.0;
             this.ignoreMetadataKeys = IgnoreMetadataKeys.NULL_OBJECT;
             this.cleanOlderThan = JobTimestamp.now().minusHours(3);
-            this.environmentLeft = Environment.NULL_OBJECT;
-            this.environmentRight = Environment.NULL_OBJECT;
+            this.environment = Environment.NULL_OBJECT;
         }
         public Builder(Parameters source) {
             this.baseDir = source.baseDir;
@@ -146,8 +137,7 @@ public final class Parameters {
             this.threshold = source.threshold;
             this.ignoreMetadataKeys = source.ignoreMetadataKeys;
             this.cleanOlderThan = source.cleanOlderThan;
-            this.environmentLeft = source.environmentLeft;
-            this.environmentRight = source.environmentRight;
+            this.environment = source.environment;
         }
         public Builder baseDir(Path baseDir) {
             this.baseDir = baseDir;
@@ -216,14 +206,11 @@ public final class Parameters {
             this.cleanOlderThan = cleanOlderThan;
             return this;
         }
-        public Builder environmentLeft(Environment environmentLeft) {
-            this.environmentLeft = environmentLeft;
+        public Builder environment(Environment environment) {
+            this.environment = environment;
             return this;
         }
-        public Builder environmentRight(Environment environmentRight) {
-            this.environmentRight = environmentRight;
-            return this;
-        }
+
         public Parameters build() {
             return new Parameters(this);
         }

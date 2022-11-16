@@ -5,6 +5,7 @@ import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;
 import com.kazurayam.inspectus.core.Parameters;
 import com.kazurayam.inspectus.core.internal.TwinsDiff;
+import com.kazurayam.materialstore.core.filesystem.JobTimestamp;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -24,8 +25,16 @@ public class FnTwinsDiff extends TwinsDiff {
         this.environmentRight = environmentRight;
     }
 
+
+    /**
+     * call the Function
+     */
     @Override
-    public Intermediates step2_materialize(Parameters parameters) throws InspectusException {
-        return fn.apply(parameters);
+    public Intermediates processEnvironment(Parameters params, Environment env) throws InspectusException {
+        Parameters decorated =
+                Parameters.builder(params)
+                        .environment(env).build();
+        return fn.apply(decorated);
     }
+
 }

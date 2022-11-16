@@ -9,6 +9,7 @@ import com.kazurayam.inspectus.core.TestHelper;
 import com.kazurayam.materialstore.core.filesystem.FileType;
 import com.kazurayam.materialstore.core.filesystem.JobName;
 import com.kazurayam.materialstore.core.filesystem.JobTimestamp;
+import com.kazurayam.materialstore.core.filesystem.MaterialList;
 import com.kazurayam.materialstore.core.filesystem.MaterialstoreException;
 import com.kazurayam.materialstore.core.filesystem.Metadata;
 import com.kazurayam.materialstore.core.filesystem.SortKeys;
@@ -59,10 +60,10 @@ public class FnTwinsDiffTest {
             assertTrue(store.contains(jobName, jobTimestamp));
             assertNotNull(store.selectSingle(jobName, jobTimestamp));
             assertTrue(store.selectSingle(jobName, jobTimestamp).getMetadata()
-                    .containsKey(Parameters.KEY_environmentLeft));
+                    .containsKey(Parameters.KEY_environment));
             assertEquals("ProductionEnv",
                     store.selectSingle(jobName, jobTimestamp).getMetadata()
-                            .get(Parameters.KEY_environmentLeft));
+                            .get(Parameters.KEY_environment));
             //
         } catch (MaterialstoreException e) {
             throw new RuntimeException(e);
@@ -76,54 +77,40 @@ public class FnTwinsDiffTest {
      */
     private final Function<Parameters, Intermediates> fn = p -> {
         Path bd = p.getBaseDir();
-        Path images = bd.resolve("src/test/fixtures/images");
-        Path apple = images.resolve("apple.png");
-        Path greenApple = images.resolve("green-apple.png");
-        Path mikan = images.resolve("mikan.png");
-        Path money = images.resolve("money.png");
         Store st = p.getStore();
         JobName jn = p.getJobName();
+        JobTimestamp jt = p.getJobTimestamp();
+        Path images = bd.resolve("src/test/fixtures/images");
+        // the apple could be red or green randomly
+        Path apple = (jt.value().getSecond() %2 == 1) ?
+                images.resolve("apple.png") :
+                images.resolve("green-apple.png");
+        Path mikan = images.resolve("mikan.png");
+        Path money = images.resolve("money.png");
+
         try {
-            // 1st set of shooting
-            JobTimestamp jt1 = p.getJobTimestamp();
-            st.write(jn, jt1, FileType.PNG,
+            st.write(jn, jt, FileType.PNG,
                     Metadata.builder()
-                            .put("environment", p.getEnvironmentLeft().toString())
+                            .put("environment", p.getEnvironment().toString())
                             .put("imageOf", "apple")
                             .build(), apple);
-            st.write(jn, jt1, FileType.PNG,
+            st.write(jn, jt, FileType.PNG,
                     Metadata.builder()
-                            .put("environment", p.getEnvironmentLeft().toString())
+                            .put("environment", p.getEnvironment().toString())
                             .put("imageOf", "orange")
                             .build(), mikan);
-            st.write(jn, jt1, FileType.PNG,
+            st.write(jn, jt, FileType.PNG,
                     Metadata.builder()
-                            .put("environment", p.getEnvironmentLeft().toString())
+                            .put("environment", p.getEnvironment().toString())
                             .put("imageOf", "cash")
                             .build(), money);
 
-            // 2nd set of shooting
-            JobTimestamp jt2 = JobTimestamp.laterThan(jt1);
-            st.write(jn, jt2, FileType.PNG,
-                    Metadata.builder()
-                            .put("environment", p.getEnvironmentRight().toString())
-                            .put("imageOf", "apple")
-                            .build(), greenApple);
-            st.write(jn, jt2, FileType.PNG,
-                    Metadata.builder()
-                            .put("environment", p.getEnvironmentRight().toString())
-                            .put("imageOf", "orange")
-                            .build(), mikan);
-            st.write(jn, jt2, FileType.PNG,
-                    Metadata.builder()
-                            .put("environment", p.getEnvironmentRight().toString())
-                            .put("imageOf", "cash")
-                            .build(), money);
+            MaterialList mt = store.select(jn, jt);
 
             return new Intermediates.Builder()
-                    .jobTimestampLeft(jt1)
-                    .jobTimestampRight(jt2)
+                    .materialList(mt)
                     .build();
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

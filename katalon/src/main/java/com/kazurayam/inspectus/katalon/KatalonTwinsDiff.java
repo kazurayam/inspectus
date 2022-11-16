@@ -5,12 +5,13 @@ import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;
 import com.kazurayam.inspectus.core.Parameters;
 import com.kazurayam.inspectus.core.internal.TwinsDiff;
+import com.kazurayam.materialstore.core.filesystem.JobTimestamp;
 
 import java.util.Objects;
 
 public final class KatalonTwinsDiff extends TwinsDiff implements ITestCaseCaller {
 
-    private String materializeTestCaseName = null;
+    private final String materializeTestCaseName;
 
     public KatalonTwinsDiff(String materializeTestCaseName,
                             Environment environmentLeft,
@@ -22,22 +23,17 @@ public final class KatalonTwinsDiff extends TwinsDiff implements ITestCaseCaller
         this.environmentLeft = environmentLeft;
         this.environmentRight = environmentRight;
     }
-    @Override
-    public Intermediates step2_materialize(Parameters parameters)
-            throws InspectusException {
-        listener.stepStarted("step2_materialize");
-        if (materializeTestCaseName == null) {
-            throw new InspectusException("materializeTestCaseName is not specified");
-        }
-        Parameters decoratedParameters =
-                Parameters.builder(parameters)
-                        .environmentLeft(environmentLeft)
-                        .environmentRight(environmentRight)
-                        .build();
-        Intermediates intermediates = callTestCase(materializeTestCaseName, decoratedParameters);
-        listener.stepFinished("step2_materialize");
-        return intermediates;
-    }
 
+
+    /**
+     * call the "materialize" Test Case
+     */
+    @Override
+    public Intermediates processEnvironment(Parameters params, Environment env) throws InspectusException {
+        Parameters decoratedParameters =
+                Parameters.builder(params)
+                        .environment(env).build();
+        return callTestCase(materializeTestCaseName, decoratedParameters);
+    }
 
 }

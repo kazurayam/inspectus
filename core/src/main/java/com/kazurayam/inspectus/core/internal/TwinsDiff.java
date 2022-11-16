@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
-import java.util.Collections;
 
 public abstract class TwinsDiff extends AbstractDiffService {
 
@@ -44,22 +43,51 @@ public abstract class TwinsDiff extends AbstractDiffService {
         if (environmentRight == Environment.NULL_OBJECT) {
             throw new InspectusException("environmentRight must be set");
         }
-        Parameters decoParameters =
-                Parameters.builder(parameters)
-                        .environmentLeft(environmentLeft)
-                        .environmentRight(environmentRight).build();
 
-        Intermediates im = step2_materialize(decoParameters);
+        Intermediates im = step2_materialize(parameters);
 
-        Intermediates decoIntermediates =
+        Intermediates decoratedIntermediates =
                 Intermediates.builder(im)
                         .environmentLeft(environmentLeft)
                         .environmentRight(environmentRight)
+                        .jobTimestampLeft(im.getJobTimestampLeft())
+                        .jobTimestampRight(im.getJobTimestampRight())
                         .build();
-        return step3_reduceTwins(decoParameters, decoIntermediates);
+
+        return step3_reduceTwins(parameters, decoratedIntermediates);
     }
 
-    public abstract Intermediates step2_materialize(Parameters parameters)
+    public Intermediates step2_materialize(Parameters parameters) throws InspectusException {
+        listener.stepStarted("step2_materialize");
+        //return fn.apply(parameters);
+        if ( ! parameters.containsJobTimestamp()) {
+            throw new InspectusException("jobTimestamp is required");
+        }
+
+        // take the screenshots of the left environment
+        // while passing the given JobTimestamp to the custom code
+        JobTimestamp jobTimestampLeft = parameters.getJobTimestamp();
+        Intermediates resultLeft =
+                processEnvironment(parameters, environmentLeft);
+
+        // take the screenshots of the right environment
+        // while passing a calculated JobTimestamp to the custom code
+        JobTimestamp jobTimestampRight = JobTimestamp.laterThan(jobTimestampLeft);
+        Parameters modifiedParams =
+                Parameters.builder(parameters)
+                        .jobTimestamp(jobTimestampRight).build();
+        Intermediates resultRight =
+                processEnvironment(modifiedParams, environmentRight);
+
+        // return the JobTimestamp of the left and the right
+        listener.stepFinished("step2_materialize");
+        return Intermediates.builder()
+                .jobTimestampLeft(jobTimestampLeft)
+                .jobTimestampRight(jobTimestampRight)
+                .build();
+    }
+
+    public abstract Intermediates processEnvironment(Parameters params, Environment env)
             throws InspectusException;
 
     public Intermediates step3_reduceTwins(Parameters parameters,

@@ -80,6 +80,8 @@ public class FnTwinsDiffTest {
         Store st = p.getStore();
         JobName jn = p.getJobName();
         JobTimestamp jt = p.getJobTimestamp();
+        Environment env = p.getEnvironment();
+
         Path images = bd.resolve("src/test/fixtures/images");
         // the apple could be red or green randomly
         Path apple = (jt.value().getSecond() %2 == 1) ?
@@ -91,17 +93,17 @@ public class FnTwinsDiffTest {
         try {
             st.write(jn, jt, FileType.PNG,
                     Metadata.builder()
-                            .put("environment", p.getEnvironment().toString())
+                            .put("environment", env.toString())
                             .put("imageOf", "apple")
                             .build(), apple);
             st.write(jn, jt, FileType.PNG,
                     Metadata.builder()
-                            .put("environment", p.getEnvironment().toString())
+                            .put("environment", env.toString())
                             .put("imageOf", "orange")
                             .build(), mikan);
             st.write(jn, jt, FileType.PNG,
                     Metadata.builder()
-                            .put("environment", p.getEnvironment().toString())
+                            .put("environment", env.toString())
                             .put("imageOf", "cash")
                             .build(), money);
 

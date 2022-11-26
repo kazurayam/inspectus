@@ -40,11 +40,13 @@ public class FnTwinsDiffTest {
     }
 
     @Test
-    public void test_smoke() throws InspectusException {
-        JobName jobName = new JobName("test_smoke");
+    public void test_storingTextFiles() throws InspectusException {
+        JobName jobName = new JobName("test_storingTextFiles");
         JobTimestamp jobTimestamp = JobTimestamp.now();
-        Parameters parameters = new Parameters.Builder()
-                .baseDir(baseDir).store(store).jobName(jobName)
+        Parameters parameters = Parameters.builder()
+                .baseDir(baseDir)
+                .store(store)
+                .jobName(jobName)
                 .jobTimestamp(jobTimestamp)
                 .sortKeys(new SortKeys("imageOf"))
                 .build();
@@ -66,7 +68,7 @@ public class FnTwinsDiffTest {
                             .get(Parameters.KEY_environment));
             //
         } catch (MaterialstoreException e) {
-            throw new RuntimeException(e);
+            throw new InspectusException(e);
         }
     }
 

@@ -4,40 +4,32 @@
 
 === The term "Materials"
 
-When you run your automated UI tests, you are likely to create many files and want to utilize them for various inspections.
+When you run your automated Web UI tests on top of Selenium, you are likely to create many files and want to utilize them for various inspections.
 
-For example, Selenium WebDriver API enables you to
-
-- take screenshots of web pages displayed in web browser by a Selenium-builtin method link:https://www.guru99.com/take-screenshot-selenium-webdriver.html[org.openqa.selenium.TakesScreenshot#getScreenshotAs(...)]. There are several other tools to do screen shooting: e.g, link:https://testingchief.com/automated-visual-testing-with-ashot/[AShot]
-- get HTML source of web pages by a Selenium-builtin link:https://www.selenium.dev/selenium/docs/api/java/org/openqa/selenium/WebDriver.html#getPageSource()[org.openqa.selenium.Webdriver#getPageSource()]
-
-Also you sometimes would want to download files of various format: JSON, XML, CSV, Excel, PDF out of RESTful/SOAP services using link:https://www.baeldung.com/httpclient-guide[Apache HTTP Client API].
+For example, Selenium WebDriver API enables you to take screenshots of web pages displayed in web browser by a Selenium-builtin method link:https://www.guru99.com/take-screenshot-selenium-webdriver.html[org.openqa.selenium.TakesScreenshot#getScreenshotAs(...)]. There are several other tools to do screen shooting: e.g, link:https://testingchief.com/automated-visual-testing-with-ashot/[AShot]. You can also get the HTML source of web pages by a Selenium-builtin link:https://www.selenium.dev/selenium/docs/api/java/org/openqa/selenium/WebDriver.html#getPageSource()[org.openqa.selenium.Webdriver#getPageSource()]. It is quite likely the case that you want to download files of various format: JSON, XML, CSV, Excel, PDF out of RESTful/SOAP services using link:https://www.baeldung.com/httpclient-guide[Apache HTTP Client API].
 
 I will refer to these files created by your automated UI tests as **"materials"** collectively.
 
-=== Materials use-cases
+=== Use cases of materials
 
-I would the materials as follows.
+I would utilize the materials as follows.
 
 ==== (1) I want lists of page screenshot of my web system
 
 It is just nice to look at. It is useful for various administrative reporting purposes.
 
-==== (2) I want to compare the page screenshots taken before and after the system change action
+==== (2) I want to compare the page screenshots taken before and after a system change action
 
-Few times a month, I work for changing my web systems. I want to make very sure that I did not make any stupid mistakes in the work. So, I want to take hundreds of screenshots BEFORE the change; and a few hours later I want to take the same number of screenshots AFTER the change. I want to compare the hundreds of screenshot pairs and make sure there aren't any unexpected differences in the images. If any unexpected/significant image difference found, I will quickly bring the system back to the previous status, then I will study what I have done wrong. If no difference found, Yah!, I will be relieved and go home.
+Few times a month, I work for changing my web systems. I want to make very sure that I did not make any stupid mistakes in the work. So, I want to take hundreds of screenshots of web pages of the system BEFORE the change; and a few hours later, I want to take the same number of screenshots AFTER the change. Then I want to compare the hundreds of screenshot pairs and make sure there aren't any differences in the images. If any significant image difference found, I will quickly bring the system back to the previous status. Later next day I will study what I have done wrong. If no image difference found, Yah!, I would be relieved and go home.
 
 ==== (3) I want to compare Development environment against Production environment
 
-We, web developers, want to make our web system to be quality software. But comprehensive and strict testings cost us much. Quite often I can only do the poor man's test method: just look at the pages of the development environment and try to find any difference from the production environment which is now on live.
+We, web developers, want to make our web system to be quality software. But comprehensive and strict E2E testings cost us very much. Quite often I can only do the poor man's test method: just look at the pages of the development environment and try to find any difference from the production environment which is now on live. Also, looking at the pages could be the only method of UI testing sometimes. For example, let me assume that my web application depends of dozens of external open source software libraries. Now I need to upgrade one of these external libs. I hope the upgrade would not change my system at all, but who knows? The only thing I can do is to try upgrading in the development environment, and compare as many pages as possible (several hundreds) with the counter-pages in the production environment.
 
-Also, sometimes, looking at the pages is the only method of UI testing. For example, let me assume that my web application depends of dozens of external open source software libraries. Now I need to upgrade one of these external libs. I hope the upgrade would not change my system at all, but who knows? The only thing I can do is to try upgrading in the development environment, and compare as many pages as possible (several hundreds) with the counter-pages in the production environment.
-
-Visual testing could be the poor man's last and only resort.
-
-When I planed to carry out comparing massive screenshot images, soon I realized it is a difficult task. Why, then?
 
 ## How I manage materials?
+
+Visual testing could be the poor man's last and only resort. When I plan to carry out comparing massive screenshot images, soon I realized it is a difficult task. Why?
 
 Aforementioned famous APIs certainly help you get files out of the UAT (Application Under Test). But **these libraries do not help you manage the files created by your tests**.
 

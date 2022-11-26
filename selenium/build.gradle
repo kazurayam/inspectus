@@ -1,0 +1,11 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    implementation(project(":core"))
+    implementation libs.materialstore
+    implementation libs.selenium
+    testImplementation libs.webdrivermanager
+    testImplementation project(':core').sourceSets.test.output
+}

@@ -11,13 +11,9 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/katalon" />
-
+            <option value="$PROJECT_DIR$/selenium" />
           </set>
         </option>
-      </GradleProjectSettings>
-      <GradleProjectSettings>
-        <option name="distributionType" value="DEFAULT_WRAPPED" />
-
       </GradleProjectSettings>
     </option>
   </component>

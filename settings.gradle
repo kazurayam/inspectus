@@ -1,5 +1,5 @@
 rootProject.name = 'inspectus'
-include(':core', ':katalon')
+include(':core', ':selenium', ':katalon')
 
 dependencyResolutionManagement {
     versionCatalogs {

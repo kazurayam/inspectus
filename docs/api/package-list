@@ -2,4 +2,5 @@ com.kazurayam.inspectus.core
 com.kazurayam.inspectus.core.internal
 com.kazurayam.inspectus.fn
 com.kazurayam.inspectus.katalon
+com.kazurayam.inspectus.support.selenium
 com.kazurayam.inspectus.util

@@ -40,8 +40,8 @@ public class FnTwinsDiffTest {
     }
 
     @Test
-    public void test_storingTextFiles() throws InspectusException {
-        JobName jobName = new JobName("test_storingTextFiles");
+    public void test_storingImageFiles() throws InspectusException {
+        JobName jobName = new JobName("test_storingImageFiles");
         JobTimestamp jobTimestamp = JobTimestamp.now();
         Parameters parameters = Parameters.builder()
                 .baseDir(baseDir)

@@ -61,7 +61,7 @@ What do I mean by "metadata" of materials? --- A typical metadata of a screensho
 
 I realized that I need to invent a domain specific file system which enables me to associate rich set of metadata with the materials.
 
-Should I use some SQL Databases for it? --- well, I do not like that idea; Just because I am not skilled enough about it.
+Should I use some SQL Databases for it? --- well, I do not like that idea; just because I am not skilled enough about SQL.
 
 Instead I invented a domain-specific Object-oriented file system for the materials. I named it link:https://github.com/kazurayam/materialstore[`materialstore`].
 

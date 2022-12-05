@@ -3,7 +3,7 @@ rootProject.name = 'inspectus'
 dependencyResolutionManagement {
     versionCatalogs {
         libs {
-            version('materialstore', '0.13.0')
+            version('materialstore', '0.14.0')
             library('materialstore', 'com.kazurayam', 'materialstore').versionRef('materialstore')
 
             version('commons-io', '2.11.0')

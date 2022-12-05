@@ -22,8 +22,6 @@ import java.util.Objects;
  */
 public interface ITestCaseCaller {
 
-    static final Logger logger = LoggerFactory.getLogger(ITestCaseCaller.class);
-
     public static String KEY_result = "result";
 
     default Intermediates callTestCase(String calleeName, Parameters parameters) throws InspectusException {
@@ -46,6 +44,7 @@ public interface ITestCaseCaller {
 
         // convert an Object instance returned from the Katalon Test Case
         // into an instance of Intermediates
+        Logger logger = LoggerFactory.getLogger(ITestCaseCaller.class);
         if (result == null) {
             logger.warn(String.format("Test Case '%s' may return an instance of Map<?, ?> class; actually returned null",
                     calleeName));

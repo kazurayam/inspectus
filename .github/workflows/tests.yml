@@ -22,14 +22,16 @@ jobs:
           distribution: 'adopt'
           architecture: x64
 
+      - name: Restore gradle.properties
+        env:
+          GP: ${{ secrets.GRADLE_PROPERTIES }}
+        shell: bash
+        run: |
+          mkdir -p ~/.gradle/
+          echo "${GP}" > ~/.gradle/gradle.properties
+
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
-
-      - name: Build with Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: 7.4.2
-          arguments: :build
 
       - name: Run the Gradle test task
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1

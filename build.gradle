@@ -118,6 +118,14 @@ publishing {
                 password = project.hasProperty("ossrhPassword") ? ossrhPassword : "Unknown password"
             }
         }
+        maven {
+            name = "gpr"
+            url = uri("https://maven.pkg.github.com/kazurayam/inspectus")
+            credentials {
+                username = project.findProperty("gpr.user")
+                password = project.findProperty("gpr.key")
+            }
+        }
     }
 }
 

@@ -120,7 +120,7 @@ publishing {
         }
         maven {
             name = "gpr"
-            url = uri("https://maven.pkg.github.com/kazurayam/materialstore")
+            url = uri("https://maven.pkg.github.com/kazurayam/inspectus")
             credentials {
                 username = project.findProperty("gpr.user")
                 password = project.findProperty("gpr.key")

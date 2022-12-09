@@ -1,4 +1,4 @@
-package com.kazurayam.inspectus.core;
+package com.kazurayam.inspectus;
 
 import com.kazurayam.materialstore.core.util.CopyDir;
 import com.kazurayam.materialstore.core.util.DeleteDir;
@@ -75,9 +75,9 @@ public class TestHelper {
     /**
      * create the out directory for the testCase object to write output files
      */
-    public static Path createTestClassOutputDir(Object testCase) {
+    public static Path createTestClassOutputDir(Class clazz) {
         Path output = getTestOutputDir()
-                .resolve(testCase.getClass().getName());
+                .resolve(clazz.getName());
         try {
             if (!Files.exists(output)) {
                 Files.createDirectories(output);

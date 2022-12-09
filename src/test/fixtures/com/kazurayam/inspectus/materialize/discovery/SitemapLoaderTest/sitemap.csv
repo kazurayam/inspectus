@@ -1,4 +1,6 @@
 url,handle,step
+
 "http://myadmin.kazurayam.com/index.html","By.cssSelector: #main","01"
+""
 "http://myadmin.kazurayam.com/repositories.html","By.cssSelector: #main","02"
-"http://myadmin.kazurayam.com/proverbs.html","By.cssSelector: #main","03"
+"/proverbs.html","By.cssSelector: #main","03"

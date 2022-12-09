@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.kazurayam.materialstore.core.filesystem.MaterialstoreException;
+import com.kazurayam.inspectus.core.InspectusException;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
@@ -38,7 +38,7 @@ public final class SitemapLoader {
         this.twinTopPage = twinTopPage;
     }
 
-    public Sitemap parseJson(String jsonText) throws MaterialstoreException {
+    public Sitemap parseJson(String jsonText) throws InspectusException {
         JsonElement jsonElement = new JsonParser().parse(jsonText);
         JsonObject jo = jsonElement.getAsJsonObject();
         Target baseTopPage = Target.deserialize(jo.getAsJsonObject("baseTopPage"));
@@ -53,15 +53,15 @@ public final class SitemapLoader {
         return sitemap;
     }
 
-    public Sitemap parseJson(Path jsonPath) throws MaterialstoreException {
+    public Sitemap parseJson(Path jsonPath) throws InspectusException {
         return this.parseJson(readFully(jsonPath));
     }
 
-    public Sitemap parseJson(File jsonFile) throws MaterialstoreException {
+    public Sitemap parseJson(File jsonFile) throws InspectusException {
         return this.parseJson(jsonFile.toPath());
     }
 
-    public Sitemap parseCSV(String csvText) throws MaterialstoreException {
+    public Sitemap parseCSV(String csvText) throws InspectusException {
         Objects.requireNonNull(csvText);
         if (baseTopPage == Target.NULL_OBJECT) {
             throw new IllegalArgumentException("baseTopPage is required but not set");
@@ -88,25 +88,25 @@ public final class SitemapLoader {
                 }
             }
         } catch (IOException e) {
-            throw new MaterialstoreException(e);
+            throw new InspectusException(e);
         }
         return sitemap;
     }
 
-    public Sitemap parseCSV(Path csvPath) throws MaterialstoreException {
+    public Sitemap parseCSV(Path csvPath) throws InspectusException {
         return this.parseCSV(readFully(csvPath));
     }
 
-    public Sitemap parseCSV(File csvFile) throws MaterialstoreException {
+    public Sitemap parseCSV(File csvFile) throws InspectusException {
         return this.parseCSV(csvFile.toPath());
     }
 
-    private String readFully(Path p) throws MaterialstoreException {
+    private String readFully(Path p) throws InspectusException {
         try {
             List<String> lines = Files.readAllLines(p);
             return String.join("\n", lines);
         } catch (IOException e) {
-            throw new MaterialstoreException(e);
+            throw new InspectusException(e);
         }
     }
 
@@ -122,7 +122,7 @@ public final class SitemapLoader {
      * @param urlSpec e.g, "http://host/foo.html" or "/foo.html" or "foo.html"
      * @return URL
      */
-    public URL resolveUrl(String urlSpec) throws MaterialstoreException {
+    public URL resolveUrl(String urlSpec) throws InspectusException {
         Objects.requireNonNull(urlSpec);
         try {
             URL url1 = new URL(urlSpec);
@@ -133,10 +133,10 @@ public final class SitemapLoader {
                     URL url2 = new URL(baseTopPage.getUrl(), urlSpec);
                     return url2;
                 } catch (MalformedURLException e2) {
-                    throw new MaterialstoreException(e2);
+                    throw new InspectusException(e2);
                 }
             } else {
-                throw new MaterialstoreException("urlStr=\"" + urlSpec + "\"");
+                throw new InspectusException("urlStr=\"" + urlSpec + "\"");
             }
         }
     }

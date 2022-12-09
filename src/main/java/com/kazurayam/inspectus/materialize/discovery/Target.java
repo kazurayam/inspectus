@@ -4,8 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.materialstore.core.filesystem.Jsonifiable;
-import com.kazurayam.materialstore.core.filesystem.MaterialstoreException;
 import com.kazurayam.materialstore.core.util.JsonUtil;
 import org.openqa.selenium.By;
 
@@ -26,7 +26,7 @@ public final class Target implements Jsonifiable {
     static {
         try {
             NULL_OBJECT = new Builder("https://example.com/").build();
-        } catch (MaterialstoreException e) {
+        } catch (InspectusException e) {
             throw new RuntimeException(e);
         }
     }
@@ -39,7 +39,7 @@ public final class Target implements Jsonifiable {
         return new Builder(url);
     }
 
-    public static Builder builder(String urlString) throws MaterialstoreException {
+    public static Builder builder(String urlString) throws InspectusException {
         return new Builder(urlString);
     }
 
@@ -182,24 +182,24 @@ public final class Target implements Jsonifiable {
      *     }
      * </PRE>
      * @return an instance of Target class constructed from a String in JSON format
-     * @throws MaterialstoreException when failed deserializing this
+     * @throws InspectusException when failed deserializing this
      */
     public static Target deserialize(String jsonText)
-            throws MaterialstoreException {
+            throws InspectusException {
         Objects.requireNonNull(jsonText);
         JsonElement jsonElement = new JsonParser().parse(jsonText);
         JsonObject jo = jsonElement.getAsJsonObject();
         return deserialize(jo);
     }
 
-    public static Target deserialize(JsonObject jo) throws MaterialstoreException {
+    public static Target deserialize(JsonObject jo) throws InspectusException {
         // deserialize a URL
         String urlValue = jo.get("url").getAsString();
         URL url = null;
         try {
             url = new URL(urlValue);
         } catch (MalformedURLException e) {
-            throw new MaterialstoreException(e);
+            throw new InspectusException(e);
         }
         // deserialize a Target
         String handleValue = jo.get("handle").getAsString();
@@ -218,11 +218,11 @@ public final class Target implements Jsonifiable {
         private final URL url;
         private Handle handle = new Handle(By.xpath("/html/body"));
         private Map<String, String> attributes = new LinkedHashMap<>();
-        public Builder(String urlString) throws MaterialstoreException {
+        public Builder(String urlString) throws InspectusException {
             try {
                 this.url = new URL(urlString);
             } catch (MalformedURLException e) {
-                throw new MaterialstoreException(e);
+                throw new InspectusException(e);
             }
         }
         public Builder(URL url) {

@@ -1,5 +1,6 @@
 package com.kazurayam.inspectus.materialize.url;
 
+import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.materialize.TestHelper;
 import com.kazurayam.inspectus.materialize.discovery.Target;
 import com.kazurayam.materialstore.core.filesystem.FileType;
@@ -30,7 +31,7 @@ public class URLMaterializingFunctionsTest {
     }
 
     @Test
-    public void test_storeWebResource_jpg() throws MaterialstoreException {
+    public void test_storeWebResource_jpg() throws MaterialstoreException, InspectusException {
         Target target =
                 new Target.Builder("http://myadmin.kazurayam.com/umineko-1960x1960.jpg")
                         .put("step", "1")
@@ -45,7 +46,7 @@ public class URLMaterializingFunctionsTest {
     }
 
     @Test
-    public void test_storeWebResource_js() throws MaterialstoreException {
+    public void test_storeWebResource_js() throws MaterialstoreException, InspectusException {
         Target target = new Target.Builder("https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.js")
                 .put("step", "2")
                 .build();
@@ -59,7 +60,7 @@ public class URLMaterializingFunctionsTest {
     }
 
     @Test
-    public void test_storeWebResource_xls() throws MaterialstoreException {
+    public void test_storeWebResource_xls() throws MaterialstoreException, InspectusException {
         Target target = new Target.Builder("https://filesamples.com/samples/document/xls/sample1.xls")
                 .put("step", "3")
                 .build();
@@ -73,7 +74,7 @@ public class URLMaterializingFunctionsTest {
     }
 
     @Test
-    public void test_storeWebResource_pdf() throws MaterialstoreException {
+    public void test_storeWebResource_pdf() throws MaterialstoreException, InspectusException {
         Target target = new Target.Builder("https://unric.org/en/wp-content/uploads/sites/15/2020/01/sdgs-eng.pdf")
                 .put("step", "4")
                 .build();
@@ -89,7 +90,7 @@ public class URLMaterializingFunctionsTest {
 
 
     @Test
-    public void test_storeWebResource_css() throws MaterialstoreException {
+    public void test_storeWebResource_css() throws InspectusException, MaterialstoreException {
         Target target = new Target.Builder("https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css")
                 .put("step", "5")
                 .build();

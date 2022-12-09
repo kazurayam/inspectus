@@ -1,5 +1,6 @@
 package com.kazurayam.inspectus.materialize.discovery;
 
+import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.materialstore.core.filesystem.MaterialstoreException;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -15,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class TargetTest {
 
     @Test
-    public void test_default_By() throws MaterialstoreException, MalformedURLException {
+    public void test_default_By() throws InspectusException, MalformedURLException {
         Target target =
                 new Target.Builder("http://example.com").build();
         assertEquals(new URL("http://example.com"), target.getUrl());
@@ -24,7 +25,7 @@ public class TargetTest {
     }
 
     @Test
-    public void test_GoogleSearchPage() throws MalformedURLException, MaterialstoreException {
+    public void test_GoogleSearchPage() throws MalformedURLException, InspectusException {
         Target target =
                 new Target.Builder("https://www.google.com")
                         .handle(new Handle(By.cssSelector("input[name=\"q\"]")))
@@ -34,7 +35,7 @@ public class TargetTest {
     }
 
     @Test
-    public void test_copyWithBy() throws MaterialstoreException {
+    public void test_copyWithBy() throws InspectusException {
         Target target =
                 new Target.Builder("https://www.google.com")
                         .build();
@@ -43,7 +44,7 @@ public class TargetTest {
     }
 
     @Test
-    public void test_copyWithAttribute() throws MaterialstoreException {
+    public void test_copyWithAttribute() throws InspectusException {
         Target target =
                 new Target.Builder("https://www.google.com")
                         .handle(new Handle(By.cssSelector("input[name=\"q\"]")))
@@ -53,7 +54,7 @@ public class TargetTest {
     }
 
     @Test
-    public void test_copyWithAttributes() throws MaterialstoreException {
+    public void test_copyWithAttributes() throws InspectusException {
         Target target =
                 new Target.Builder("https://www.google.com")
                         .handle(new Handle(By.cssSelector("input[name=\"q\"]")))
@@ -64,7 +65,7 @@ public class TargetTest {
     }
 
     @Test
-    public void test_copyConstructor() throws MaterialstoreException {
+    public void test_copyConstructor() throws InspectusException {
         Target target =
                 new Target.Builder("https://www.google.com")
                         .handle(new Handle(By.cssSelector("input[name=\"q\"]")))
@@ -83,14 +84,14 @@ public class TargetTest {
     }
 
     @Test
-    public void test_builder_String() throws MaterialstoreException {
+    public void test_builder_String() throws InspectusException {
         String urlString = "http://www.example.com";
         Target target = Target.builder(urlString).build();
         assertNotNull(target);
     }
 
     @Test
-    public void test_deserialize() throws MaterialstoreException {
+    public void test_deserialize() throws InspectusException {
         String json = "{\"url\":\"http://myadmin.kazurayam.com/index.html\",\"handle\":\"By.cssSelector: #main\",\"attributes\":{\"step\":\"01\"}}";
         Target t = Target.deserialize(json);
         assertEquals("http://myadmin.kazurayam.com/index.html", t.getUrl().toString());

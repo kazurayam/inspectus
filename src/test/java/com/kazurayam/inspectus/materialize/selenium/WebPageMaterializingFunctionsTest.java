@@ -1,5 +1,6 @@
 package com.kazurayam.inspectus.materialize.selenium;
 
+import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.materialize.TestHelper;
 import com.kazurayam.inspectus.materialize.discovery.Handle;
 import com.kazurayam.inspectus.materialize.discovery.Target;
@@ -55,7 +56,7 @@ public class WebPageMaterializingFunctionsTest {
     }
 
     @Test
-    void test_storeHTMLSource() throws MaterialstoreException {
+    void test_storeHTMLSource() throws InspectusException, MaterialstoreException {
         Target target = new Target.Builder("https://www.google.com")
                 .handle(new Handle(By.cssSelector("input[name=\"q\"]")))
                 .build();
@@ -76,7 +77,7 @@ public class WebPageMaterializingFunctionsTest {
     }
 
     @Test
-    void test_storeEntirePageScreenshot() throws MaterialstoreException {
+    void test_storeEntirePageScreenshot() throws InspectusException, MaterialstoreException {
         Target target = new Target.Builder("https://github.com/kazurayam")
                 .handle(new Handle(By.cssSelector("div.application-main main")))
                 .build();

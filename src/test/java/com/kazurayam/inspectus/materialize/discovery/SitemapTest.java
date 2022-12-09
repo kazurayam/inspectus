@@ -1,5 +1,6 @@
 package com.kazurayam.inspectus.materialize.discovery;
 
+import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.materialstore.core.filesystem.MaterialstoreException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ public class SitemapTest {
     private static Target baseProverbs;
 
     @BeforeAll
-    public static void beforeAll() throws MaterialstoreException {
+    public static void beforeAll() throws InspectusException {
         baseTopPage = Target.builder("http://myadmin.kazurayam.com")
                 .handle(new Handle(By.xpath("//*[@id='main']"))).build();
         twinTopPage = Target.builder("http://devadmin.kazurayam.com")

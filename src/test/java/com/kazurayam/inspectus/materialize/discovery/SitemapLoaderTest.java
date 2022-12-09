@@ -1,5 +1,6 @@
 package com.kazurayam.inspectus.materialize.discovery;
 
+import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.materialize.TestHelper;
 import com.kazurayam.materialstore.core.filesystem.MaterialstoreException;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +20,7 @@ public class SitemapLoaderTest {
                     .resolve("com/kazurayam/inspectus/materialize/discovery/SitemapLoaderTest");
 
     @BeforeEach
-    public void setup() throws MaterialstoreException {
+    public void setup() throws InspectusException {
         assert Files.exists(fixtureDir) :
                 String.format("fixtureDir=%s not present",
                         fixtureDir.toAbsolutePath().toString());
@@ -29,7 +30,7 @@ public class SitemapLoaderTest {
     }
 
     @Test
-    public void test_parseJson_Path() throws MaterialstoreException {
+    public void test_parseJson_Path() throws InspectusException {
         Path json = fixtureDir.resolve("sitemap.json");
         assert Files.exists(json);
         Sitemap sitemap = loader.parseJson(json);
@@ -37,7 +38,7 @@ public class SitemapLoaderTest {
     }
 
     @Test
-    public void test_parseCSV_File() throws MaterialstoreException {
+    public void test_parseCSV_File() throws InspectusException {
         Path csv = fixtureDir.resolve("sitemap.csv");
         assert Files.exists(csv);
         Sitemap sitemap = loader.parseCSV(csv);
@@ -52,14 +53,14 @@ public class SitemapLoaderTest {
     }
 
     @Test
-    public void test_resolveUrl_withProtocol() throws MaterialstoreException {
+    public void test_resolveUrl_withProtocol() throws InspectusException {
         SitemapLoader sitemapLoader = new SitemapLoader(Target.builder("http://example.com/pages").build());
         URL url = loader.resolveUrl("http://foo.bar/baz");
         assertEquals("http://foo.bar/baz", url.toString());
     }
 
     @Test
-    public void test_resolveUrl_withSlash() throws MaterialstoreException {
+    public void test_resolveUrl_withSlash() throws InspectusException {
         SitemapLoader sitemapLoader =
                 new SitemapLoader(Target.builder("http://example.com/pages").build());
         URL url = sitemapLoader.resolveUrl("/index.html");
@@ -67,7 +68,7 @@ public class SitemapLoaderTest {
     }
 
     @Test
-    public void test_resolveURl_withoutSlash() throws MaterialstoreException {
+    public void test_resolveURl_withoutSlash() throws InspectusException {
         SitemapLoader sitemapLoader =
                 new SitemapLoader(Target.builder("http://example.com/pages").build());
         URL url = sitemapLoader.resolveUrl("p1.html");

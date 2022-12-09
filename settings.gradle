@@ -27,8 +27,14 @@ dependencyResolutionManagement {
             library('junit-jupiter-api', 'org.junit.jupiter', 'junit-jupiter-api').versionRef('junit5')
             library('junit-jupiter-engine', 'org.junit.jupiter', 'junit-jupiter-engine').versionRef('junit5')
 
+            version('log4j', '2.19.0')
+            library('log4j-core', 'org.apache.logging.log4j', 'log4j-core').versionRef('log4j')
+
             version('materialstore', '0.14.0')
             library('materialstore', 'com.kazurayam', 'materialstore').versionRef('materialstore')
+
+            version('poi', '5.2.3')
+            library('poi', 'org.apache.poi','poi-ooxml').versionRef('poi')
 
             version('selenium3', '3.141.59')
             library('selenium3', 'org.seleniumhq.selenium', 'selenium-java').versionRef('selenium3')

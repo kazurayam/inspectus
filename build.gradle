@@ -35,29 +35,51 @@ tasks.withType(JavaCompile) {
 
 
 
-test {
-    useJUnitPlatform()
-    finalizedBy(jacocoTestReport)
-}
 
 dependencies {
     api libs.materialstore
-
-    // slf4j is required by many classes in this library
-    implementation(libs.slf4j.api)
-    testImplementation(libs.slf4j.simple)
-
-    // https://mvnrepository.com/artifact/commons-io/commons-io
-    testImplementation(libs.commons.io)
-
-    testImplementation(libs.junit.jupiter.api)
-    testRuntimeOnly(libs.junit.jupiter.engine)
+    implementation libs.ashot
+    implementation libs.commons.csv
+    implementation libs.httpclient
+    implementation libs.jsoup
+    implementation libs.slf4j.api
+    testImplementation libs.slf4j.simple
+    testImplementation libs.commons.io
+    testImplementation libs.junit.jupiter.api
+    testImplementation libs.webdrivermanager
+    testRuntimeOnly libs.junit.jupiter.engine
 }
 
 java {
     withJavadocJar()
     withSourcesJar()
 }
+
+
+test {
+    useJUnitPlatform()
+    exclude '**/selenium/*'
+    finalizedBy(jacocoTestReport)
+}
+
+// https://stackoverflow.com/questions/56796676/gradle-how-to-run-a-custom-task-with-a-custom-configuration
+task testWithSelenium3(type: Test, dependsOn: test) {
+    dependencies {
+        implementation libs.selenium3
+    }
+    testClassesDirs = sourceSets.test.output.classesDirs
+    include '**/selenium/*'
+}
+
+task testWithSelenium4(type: Test, dependsOn: test) {
+    dependencies {
+        implementation libs.selenium4
+    }
+    testClassesDirs = sourceSets.test.output.classesDirs
+    include '**/selenium/*'
+}
+
+task testBoth(dependsOn: [testWithSelenium3, testWithSelenium4])
 
 javadoc {
     options.showFromProtected()

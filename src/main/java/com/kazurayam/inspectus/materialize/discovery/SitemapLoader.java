@@ -16,11 +16,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 public final class SitemapLoader {
 
@@ -77,14 +75,17 @@ public final class SitemapLoader {
             Iterable<CSVRecord> records = csvFormat.parse(in);
             for (CSVRecord record : records) {
                 Map<String,String> map = record.toMap();
-                URL url = new URL(map.get("url"));
-                Handle handle = Handle.deserialize(map.get("handle"));
-                map.remove("url");
-                map.remove("handle");
-                Target t =
-                        Target.builder(url).handle(handle)
-                                .putAll(map).build();
-                sitemap.add(t);
+                if (map.get("url") != null &&
+                        map.get("url").length() > 0) {
+                    URL url = resolveUrl(map.get("url"));
+                    Handle handle = Handle.deserialize(map.get("handle"));
+                    map.remove("url");
+                    map.remove("handle");
+                    Target t =
+                            Target.builder(url).handle(handle)
+                                    .putAll(map).build();
+                    sitemap.add(t);
+                }
             }
         } catch (IOException e) {
             throw new MaterialstoreException(e);
@@ -106,6 +107,37 @@ public final class SitemapLoader {
             return String.join("\n", lines);
         } catch (IOException e) {
             throw new MaterialstoreException(e);
+        }
+    }
+
+    /**
+     * urlString could be in 2 forms:
+     * - with URL protocol <PRE>http://hostname/foo.html</PRE>
+     * - without URL protocol <PRE>/foo.html</PRE>
+     * Either form should be accepted.
+     * When the protocol is omitted, then the baseTopPage is refered to
+     * supplement the protocol+host+port of the url to return
+     *
+     * the baseTopPage is
+     * @param urlSpec e.g, "http://host/foo.html" or "/foo.html" or "foo.html"
+     * @return URL
+     */
+    public URL resolveUrl(String urlSpec) throws MaterialstoreException {
+        Objects.requireNonNull(urlSpec);
+        try {
+            URL url1 = new URL(urlSpec);
+            return url1;
+        } catch (MalformedURLException e1) {
+            if (e1.getMessage().contains("no protocol")) {
+                try {
+                    URL url2 = new URL(baseTopPage.getUrl(), urlSpec);
+                    return url2;
+                } catch (MalformedURLException e2) {
+                    throw new MaterialstoreException(e2);
+                }
+            } else {
+                throw new MaterialstoreException("urlStr=\"" + urlSpec + "\"");
+            }
         }
     }
 }

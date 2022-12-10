@@ -25,6 +25,8 @@ public final class SitemapLoader {
     private final Target baseTopPage;
     private final Target twinTopPage;
 
+    private boolean withHeaderRecord;
+
     public SitemapLoader() {
         this(Target.NULL_OBJECT, Target.NULL_OBJECT);
     }
@@ -36,6 +38,11 @@ public final class SitemapLoader {
     public SitemapLoader(Target baseTopPage, Target twinTopPage) {
         this.baseTopPage = baseTopPage;
         this.twinTopPage = twinTopPage;
+        this.withHeaderRecord = true;
+    }
+
+    public void setWithHeaderRecord(boolean withHeaderRecord) {
+        this.withHeaderRecord = withHeaderRecord;
     }
 
     public Sitemap parseJson(String jsonText) throws InspectusException {
@@ -67,28 +74,53 @@ public final class SitemapLoader {
             throw new IllegalArgumentException("baseTopPage is required but not set");
         }
         Reader in = new StringReader(csvText);
-        CSVFormat csvFormat =
-                CSVFormat.RFC4180.builder().setHeader()
-                        .setSkipHeaderRecord(true).build();
         Sitemap sitemap = new Sitemap(baseTopPage, twinTopPage);
-        try {
-            Iterable<CSVRecord> records = csvFormat.parse(in);
-            for (CSVRecord record : records) {
-                Map<String,String> map = record.toMap();
-                if (map.get("url") != null &&
-                        map.get("url").length() > 0) {
-                    URL url = resolveUrl(map.get("url"));
-                    Handle handle = Handle.deserialize(map.get("handle"));
-                    map.remove("url");
-                    map.remove("handle");
-                    Target t =
-                            Target.builder(url).handle(handle)
-                                    .putAll(map).build();
-                    sitemap.add(t);
+        if (withHeaderRecord) {
+            CSVFormat csvFormat =
+                    CSVFormat.RFC4180.builder().setHeader()
+                            .setCommentMarker('#')
+                            .setSkipHeaderRecord(true).build();
+            try {
+                Iterable<CSVRecord> records = csvFormat.parse(in);
+                for (CSVRecord record : records) {
+                    Map<String, String> map = record.toMap();
+                    if (map.get("url") != null && map.get("url").length() > 0) {
+                        URL url = resolveUrl(map.get("url"));
+                        Handle handle = Handle.deserialize(map.get("handle"));
+                        map.remove("url");
+                        map.remove("handle");
+                        Target t =
+                                Target.builder(url).handle(handle)
+                                        .putAll(map).build();
+                        sitemap.add(t);
+                    }
                 }
+            } catch (IOException e) {
+                throw new InspectusException(e);
             }
-        } catch (IOException e) {
-            throw new InspectusException(e);
+        } else {
+            CSVFormat csvFormat = CSVFormat.Builder.create()
+                    .setCommentMarker('#').build();
+            try {
+                Iterable<CSVRecord> records = csvFormat.parse(in);
+                for (CSVRecord record : records) {
+                    if (record.get(0) != null && record.get(0).length() > 0) {
+                        URL url = resolveUrl(record.get(0));
+                        if (record.size() > 1) {
+                            Handle handle = Handle.deserialize(record.get(1));
+                            Target t =
+                                    Target.builder(url).handle(handle).build();
+                            sitemap.add(t);
+                        } else {
+                            Target t =
+                                    Target.builder(url).build();
+                            sitemap.add(t);
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                throw new InspectusException(e);
+            }
         }
         return sitemap;
     }

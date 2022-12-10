@@ -5,14 +5,19 @@ import com.kazurayam.inspectus.materialize.TestHelper;
 import com.kazurayam.materialstore.core.filesystem.MaterialstoreException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class SitemapLoaderTest {
+
+    private Logger logger = LoggerFactory.getLogger(SitemapLoaderTest.class);
 
     private SitemapLoader loader;
     private final Path fixtureDir =
@@ -27,6 +32,7 @@ public class SitemapLoaderTest {
         Target baseTopPage = Target.builder("http://myadmin.kazurayam.com").build();
         Target twinTopPage = Target.builder("http://devadmin.kazurayam.com").build();
         loader = new SitemapLoader(baseTopPage, twinTopPage);
+        loader.setWithHeaderRecord(true);
     }
 
     @Test
@@ -34,15 +40,15 @@ public class SitemapLoaderTest {
         Path json = fixtureDir.resolve("sitemap.json");
         assert Files.exists(json);
         Sitemap sitemap = loader.parseJson(json);
-        System.out.println(sitemap.toJson(true));
+        logger.info("[test_parseJsonPath] " + sitemap.toJson(true));
     }
 
     @Test
-    public void test_parseCSV_File() throws InspectusException {
+    public void test_parseCSV_withHeader() throws InspectusException {
         Path csv = fixtureDir.resolve("sitemap.csv");
         assert Files.exists(csv);
         Sitemap sitemap = loader.parseCSV(csv);
-        System.out.println(sitemap.toJson(true));
+        logger.info("[test_parseCSV_withHeader] " + sitemap.toJson(true));
         assertEquals(3, sitemap.size());
         assertEquals("http://myadmin.kazurayam.com/proverbs.html",
                 sitemap.getBaseTarget(2).getUrl().toString());
@@ -50,6 +56,21 @@ public class SitemapLoaderTest {
                 sitemap.getBaseTarget(2).getHandle().toString());
         assertEquals("03",
                 sitemap.getBaseTarget(2).getAttributes().get("step"));
+    }
+
+    @Test
+    public void test_parseCSV_noHeader() throws InspectusException {
+        Path csv = fixtureDir.resolve("sitemap_no_header.csv");
+        assert Files.exists(csv);
+        loader.setWithHeaderRecord(false);
+        Sitemap sitemap = loader.parseCSV(csv);
+        logger.info("[test_parseCSV_noHeader] " + sitemap.toJson(true));
+        assertEquals(3, sitemap.size());
+        assertEquals("http://myadmin.kazurayam.com/proverbs.html",
+                sitemap.getBaseTarget(2).getUrl().toString());
+        assertEquals("By.cssSelector: #main",
+                sitemap.getBaseTarget(2).getHandle().toString());
+        assertNull(sitemap.getBaseTarget(2).getAttributes().get("step"));
     }
 
     @Test

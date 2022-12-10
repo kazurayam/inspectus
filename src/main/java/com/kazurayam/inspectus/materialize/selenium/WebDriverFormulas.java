@@ -13,6 +13,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.time.Duration;
+import java.util.Objects;
 
 /**
  * A collection of WebDriver code snippet that are frequently repeated in UI test cases:
@@ -105,6 +106,12 @@ public final class WebDriverFormulas {
      * @return an instance of WebDriverWait
      */
     public final WebDriverWait createWebDriverWait(WebDriver driver, long timeout) {
+        return this.createWebDriverWait(driver, Duration.ofSeconds(timeout));
+    }
+
+    public final WebDriverWait createWebDriverWait(WebDriver driver, Duration duration) {
+        Objects.requireNonNull(driver);
+        Objects.requireNonNull(duration);
         //return new WebDriverWait(driver, timeout);
         Class<?> clazz;
         String fullyQualifiedClassName = "org.openqa.selenium.support.ui.WebDriverWait";
@@ -116,7 +123,7 @@ public final class WebDriverFormulas {
         Constructor<?> selenium4constructor;
         try {
             selenium4constructor = clazz.getConstructor(WebDriver.class, Duration.class);
-            return (WebDriverWait)selenium4constructor.newInstance(driver, Duration.ofSeconds(timeout));
+            return (WebDriverWait)selenium4constructor.newInstance(driver, duration);
         } catch (NoSuchMethodException e) {
             logger.debug(String.format("%s(WebDriver, Duration) of Selenium4 is NOT found in the CLASSPATH",
                     fullyQualifiedClassName));
@@ -126,6 +133,7 @@ public final class WebDriverFormulas {
             Constructor<?> selenium3constructor;
             try {
                 selenium3constructor = clazz.getConstructor(WebDriver.class, long.class);
+                long timeout = duration.getSeconds();
                 return (WebDriverWait)selenium3constructor.newInstance(driver, timeout);
             } catch (NoSuchMethodException x) {
                 throw new IllegalStateException(

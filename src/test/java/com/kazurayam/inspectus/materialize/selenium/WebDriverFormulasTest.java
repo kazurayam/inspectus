@@ -13,6 +13,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -43,8 +44,15 @@ public class WebDriverFormulasTest {
     }
 
     @Test
-    public void test_createWebDriverWait() {
+    public void test_createWebDriverWait_long() {
         WebDriverWait wait = formulas.createWebDriverWait(driver, 3);
+        assertNotNull(wait);
+        assertTrue(wait instanceof WebDriverWait);
+    }
+
+    @Test
+    public void test_createWebDriverWait_Duration() {
+        WebDriverWait wait = formulas.createWebDriverWait(driver, Duration.ofSeconds(3));
         assertNotNull(wait);
         assertTrue(wait instanceof WebDriverWait);
     }

@@ -99,13 +99,14 @@ public final class SitemapLoader {
                 throw new InspectusException(e);
             }
         } else {
-            CSVFormat csvFormat = CSVFormat.DEFAULT;
+            CSVFormat csvFormat = CSVFormat.Builder.create()
+                    .setCommentMarker('#').build();
             try {
                 Iterable<CSVRecord> records = csvFormat.parse(in);
                 for (CSVRecord record : records) {
                     if (record.get(0) != null && record.get(0).length() > 0) {
                         URL url = resolveUrl(record.get(0));
-                        if (record.get(1) != null && record.get(1).length() > 0) {
+                        if (record.size() > 1) {
                             Handle handle = Handle.deserialize(record.get(1));
                             Target t =
                                     Target.builder(url).handle(handle).build();

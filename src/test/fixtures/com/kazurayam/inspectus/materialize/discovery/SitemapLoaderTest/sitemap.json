@@ -1,0 +1,40 @@
+{
+  "baseTopPage": {
+    "url": "http://myadmin.kazurayam.com",
+    "handle": "By.xpath: //*[@id\u003d\u0027main\u0027]",
+    "attributes": {}
+  },
+  "twinTopPage": {
+    "url": "http://devadmin.kazurayam.com",
+    "handle": "By.xpath: //*[@id\u003d\u0027main\u0027]",
+    "attributes": {}
+  },
+  "targetList": [
+    {
+      "url": "http://myadmin.kazurayam.com",
+      "handle": "By.xpath: //*[@id\u003d\u0027main\u0027]",
+      "attributes": {}
+    },
+    {
+      "url": "http://myadmin.kazurayam.com/index.html",
+      "handle": "By.cssSelector: #main",
+      "attributes": {
+        "step": "01"
+      }
+    },
+    {
+      "url": "http://myadmin.kazurayam.com/repositories.html",
+      "handle": "By.cssSelector: #main",
+      "attributes": {
+        "step": "02"
+      }
+    },
+    {
+      "url": "http://myadmin.kazurayam.com/proverbs.html",
+      "handle": "By.cssSelector: #main",
+      "attributes": {
+        "step": "03"
+      }
+    }
+  ]
+}

@@ -4,7 +4,7 @@ import com.kazurayam.inspectus.core.Inspectus;
 import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;
 import com.kazurayam.inspectus.core.Parameters;
-import com.kazurayam.inspectus.core.TestHelper;
+import com.kazurayam.inspectus.TestHelper;
 import com.kazurayam.materialstore.core.filesystem.FileType;
 import com.kazurayam.materialstore.core.filesystem.JobName;
 import com.kazurayam.materialstore.core.filesystem.JobTimestamp;
@@ -27,13 +27,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class FnChronosDiffTest {
 
     private Path baseDir;
-    private Path testClassOutputDir;
     private Store store;
 
     @BeforeEach
     public void beforeEach() throws IOException {
         baseDir = TestHelper.getCWD();
-        testClassOutputDir = TestHelper.createTestClassOutputDir(this);
+        Path testClassOutputDir = TestHelper.createTestClassOutputDir(FnChronosDiffTest.class);
         store = Stores.newInstance(testClassOutputDir.resolve("store"));
     }
 

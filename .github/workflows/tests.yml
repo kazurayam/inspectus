@@ -33,7 +33,7 @@ jobs:
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
 
-      - name: Run the Gradle test task
+      - name: Run the Gradle build task
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: :test
+          arguments: :build --scan

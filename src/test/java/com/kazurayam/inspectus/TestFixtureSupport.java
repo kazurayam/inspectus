@@ -1,4 +1,4 @@
-package com.kazurayam.inspectus.core;
+package com.kazurayam.inspectus;
 
 import com.kazurayam.materialstore.core.filesystem.FileType;
 import com.kazurayam.materialstore.core.filesystem.JobName;

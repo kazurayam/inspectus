@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.kazurayam"
-version = "0.6.0"
+version = "0.7.1"
 
 ext {
     isReleaseVersion = !version.endsWith("SNAPSHOT")
@@ -33,31 +33,52 @@ tasks.withType(JavaCompile) {
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
 
-
-
-test {
-    useJUnitPlatform()
-    finalizedBy(jacocoTestReport)
-}
-
 dependencies {
     api libs.materialstore
-
-    // slf4j is required by many classes in this library
-    implementation(libs.slf4j.api)
-    testImplementation(libs.slf4j.simple)
-
-    // https://mvnrepository.com/artifact/commons-io/commons-io
-    testImplementation(libs.commons.io)
-
-    testImplementation(libs.junit.jupiter.api)
-    testRuntimeOnly(libs.junit.jupiter.engine)
+    implementation libs.ashot
+    implementation libs.commons.csv
+    implementation libs.httpclient
+    implementation libs.jsoup
+    implementation libs.poi
+    implementation libs.slf4j.api
+    testImplementation libs.slf4j.simple
+    testImplementation libs.commons.io
+    testImplementation libs.junit.jupiter.api
+    testImplementation libs.webdrivermanager
+    testRuntimeOnly libs.junit.jupiter.engine
+    testRuntimeOnly libs.log4j.core
 }
 
 java {
     withJavadocJar()
     withSourcesJar()
 }
+
+tasks.withType(Test) {
+    useJUnitPlatform()
+}
+
+test {
+    exclude '**/selenium/*'
+    finalizedBy(jacocoTestReport)
+}
+
+// https://stackoverflow.com/questions/56796676/gradle-how-to-run-a-custom-task-with-a-custom-configuration
+task testWithSelenium3(type: Test, dependsOn: compileTestJava) {
+    dependencies {
+        implementation libs.selenium3
+    }
+    include '**/selenium/*'
+}
+
+task testWithSelenium4(type: Test, dependsOn: compileTestJava) {
+    dependencies {
+        implementation libs.selenium4
+    }
+    include '**/selenium/*'
+}
+
+task testSelenium(dependsOn: [testWithSelenium3, testWithSelenium4])
 
 javadoc {
     options.showFromProtected()

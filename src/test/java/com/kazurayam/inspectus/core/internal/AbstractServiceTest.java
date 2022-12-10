@@ -3,7 +3,7 @@ package com.kazurayam.inspectus.core.internal;
 import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;
 import com.kazurayam.inspectus.core.Parameters;
-import com.kazurayam.inspectus.core.TestHelper;
+import com.kazurayam.inspectus.TestHelper;
 import com.kazurayam.inspectus.fn.FnShootings;
 import com.kazurayam.materialstore.core.filesystem.FileType;
 import com.kazurayam.materialstore.core.filesystem.JobName;
@@ -25,12 +25,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AbstractServiceTest {
 
-    private Path testClassOutputDir;
     private Store store;
 
     @BeforeEach
     public void beforeEach() throws IOException {
-        testClassOutputDir = TestHelper.createTestClassOutputDir(this);
+        Path testClassOutputDir = TestHelper.createTestClassOutputDir(AbstractServiceTest.class);
         store = Stores.newInstance(testClassOutputDir.resolve("store"));
     }
 

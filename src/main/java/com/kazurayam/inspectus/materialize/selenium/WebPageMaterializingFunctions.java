@@ -40,11 +40,10 @@ public class WebPageMaterializingFunctions {
      * get HTML source of the target web page, pretty-print it, save it into
      * the store
      */
-    public WebPageMaterializingFunction<WebDriver, Target, Map<String,String>, Material>
-            storeHTMLSource = (driver, target, attributes) -> {
+    public WebPageMaterializingFunction<WebDriver, Target, Material>
+            storeHTMLSource = (driver, target) -> {
         Objects.requireNonNull(driver);
         Objects.requireNonNull(target);
-        Objects.requireNonNull(attributes);
         //-------------------------------------------------------------
         // get the HTML source from browser
         String rawHtmlSource = driver.getPageSource();
@@ -56,7 +55,6 @@ public class WebPageMaterializingFunctions {
         // write the HTML source into the store
         Metadata metadata = Metadata.builder(target.getUrl())
                 .putAll(target.getAttributes())
-                .putAll(attributes)
                 .build();
         return this.store.write(this.jobName, this.jobTimestamp,
                 FileType.HTML, metadata, ppHtml);
@@ -65,11 +63,10 @@ public class WebPageMaterializingFunctions {
     /**
      *
      */
-    public WebPageMaterializingFunction<WebDriver, Target, Map<String,String>, Material>
-            storeEntirePageScreenshot = (driver, target, attributes) -> {
+    public WebPageMaterializingFunction<WebDriver, Target, Material>
+            storeEntirePageScreenshot = (driver, target) -> {
         Objects.requireNonNull(driver);
         Objects.requireNonNull(target);
-        Objects.requireNonNull(attributes);
         //-------------------------------------------------------------
         int timeout = 500;  // milli-seconds
         // look up the device-pixel-ratio of the current machine
@@ -89,7 +86,6 @@ public class WebPageMaterializingFunctions {
         // write the PNG image into the store
         Metadata metadata = Metadata.builder(target.getUrl())
                 .putAll(target.getAttributes())
-                .putAll(attributes)
                 .build();
         return this.store.write(this.jobName, this.jobTimestamp,
                 FileType.PNG, metadata, bufferedImage);

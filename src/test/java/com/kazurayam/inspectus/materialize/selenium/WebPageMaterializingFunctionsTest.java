@@ -59,6 +59,7 @@ public class WebPageMaterializingFunctionsTest {
     void test_storeHTMLSource() throws InspectusException, MaterialstoreException {
         Target target = new Target.Builder("https://www.google.com")
                 .handle(new Handle(By.cssSelector("input[name=\"q\"]")))
+                .put("step", "01")
                 .build();
         JobName jobName = new JobName("test_storeHTMLSource");
         JobTimestamp jobTimestamp = JobTimestamp.now();
@@ -67,8 +68,7 @@ public class WebPageMaterializingFunctionsTest {
         // get HTML source of the page, save it into the store
         Map<String, String> attribute = Collections.singletonMap("step", "01");
         WebPageMaterializingFunctions pmf = new WebPageMaterializingFunctions(store, jobName, jobTimestamp);
-        Material createdMaterial =
-                pmf.storeHTMLSource.accept(driver, target, attribute);
+        Material createdMaterial = pmf.storeHTMLSource.accept(driver, target);
         assertNotNull(createdMaterial);
         // assert that a material has been created
         Material selectedMaterial = store.selectSingle(jobName, jobTimestamp, FileType.HTML, QueryOnMetadata.ANY);
@@ -80,16 +80,15 @@ public class WebPageMaterializingFunctionsTest {
     void test_storeEntirePageScreenshot() throws InspectusException, MaterialstoreException {
         Target target = new Target.Builder("https://github.com/kazurayam")
                 .handle(new Handle(By.cssSelector("div.application-main main")))
+                .put("step", "01")
                 .build();
         JobName jobName = new JobName("test_storeEntirePageScreenshot");
         JobTimestamp jobTimestamp = JobTimestamp.now();
         // open the page in browser
         driver.navigate().to(target.getUrl());
         // take an entire page screenshot, write the image into the store
-        Map<String, String> attribute = Collections.singletonMap("step", "01");
         WebPageMaterializingFunctions pmf = new WebPageMaterializingFunctions(store, jobName, jobTimestamp);
-        Material createdMaterial =
-                pmf.storeEntirePageScreenshot.accept(driver, target, attribute);
+        Material createdMaterial = pmf.storeEntirePageScreenshot.accept(driver, target);
         assertNotNull(createdMaterial);
         // assert that a material has been created
         Material selectedMaterial = store.selectSingle(jobName, jobTimestamp, FileType.PNG, QueryOnMetadata.ANY);

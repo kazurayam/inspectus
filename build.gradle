@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.kazurayam"
-version = "0.7.2"
+version = "0.7.3"
 
 ext {
     isReleaseVersion = !version.endsWith("SNAPSHOT")
@@ -40,6 +40,7 @@ dependencies {
     implementation libs.httpclient
     implementation libs.jsoup
     implementation libs.poi
+    implementation libs.selenium4
     implementation libs.slf4j.api
     testImplementation libs.slf4j.simple
     testImplementation libs.commons.io
@@ -66,14 +67,14 @@ test {
 // https://stackoverflow.com/questions/56796676/gradle-how-to-run-a-custom-task-with-a-custom-configuration
 task testWithSelenium3(type: Test, dependsOn: compileTestJava) {
     dependencies {
-        implementation libs.selenium3
+        testImplementation libs.selenium3
     }
     include '**/selenium/*'
 }
 
 task testWithSelenium4(type: Test, dependsOn: compileTestJava) {
     dependencies {
-        implementation libs.selenium4
+        testImplementation libs.selenium4
     }
     include '**/selenium/*'
 }

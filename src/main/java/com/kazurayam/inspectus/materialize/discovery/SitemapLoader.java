@@ -153,6 +153,7 @@ public final class SitemapLoader {
      * the baseTopPage is
      * @param urlSpec e.g, "http://host/foo.html" or "/foo.html" or "foo.html"
      * @return URL
+     * @throws InspectusException when urlSpec is malformed
      */
     public URL resolveUrl(String urlSpec) throws InspectusException {
         Objects.requireNonNull(urlSpec);

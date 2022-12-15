@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,7 +55,7 @@ public class FnTwinsDiffTest {
                 new FnTwinsDiff(fn,
                         new Environment("ProductionEnv"),
                         new Environment("DevelopmentEnv"));
-        fnTwinsDiff.execute(parameters);
+        Intermediates result = fnTwinsDiff.execute(parameters);
 
         // Assert
         try {
@@ -65,7 +66,7 @@ public class FnTwinsDiffTest {
             assertEquals("ProductionEnv",
                     store.selectSingle(jobName, jobTimestamp).getMetadata()
                             .get(Parameters.KEY_environment));
-            //
+            assertTrue(result.getWarnings() > 0);
         } catch (MaterialstoreException e) {
             throw new InspectusException(e);
         }
@@ -76,12 +77,13 @@ public class FnTwinsDiffTest {
      * and "store/jobName/RightJobTimestamp", each of which contains 3 PNG images
      * files.
      */
-    private final Function<Parameters, Intermediates> fn = p -> {
-        Path bd = p.getBaseDir();
-        Store st = p.getStore();
-        JobName jn = p.getJobName();
-        JobTimestamp jt = p.getJobTimestamp();
-        Environment env = p.getEnvironment();
+    private final BiFunction<Parameters, Intermediates, Intermediates> fn =
+            (parameters, intermediates) -> {
+        Path bd = parameters.getBaseDir();
+        Store st = parameters.getStore();
+        JobName jn = parameters.getJobName();
+        JobTimestamp jt = parameters.getJobTimestamp();
+        Environment env = parameters.getEnvironment();
 
         Path images = bd.resolve("src/test/fixtures/images");
         // the apple could be red or green randomly
@@ -110,7 +112,7 @@ public class FnTwinsDiffTest {
 
             MaterialList mt = store.select(jn, jt);
 
-            return new Intermediates.Builder()
+            return Intermediates.builder(intermediates)
                     .materialList(mt)
                     .build();
 

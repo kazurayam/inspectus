@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -91,8 +92,19 @@ public class SitemapLoaderTest {
     @Test
     public void test_resolveURl_withoutSlash() throws InspectusException {
         SitemapLoader sitemapLoader =
-                new SitemapLoader(Target.builder("http://example.com/pages").build());
+                new SitemapLoader(Target.builder("http://example.com/pages/").build());
         URL url = sitemapLoader.resolveUrl("p1.html");
-        assertEquals("http://example.com/p1.html", url.toString());
+        assertEquals("http://example.com/pages/p1.html", url.toString());
+    }
+
+    @Test
+    public void test_URL_constructor_withoutSlash() throws MalformedURLException {
+        URL baseURL1 = new URL("http://example.com/pages");
+        URL derived1 = new URL(baseURL1, "p1.html");
+        assertEquals("http://example.com/p1.html", derived1.toExternalForm());
+        // the "/" character at the end of baseURL matters
+        URL baseURL2 = new URL("http://example.com/pages/");
+        URL derived2 = new URL(baseURL2, "p1.html");
+        assertEquals("http://example.com/pages/p1.html", derived2.toExternalForm());
     }
 }

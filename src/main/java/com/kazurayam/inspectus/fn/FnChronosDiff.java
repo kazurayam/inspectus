@@ -5,16 +5,18 @@ import com.kazurayam.inspectus.core.Intermediates;
 import com.kazurayam.inspectus.core.Parameters;
 import com.kazurayam.inspectus.core.internal.ChronosDiff;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 public class FnChronosDiff extends ChronosDiff {
 
-    private Function<Parameters, Intermediates> fn;
+    private BiFunction<Parameters, Intermediates, Intermediates> fn;
 
-    public FnChronosDiff(Function<Parameters, Intermediates> fn) { this.fn = fn; }
+    public FnChronosDiff(BiFunction<Parameters, Intermediates, Intermediates> fn) { this.fn = fn; }
 
     @Override
-    public Intermediates step2_materialize(Parameters parameters) throws InspectusException {
-        return fn.apply(parameters);
+    public Intermediates step2_materialize(Parameters parameters,
+                                           Intermediates intermediates)
+            throws InspectusException {
+        return fn.apply(parameters, intermediates);
     }
 }

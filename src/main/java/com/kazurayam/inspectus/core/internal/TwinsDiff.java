@@ -25,12 +25,12 @@ import java.awt.image.BufferedImage;
 public abstract class TwinsDiff extends AbstractDiffService {
 
     private final Logger logger = LoggerFactory.getLogger(TwinsDiff.class);
-
     protected Environment environmentLeft = Environment.NULL_OBJECT;
     protected Environment environmentRight = Environment.NULL_OBJECT;
 
     @Override
-    public Intermediates process(Parameters parameters) throws InspectusException {
+    public Intermediates process(Parameters parameters, Intermediates intermediates)
+            throws InspectusException {
         if (environmentLeft == null) {
             throw new InspectusException("environmentLeft must not be null");
         }
@@ -44,20 +44,21 @@ public abstract class TwinsDiff extends AbstractDiffService {
             throw new InspectusException("environmentRight must be set");
         }
 
-        Intermediates im = step2_materialize(parameters);
+        Intermediates result2 = step2_materialize(parameters, intermediates);
 
-        Intermediates decoratedIntermediates =
-                Intermediates.builder(im)
+        Intermediates stuffedIntermediates =
+                Intermediates.builder(result2)
                         .environmentLeft(environmentLeft)
                         .environmentRight(environmentRight)
-                        .jobTimestampLeft(im.getJobTimestampLeft())
-                        .jobTimestampRight(im.getJobTimestampRight())
+                        .jobTimestampLeft(result2.getJobTimestampLeft())
+                        .jobTimestampRight(result2.getJobTimestampRight())
                         .build();
 
-        return step3_reduceTwins(parameters, decoratedIntermediates);
+        return step3_reduceTwins(parameters, stuffedIntermediates);
     }
 
-    public Intermediates step2_materialize(Parameters parameters) throws InspectusException {
+    public Intermediates step2_materialize(Parameters parameters, Intermediates intermediates)
+            throws InspectusException {
         listener.stepStarted("step2_materialize");
         //return fn.apply(parameters);
         if ( ! parameters.containsJobTimestamp()) {
@@ -68,7 +69,7 @@ public abstract class TwinsDiff extends AbstractDiffService {
         // while passing the given JobTimestamp to the custom code
         JobTimestamp jobTimestampLeft = parameters.getJobTimestamp();
         Intermediates resultLeft =
-                processEnvironment(parameters, environmentLeft);
+                processEnvironment(parameters, environmentLeft, intermediates);
 
         // take the screenshots of the right environment
         // while passing a calculated JobTimestamp to the custom code
@@ -77,17 +78,19 @@ public abstract class TwinsDiff extends AbstractDiffService {
                 Parameters.builder(parameters)
                         .jobTimestamp(jobTimestampRight).build();
         Intermediates resultRight =
-                processEnvironment(modifiedParams, environmentRight);
+                processEnvironment(modifiedParams, environmentRight, resultLeft);
 
         // return the JobTimestamp of the left and the right
         listener.stepFinished("step2_materialize");
-        return Intermediates.builder()
+        return Intermediates.builder(resultRight)
                 .jobTimestampLeft(jobTimestampLeft)
                 .jobTimestampRight(jobTimestampRight)
                 .build();
     }
 
-    public abstract Intermediates processEnvironment(Parameters params, Environment env)
+    public abstract Intermediates processEnvironment(Parameters params,
+                                                     Environment env,
+                                                     Intermediates intermediates)
             throws InspectusException;
 
     public Intermediates step3_reduceTwins(Parameters parameters,
@@ -176,7 +179,7 @@ public abstract class TwinsDiff extends AbstractDiffService {
             // we will pass the MaterialProductGroup object to
             // the reporting step that follows
             Intermediates result =
-                    new Intermediates.Builder()
+                    Intermediates.builder(intermediates)
                             .materialProductGroup(inspected)
                             .build();
 

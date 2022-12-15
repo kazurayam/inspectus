@@ -7,13 +7,13 @@ import com.kazurayam.inspectus.core.Parameters;
 import com.kazurayam.inspectus.core.internal.TwinsDiff;
 
 import java.util.Objects;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 public class FnTwinsDiff extends TwinsDiff {
 
-    private Function<Parameters, Intermediates> fn;
+    private BiFunction<Parameters, Intermediates, Intermediates> fn;
 
-    public FnTwinsDiff(Function<Parameters, Intermediates> fn,
+    public FnTwinsDiff(BiFunction<Parameters, Intermediates, Intermediates> fn,
                        Environment environmentLeft,
                        Environment environmentRight) {
         Objects.requireNonNull(fn);
@@ -29,11 +29,14 @@ public class FnTwinsDiff extends TwinsDiff {
      * call the Function
      */
     @Override
-    public Intermediates processEnvironment(Parameters params, Environment env) throws InspectusException {
+    public Intermediates processEnvironment(Parameters params,
+                                            Environment env,
+                                            Intermediates intermediates)
+            throws InspectusException {
         Parameters decorated =
                 Parameters.builder(params)
                         .environment(env).build();
-        return fn.apply(decorated);
+        return fn.apply(decorated, intermediates);
     }
 
 }

@@ -1,19 +1,20 @@
 package com.kazurayam.inspectus.core;
 
 public interface Inspectus {
-    default void execute(Parameters parameters) throws InspectusException {
+
+    default Intermediates execute(Parameters parameters) throws InspectusException {
         // ante festum
-        preProcess(parameters);
+        Intermediates preProcessResult = preProcess(parameters);
         // in festum
-        Intermediates intermediates = process(parameters);
+        Intermediates processResult = process(parameters, preProcessResult);
         // post festum
-        postProcess(parameters, intermediates);
+        return postProcess(parameters, processResult);
     }
 
-    void preProcess(Parameters parameters) throws InspectusException;
+    Intermediates preProcess(Parameters parameters) throws InspectusException;
 
-    Intermediates process(Parameters parameters) throws InspectusException;
+    Intermediates process(Parameters parameters, Intermediates intermediates) throws InspectusException;
 
-    void postProcess(Parameters parameters, Intermediates intermediates) throws InspectusException;
+    Intermediates postProcess(Parameters parameters, Intermediates intermediates) throws InspectusException;
 }
 

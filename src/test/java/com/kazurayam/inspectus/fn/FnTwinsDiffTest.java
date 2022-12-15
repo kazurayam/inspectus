@@ -55,7 +55,7 @@ public class FnTwinsDiffTest {
                 new FnTwinsDiff(fn,
                         new Environment("ProductionEnv"),
                         new Environment("DevelopmentEnv"));
-        fnTwinsDiff.execute(parameters);
+        Intermediates result = fnTwinsDiff.execute(parameters);
 
         // Assert
         try {
@@ -66,7 +66,7 @@ public class FnTwinsDiffTest {
             assertEquals("ProductionEnv",
                     store.selectSingle(jobName, jobTimestamp).getMetadata()
                             .get(Parameters.KEY_environment));
-            //
+            assertTrue(result.getWarnings() > 0);
         } catch (MaterialstoreException e) {
             throw new InspectusException(e);
         }

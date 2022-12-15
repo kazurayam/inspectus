@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public abstract class AbstractService implements Inspectus {
 
@@ -26,6 +27,12 @@ public abstract class AbstractService implements Inspectus {
 
     public AbstractService() {
         listener = new StdStepListener();
+    }
+
+    @Override
+    public void setListener(StepListener listener) {
+        Objects.requireNonNull(listener);
+        this.listener = listener;
     }
 
     /*

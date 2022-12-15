@@ -32,7 +32,7 @@ public interface ITestCaseCaller {
         Objects.requireNonNull(parameters);
         Objects.requireNonNull(intermediates);
 
-        // check if the Katalon classes are available
+        // check if the Katalon classes are available in the runtime classpath
         KeywordExecutor.validateKatalonClasspath();
 
         // now run the specified Test Case script; possibly for materializing = taking screenshots etc.

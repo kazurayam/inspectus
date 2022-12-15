@@ -1,5 +1,7 @@
 package com.kazurayam.inspectus.core;
 
+import com.kazurayam.inspectus.core.internal.StepListener;
+
 public interface Inspectus {
 
     default Intermediates execute(Parameters parameters) throws InspectusException {
@@ -16,5 +18,7 @@ public interface Inspectus {
     Intermediates process(Parameters parameters, Intermediates intermediates) throws InspectusException;
 
     Intermediates postProcess(Parameters parameters, Intermediates intermediates) throws InspectusException;
+
+    void setListener(StepListener listener);
 }
 

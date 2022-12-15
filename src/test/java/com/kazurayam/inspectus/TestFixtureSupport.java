@@ -8,6 +8,10 @@ import com.kazurayam.materialstore.core.filesystem.MaterialstoreException;
 import com.kazurayam.materialstore.core.filesystem.Metadata;
 import com.kazurayam.materialstore.core.filesystem.Store;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.nio.file.Path;
 
 public class TestFixtureSupport {
@@ -64,4 +68,20 @@ public class TestFixtureSupport {
         return store.write(jobName, jobTimestamp, FileType.PNG, metadata, png);
     }
 
+    /*
+     * returns BufferedImage an image of red apple on which the current timestamp is placed
+     * https://stackoverflow.com/questions/2736320/write-text-onto-image-in-java
+     */
+    public static BufferedImage createAppleImage(JobTimestamp jobTimestamp) throws IOException {
+        Path images = TestHelper.getFixturesDirectory().resolve("images");
+        Path apple = images.resolve("apple.png");
+        BufferedImage bufferedImage = ImageIO.read(apple.toFile());
+        Graphics g = bufferedImage.getGraphics();
+        //g.setColor(Color.LIGHT_GRAY);
+        //g.fillRect(500, 600, 200, 50);
+        g.setColor(Color.YELLOW);
+        g.setFont(new Font("Arial Black", Font.BOLD, 80));
+        g.drawString(jobTimestamp.toString(), 420, 660);
+        return bufferedImage;
+    }
 }

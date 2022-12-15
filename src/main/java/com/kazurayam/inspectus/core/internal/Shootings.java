@@ -12,6 +12,7 @@ import com.kazurayam.materialstore.core.filesystem.SortKeys;
 import com.kazurayam.materialstore.core.filesystem.Store;
 
 import java.nio.file.Path;
+import java.util.Objects;
 
 public abstract class Shootings extends AbstractService {
 
@@ -20,6 +21,8 @@ public abstract class Shootings extends AbstractService {
     @Override
     public Intermediates process(Parameters parameters, Intermediates intermediates)
             throws InspectusException {
+        Objects.requireNonNull(parameters);
+        Objects.requireNonNull(intermediates);
         return step2_materialize(parameters, intermediates);
     }
 

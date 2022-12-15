@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 
 public abstract class TwinsDiff extends AbstractDiffService {
 
@@ -31,6 +32,8 @@ public abstract class TwinsDiff extends AbstractDiffService {
     @Override
     public Intermediates process(Parameters parameters, Intermediates intermediates)
             throws InspectusException {
+        Objects.requireNonNull(parameters);
+        Objects.requireNonNull(intermediates);
         if (environmentLeft == null) {
             throw new InspectusException("environmentLeft must not be null");
         }
@@ -45,6 +48,7 @@ public abstract class TwinsDiff extends AbstractDiffService {
         }
 
         Intermediates result2 = step2_materialize(parameters, intermediates);
+        assert result2 != null;
 
         Intermediates stuffedIntermediates =
                 Intermediates.builder(result2)
@@ -70,6 +74,7 @@ public abstract class TwinsDiff extends AbstractDiffService {
         JobTimestamp jobTimestampLeft = parameters.getJobTimestamp();
         Intermediates resultLeft =
                 processEnvironment(parameters, environmentLeft, intermediates);
+        assert resultLeft != null;
 
         // take the screenshots of the right environment
         // while passing a calculated JobTimestamp to the custom code
@@ -79,9 +84,10 @@ public abstract class TwinsDiff extends AbstractDiffService {
                         .jobTimestamp(jobTimestampRight).build();
         Intermediates resultRight =
                 processEnvironment(modifiedParams, environmentRight, resultLeft);
+        assert resultRight != null;
 
-        // return the JobTimestamp of the left and the right
         listener.stepFinished("step2_materialize");
+
         return Intermediates.builder(resultRight)
                 .jobTimestampLeft(jobTimestampLeft)
                 .jobTimestampRight(jobTimestampRight)

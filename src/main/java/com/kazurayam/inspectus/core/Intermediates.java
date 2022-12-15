@@ -17,12 +17,14 @@ public class Intermediates {
     private final JobTimestamp jobTimestampRight;
     private final Environment environmentLeft;
     private final Environment environmentRight;
+    private int warnings;
     public static final String KEY_materialList = "materialList";
     public static final String KEY_materialProductGroup = "materialProductGroup";
     public static final String KEY_jobTimestampLeft = "jobTimestampLeft";
     public static final String KEY_jobTimestampRight = "jobTimestampRight";
     public static final String KEY_environmentLeft = "environmentLeft";
     public static final String KEY_environmentRight = "environmentRight";
+    public static final String KEY_warnings = "warnings";
 
     public static Builder builder() {
         return new Builder();
@@ -36,6 +38,7 @@ public class Intermediates {
         this.jobTimestampRight = b.jobTimestampRight;
         this.environmentLeft = b.environmentLeft;
         this.environmentRight = b.environmentRight;
+        this.warnings = b.warnings;
     }
     public Boolean containsMaterialList() {
         return this.materialList != MaterialList.NULL_OBJECT;
@@ -60,6 +63,7 @@ public class Intermediates {
     public JobTimestamp getJobTimestampRight() { return jobTimestampRight; }
     public Environment getEnvironmentLeft() { return environmentLeft; }
     public Environment getEnvironmentRight() { return environmentRight; }
+    public int getWarnings() { return warnings; }
 
     public Map<String, Object> toMap() {
         Map<String, Object> m = new LinkedHashMap<>();
@@ -69,6 +73,7 @@ public class Intermediates {
         m.put(KEY_jobTimestampRight, jobTimestampRight);
         m.put(KEY_environmentLeft, environmentLeft);
         m.put(KEY_environmentRight, environmentRight);
+        m.put(KEY_warnings, warnings);
         return m;
     }
     public static class Builder {
@@ -78,6 +83,7 @@ public class Intermediates {
         private JobTimestamp jobTimestampRight;
         private Environment environmentLeft;
         private Environment environmentRight;
+        private int warnings;
 
         public Builder() {
             materialList = MaterialList.NULL_OBJECT;
@@ -86,6 +92,7 @@ public class Intermediates {
             jobTimestampRight = JobTimestamp.NULL_OBJECT;
             environmentLeft = Environment.NULL_OBJECT;
             environmentRight = Environment.NULL_OBJECT;
+            warnings = 0;
         }
         public Builder(Intermediates source) {
             materialList = source.materialList;
@@ -94,9 +101,9 @@ public class Intermediates {
             jobTimestampRight = source.jobTimestampRight;
             environmentLeft = source.environmentLeft;
             environmentRight = source.environmentRight;
+            warnings = source.warnings;
         }
-        public Builder(Map<String, Object> m) {
-            this();
+        public Builder putAll(Map<String, Object> m) {
             if (m.get(KEY_materialList) != null &&
                     m.get(KEY_materialList) instanceof MaterialList) {
                 materialList = (MaterialList)m.get(KEY_materialList);
@@ -121,6 +128,10 @@ public class Intermediates {
                     m.get(KEY_environmentRight) instanceof Environment) {
                 environmentRight = (Environment)m.get(KEY_environmentRight);
             }
+            if (m.get(KEY_warnings) != null) {
+                warnings = (int)m.get(KEY_warnings);
+            }
+            return this;
         }
 
         public Builder materialList(MaterialList materialList) {
@@ -143,9 +154,15 @@ public class Intermediates {
             this.environmentLeft = profile;
             return this;
         }
-
         public Builder environmentRight(Environment profile) {
             this.environmentRight = profile;
+            return this;
+        }
+        public Builder warnings(int warnings) throws InspectusException {
+            if (warnings < 0) {
+                throw new InspectusException("warnings must be >= 0");
+            }
+            this.warnings = warnings;
             return this;
         }
 

@@ -24,7 +24,10 @@ public interface ITestCaseCaller {
 
     public static String KEY_result = "result";
 
-    default Intermediates callTestCase(String calleeName, Parameters parameters) throws InspectusException {
+    default Intermediates callTestCase(String calleeName,
+                                       Parameters parameters,
+                                       Intermediates intermediates)
+            throws InspectusException {
         // check if the Katalon classes are available
         KeywordExecutor.validateKatalonClasspath();
 
@@ -60,7 +63,7 @@ public interface ITestCaseCaller {
                             ", found a key '%s' which is not a String", k.toString()));
                 }
             }
-            return new Intermediates.Builder(m).build();
+            return Intermediates.builder(intermediates).putAll(m).build();
         } else {
             throw new InspectusException(String.format(
                     "Test Case '%s' must return an instance of Map but actually returned %s",

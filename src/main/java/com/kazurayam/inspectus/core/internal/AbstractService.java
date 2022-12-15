@@ -35,23 +35,21 @@ public abstract class AbstractService implements Inspectus {
      * @throws InspectusException
      */
     @Override
-    public final void preProcess(Parameters parameters) throws InspectusException {
-        step0_restorePrevious(parameters);
+    public final Intermediates preProcess(Parameters parameters) throws InspectusException {
+        return step0_restorePrevious(parameters);
     }
 
     @Override
-    public void postProcess(Parameters parameters, Intermediates intermediates)
+    public Intermediates postProcess(Parameters parameters, Intermediates intermediates)
             throws InspectusException {
-        step4_report(parameters, intermediates);
-
-        step5_backupLatest(parameters, intermediates);
-
-        step6_cleanup(parameters, intermediates);
-
-        step7_index(parameters, intermediates);
+        Intermediates result4 = step4_report(parameters, intermediates);
+        Intermediates result5 = step5_backupLatest(parameters, result4);
+        Intermediates result6 = step6_cleanup(parameters, result5);
+        Intermediates result7 = step7_index(parameters, result6);
+        return result7;
     }
 
-    protected final void step0_restorePrevious(Parameters parameters)
+    protected final Intermediates step0_restorePrevious(Parameters parameters)
             throws InspectusException {
         listener.stepStarted("step0_restorePrevious");
         Store backup = parameters.getBackup();
@@ -75,13 +73,14 @@ public abstract class AbstractService implements Inspectus {
             throw new InspectusException(e);
         }
         listener.stepFinished("step0_restorePrevious");
+        return Intermediates.builder().build();
     }
 
 
-    abstract protected void step4_report(Parameters parameters, Intermediates intermediates)
+    abstract protected Intermediates step4_report(Parameters parameters, Intermediates intermediates)
             throws InspectusException;
 
-    protected void step5_backupLatest(Parameters parameters, Intermediates intermediates)
+    protected Intermediates step5_backupLatest(Parameters parameters, Intermediates intermediates)
             throws InspectusException {
         listener.stepStarted("step5_backupLatest");
         Store store = parameters.getStore();
@@ -100,9 +99,10 @@ public abstract class AbstractService implements Inspectus {
             throw new InspectusException(e);
         }
         listener.stepFinished("step5_backupLatest");
+        return Intermediates.builder(intermediates).build();
     }
 
-    protected void step6_cleanup(Parameters parameters, Intermediates intermediates)
+    protected Intermediates step6_cleanup(Parameters parameters, Intermediates intermediates)
             throws InspectusException {
         listener.stepStarted("step6_cleanup");
         Store store = parameters.getStore();
@@ -115,9 +115,10 @@ public abstract class AbstractService implements Inspectus {
             throw new InspectusException(e);
         }
         listener.stepFinished("step6_cleanup");
+        return Intermediates.builder(intermediates).build();
     }
 
-    protected void step7_index(Parameters parameters, Intermediates intermediates)
+    protected Intermediates step7_index(Parameters parameters, Intermediates intermediates)
             throws InspectusException {
         listener.stepStarted("step7_index");
         Store store = parameters.getStore();
@@ -128,6 +129,7 @@ public abstract class AbstractService implements Inspectus {
             throw new InspectusException(e);
         }
         listener.stepFinished("step7_index");
+        return Intermediates.builder(intermediates).build();
     }
 
     protected boolean isSubprocessjAvailable() {

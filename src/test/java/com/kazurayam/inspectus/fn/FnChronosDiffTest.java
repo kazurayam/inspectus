@@ -1,10 +1,10 @@
 package com.kazurayam.inspectus.fn;
 
+import com.kazurayam.inspectus.TestHelper;
 import com.kazurayam.inspectus.core.Inspectus;
 import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;
 import com.kazurayam.inspectus.core.Parameters;
-import com.kazurayam.inspectus.TestHelper;
 import com.kazurayam.materialstore.core.filesystem.FileType;
 import com.kazurayam.materialstore.core.filesystem.JobName;
 import com.kazurayam.materialstore.core.filesystem.JobTimestamp;
@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -145,16 +145,17 @@ public class FnChronosDiffTest {
      * if the second is odd then choose the red image,
      * if the second is even then choose the green image.
      */
-    private final Function<Parameters, Intermediates> fn = p -> {
-        Path bd = p.getBaseDir();
+    private final BiFunction<Parameters, Intermediates, Intermediates> fn =
+            (parameters, intermediates) -> {
+        Path bd = parameters.getBaseDir();
         Path images = bd.resolve("src/test/fixtures/images");
         Path apple = images.resolve("apple.png");
         Path greenApple = images.resolve("green-apple.png");
         Path mikan = images.resolve("mikan.png");
         Path money = images.resolve("money.png");
-        Store st = p.getStore();
-        JobName jn = p.getJobName();
-        JobTimestamp jt = p.getJobTimestamp();
+        Store st = parameters.getStore();
+        JobName jn = parameters.getJobName();
+        JobTimestamp jt = parameters.getJobTimestamp();
         try {
             // 1st time of shooting
             int second = jt.value().getSecond();
@@ -176,7 +177,7 @@ public class FnChronosDiffTest {
         } catch (MaterialstoreException e) {
             throw new RuntimeException(e);
         }
-        return Intermediates.NULL_OBJECT;
+        return Intermediates.builder(intermediates).build();
     };
 }
 

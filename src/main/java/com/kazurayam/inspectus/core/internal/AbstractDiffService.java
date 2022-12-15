@@ -14,7 +14,7 @@ import java.nio.file.Path;
 public abstract class AbstractDiffService extends AbstractService {
 
     @Override
-    public void step4_report(Parameters parameters, Intermediates intermediates)
+    public Intermediates step4_report(Parameters parameters, Intermediates intermediates)
             throws InspectusException {
         listener.stepStarted("step4_report");
         Store store = parameters.getStore();
@@ -34,5 +34,6 @@ public abstract class AbstractDiffService extends AbstractService {
             throw new InspectusException(e);
         }
         listener.stepFinished("step4_report");
+        return Intermediates.builder(intermediates).build();
     }
 }

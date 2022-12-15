@@ -28,11 +28,14 @@ public final class KatalonTwinsDiff extends TwinsDiff implements ITestCaseCaller
      * call the "materialize" Test Case
      */
     @Override
-    public Intermediates processEnvironment(Parameters params, Environment env) throws InspectusException {
+    public Intermediates processEnvironment(Parameters params,
+                                            Environment env,
+                                            Intermediates intermediates)
+            throws InspectusException {
         Parameters decoratedParameters =
                 Parameters.builder(params)
                         .environment(env).build();
-        return callTestCase(materializeTestCaseName, decoratedParameters);
+        return callTestCase(materializeTestCaseName, decoratedParameters, intermediates);
     }
 
 }

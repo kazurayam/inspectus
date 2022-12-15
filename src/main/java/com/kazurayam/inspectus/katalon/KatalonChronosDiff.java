@@ -16,14 +16,16 @@ public final class KatalonChronosDiff extends ChronosDiff implements ITestCaseCa
         this.materializeTestCaseName = materializeTestCaseName;
     }
     @Override
-    public Intermediates step2_materialize(Parameters parameters)
+    public Intermediates step2_materialize(Parameters parameters,
+                                           Intermediates intermediates)
             throws InspectusException {
         listener.stepStarted("step2_materialize");
         if (materializeTestCaseName == null) {
             throw new InspectusException("materializeTestCaseName is not specified");
         }
-        Intermediates intermediates = callTestCase(materializeTestCaseName, parameters);
+        Intermediates result =
+                callTestCase(materializeTestCaseName, parameters, intermediates);
         listener.stepFinished("step2_materialize");
-        return intermediates;
+        return result;
     }
 }

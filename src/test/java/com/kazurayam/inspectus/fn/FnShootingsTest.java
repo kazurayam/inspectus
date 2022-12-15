@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class FnShootingsTest {
@@ -47,17 +48,18 @@ public class FnShootingsTest {
      * Function object that creates a fileTree "store/jobName/jobTimestamp"
      * where 1 text file is written
      */
-    private final Function<Parameters, Intermediates> fn = p -> {
-        Store st = p.getStore();
-        JobName jn = p.getJobName();
-        JobTimestamp jt = p.getJobTimestamp();
+    private final BiFunction<Parameters, Intermediates, Intermediates> fn =
+            (parameters, intermediates) -> {
+        Store st = parameters.getStore();
+        JobName jn = parameters.getJobName();
+        JobTimestamp jt = parameters.getJobTimestamp();
         Metadata md = new Metadata.Builder().build();
         try {
             st.write(jn, jt, FileType.TXT, md, "Hello, world!");
             MaterialList ml = st.select(jn, jt);
-            Intermediates im = new Intermediates.Builder()
+            Intermediates result = Intermediates.builder(intermediates)
                     .materialList(ml).build();
-            return im;
+            return result;
         } catch (MaterialstoreException e) {
             throw new RuntimeException(e);
         }

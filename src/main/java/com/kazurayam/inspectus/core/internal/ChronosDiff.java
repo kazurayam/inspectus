@@ -22,13 +22,16 @@ public abstract class ChronosDiff extends AbstractDiffService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public Intermediates process(Parameters parameters) throws InspectusException {
-        step1_restorePrevious(parameters);
-        Intermediates im2 = step2_materialize(parameters);
-        return step3_reduceChronos(parameters, im2);
+    public Intermediates process(Parameters parameters, Intermediates intermediates)
+            throws InspectusException {
+        Intermediates result1 = step1_restorePrevious(parameters, intermediates);
+        Intermediates result2 = step2_materialize(parameters, result1);
+        return step3_reduceChronos(parameters, result2);
     }
 
-    public void step1_restorePrevious(Parameters parameters) throws InspectusException {
+    public Intermediates step1_restorePrevious(Parameters parameters,
+                                               Intermediates intermediates)
+            throws InspectusException {
         Store backup = parameters.getBackup();
         Store store = parameters.getStore();
         JobName jobName = parameters.getJobName();
@@ -44,9 +47,10 @@ public abstract class ChronosDiff extends AbstractDiffService {
                 throw new InspectusException(e);
             }
         }
+        return Intermediates.builder(intermediates).build();
     }
 
-    public abstract Intermediates step2_materialize(Parameters parameters)
+    public abstract Intermediates step2_materialize(Parameters parameters, Intermediates intermediates)
             throws InspectusException;
 
     public Intermediates step3_reduceChronos(Parameters parameters,

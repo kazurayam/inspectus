@@ -15,6 +15,14 @@ public class KatalonStepListener implements StepListener {
     }
 
     @Override
+    public void info(String message) {
+        try {
+            KeywordUtil.logInfo(message);
+        } catch (Exception e) {
+            throw new UncheckedInspectusException(e);
+        }
+    }
+    @Override
     public void stepFinished(String stepName) {
         try {
             KeywordUtil.logInfo(String.format("%s finished", stepName));

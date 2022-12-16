@@ -10,6 +10,10 @@ public class StdStepListener implements StepListener {
     }
 
     @Override
+    public void info(String message) {
+        System.out.println(message);
+    }
+    @Override
     public void stepFinished(String stepName) {
         System.out.println(String.format("%s finished", stepName));
     }

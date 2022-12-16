@@ -14,6 +14,7 @@ public final class KatalonShootings extends Shootings implements ITestCaseCaller
     public KatalonShootings(String materializeTestCaseName) {
         Objects.requireNonNull(materializeTestCaseName);
         this.materializeTestCaseName = materializeTestCaseName;
+        super.setListener(new KatalonStepListener());
     }
 
     @Override

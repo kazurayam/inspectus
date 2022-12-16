@@ -6,6 +6,7 @@ import com.kazurayam.materialstore.core.filesystem.MaterialList;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Intermediates {
 
@@ -29,7 +30,10 @@ public class Intermediates {
     public static Builder builder() {
         return new Builder();
     }
-    public static Builder builder(Intermediates source) { return new Builder(source); }
+    public static Builder builder(Intermediates source) {
+        Objects.requireNonNull(source);
+        return new Builder(source);
+    }
 
     private Intermediates(Builder b) {
         this.materialList = b.materialList;
@@ -95,6 +99,7 @@ public class Intermediates {
             warnings = 0;
         }
         public Builder(Intermediates source) {
+            Objects.requireNonNull(source);
             materialList = source.materialList;
             materialProductGroup = source.materialProductGroup;
             jobTimestampLeft = source.jobTimestampLeft;

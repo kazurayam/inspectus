@@ -13,10 +13,12 @@ import com.kazurayam.materialstore.core.filesystem.JobName;
 import com.kazurayam.materialstore.core.filesystem.JobTimestamp;
 import com.kazurayam.materialstore.core.filesystem.MaterialstoreException;
 import com.kazurayam.materialstore.core.filesystem.Store;
+import java.nio.file.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public abstract class AbstractService implements Inspectus {
 
@@ -26,6 +28,12 @@ public abstract class AbstractService implements Inspectus {
 
     public AbstractService() {
         listener = new StdStepListener();
+    }
+
+    @Override
+    public void setListener(StepListener listener) {
+        Objects.requireNonNull(listener);
+        this.listener = listener;
     }
 
     /*
@@ -91,11 +99,16 @@ public abstract class AbstractService implements Inspectus {
             if (backup != Store.NULL_OBJECT) {
                 StoreExport export = StoreExport.newInstance(store, backup);
                 export.exportReports(jobName, newerThanOrEqualTo);
+
+                // create the index.html of the backup
+                IndexCreator indexCreator = new IndexCreator(backup);
+                Path index = indexCreator.create();
+                listener.info("backup finished : " + index.toString());
             } else {
                 logger.warn("backup is not specified." +
                         " will skip exporting the JobTimestamp directories into backup");
             }
-        } catch (MaterialstoreException e) {
+        } catch (MaterialstoreException | IOException e) {
             throw new InspectusException(e);
         }
         listener.stepFinished("step5_backupLatest");
@@ -124,7 +137,8 @@ public abstract class AbstractService implements Inspectus {
         Store store = parameters.getStore();
         try {
             IndexCreator indexCreator = new IndexCreator(store);
-            indexCreator.create();
+            Path index = indexCreator.create();
+            listener.info("created index : " + index.toString());
         } catch (MaterialstoreException | IOException e) {
             throw new InspectusException(e);
         }

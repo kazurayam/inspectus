@@ -28,7 +28,11 @@ public interface ITestCaseCaller {
                                        Parameters parameters,
                                        Intermediates intermediates)
             throws InspectusException {
-        // check if the Katalon classes are available
+        Objects.requireNonNull(calleeName);
+        Objects.requireNonNull(parameters);
+        Objects.requireNonNull(intermediates);
+
+        // check if the Katalon classes are available in the runtime classpath
         KeywordExecutor.validateKatalonClasspath();
 
         // now run the specified Test Case script; possibly for materializing = taking screenshots etc.
@@ -51,7 +55,8 @@ public interface ITestCaseCaller {
         if (result == null) {
             logger.warn(String.format("Test Case '%s' may return an instance of Map<?, ?> class; actually returned null",
                     calleeName));
-            return null;
+            return Intermediates.builder(intermediates).build();
+
         } else if (result instanceof Map<?, ?>) {
             Map<String, Object> m = new LinkedHashMap<String, Object>();
             Map<?, ?> casted = (Map<?, ?>)result;
@@ -64,6 +69,7 @@ public interface ITestCaseCaller {
                 }
             }
             return Intermediates.builder(intermediates).putAll(m).build();
+
         } else {
             throw new InspectusException(String.format(
                     "Test Case '%s' must return an instance of Map but actually returned %s",

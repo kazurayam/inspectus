@@ -33,15 +33,22 @@ public class KeywordExecutor {
         }
     }
 
-    public static void validateKatalonClasspath() throws InspectusException {
+    public static boolean isKatalonAvailableInClasspath() {
         try {
             // verify if the Katalon classes are available in the current classpath
             Class<?> clazz = Class.forName(
                     "com.kms.katalon.core.keyword.internal.KeywordExecutor");
             assert clazz.getSimpleName().equals("KeywordExecutor");
+            return true;
         } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static void validateKatalonClasspath() throws InspectusException {
+        if (!isKatalonAvailableInClasspath()) {
             throw new InspectusException(
-                    "com.kms.katalon.core.* classes are not available in the current classpath.", e);
+                    "com.kms.katalon.core.* classes are not available in the current classpath.");
         }
     }
 }

@@ -5,6 +5,7 @@ import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;
 import com.kazurayam.inspectus.core.Parameters;
 import com.kazurayam.inspectus.TestHelper;
+import com.kazurayam.inspectus.core.StdStepListener;
 import com.kazurayam.materialstore.core.filesystem.FileType;
 import com.kazurayam.materialstore.core.filesystem.JobName;
 import com.kazurayam.materialstore.core.filesystem.JobTimestamp;
@@ -41,6 +42,7 @@ public class FnShootingsTest {
                 .jobTimestamp(jobTimestamp).build();
         // Action
         Inspectus sh = new FnShootings(fn);
+        sh.setListener(new StdStepListener());
         sh.execute(parameters);
     }
 

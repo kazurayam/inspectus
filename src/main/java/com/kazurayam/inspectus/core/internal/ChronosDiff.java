@@ -17,6 +17,8 @@ import com.kazurayam.materialstore.diagram.dot.MPGVisualizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
+
 public abstract class ChronosDiff extends AbstractDiffService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -24,6 +26,8 @@ public abstract class ChronosDiff extends AbstractDiffService {
     @Override
     public Intermediates process(Parameters parameters, Intermediates intermediates)
             throws InspectusException {
+        Objects.requireNonNull(parameters);
+        Objects.requireNonNull(intermediates);
         Intermediates result1 = step1_restorePrevious(parameters, intermediates);
         Intermediates result2 = step2_materialize(parameters, result1);
         return step3_reduceChronos(parameters, result2);

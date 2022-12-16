@@ -14,6 +14,7 @@ public final class KatalonChronosDiff extends ChronosDiff implements ITestCaseCa
     public KatalonChronosDiff(String materializeTestCaseName) {
         Objects.requireNonNull(materializeTestCaseName);
         this.materializeTestCaseName = materializeTestCaseName;
+        super.setListener(new KatalonStepListener());
     }
     @Override
     public Intermediates step2_materialize(Parameters parameters,

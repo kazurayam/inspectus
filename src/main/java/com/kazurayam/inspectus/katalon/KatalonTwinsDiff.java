@@ -21,6 +21,7 @@ public final class KatalonTwinsDiff extends TwinsDiff implements ITestCaseCaller
         this.materializeTestCaseName = materializeTestCaseName;
         this.environmentLeft = environmentLeft;
         this.environmentRight = environmentRight;
+        super.setListener(new KatalonStepListener());
     }
 
 

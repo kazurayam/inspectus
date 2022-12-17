@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.kazurayam"
-version = "0.8.1"
+version = "0.8.2"
 
 ext {
     isReleaseVersion = !version.endsWith("SNAPSHOT")
@@ -60,7 +60,7 @@ tasks.withType(Test) {
 }
 
 test {
-    exclude '**/selenium/*'
+    exclude '**/WebDriverFormulasTest*'
     finalizedBy(jacocoTestReport)
 }
 
@@ -69,14 +69,14 @@ task testWithSelenium3(type: Test, dependsOn: compileTestJava) {
     dependencies {
         testImplementation libs.selenium3
     }
-    include '**/selenium/*'
+    include '**/WebDriverFormulasTest*'
 }
 
 task testWithSelenium4(type: Test, dependsOn: compileTestJava) {
     dependencies {
         testImplementation libs.selenium4
     }
-    include '**/selenium/*'
+    include '**/WebDriverFormulasTest*'
 }
 
 task testSelenium(dependsOn: [testWithSelenium3, testWithSelenium4])

@@ -30,7 +30,7 @@ dependencyResolutionManagement {
             version('log4j', '2.19.0')
             library('log4j-core', 'org.apache.logging.log4j', 'log4j-core').versionRef('log4j')
 
-            version('materialstore', '0.14.3-SNAPSHOT')
+            version('materialstore', '0.14.3')
             library('materialstore', 'com.kazurayam', 'materialstore').versionRef('materialstore')
 
             version('poi', '5.2.3')

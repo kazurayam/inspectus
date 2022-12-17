@@ -1,5 +1,6 @@
 package com.kazurayam.inspectus.materialize.selenium;
 
+import com.kazurayam.inspectus.core.UncheckedInspectusException;
 import com.kazurayam.inspectus.materialize.discovery.Target;
 import com.kazurayam.materialstore.core.filesystem.FileType;
 import com.kazurayam.materialstore.core.filesystem.JobName;
@@ -12,6 +13,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.parser.Parser;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.yandex.qatools.ashot.AShot;
 import ru.yandex.qatools.ashot.Screenshot;
 import ru.yandex.qatools.ashot.coordinates.WebDriverCoordsProvider;
@@ -22,6 +25,8 @@ import java.util.Map;
 import java.util.Objects;
 
 public class WebPageMaterializingFunctions {
+
+    Logger logger = LoggerFactory.getLogger(WebPageMaterializingFunctions.class);
 
     private Store store;
     private JobName jobName;
@@ -72,14 +77,13 @@ public class WebPageMaterializingFunctions {
         Objects.requireNonNull(attributes);
         //-------------------------------------------------------------
         int timeout = 500;  // milli-seconds
-        // look up the device-pixel-ratio of the current machine
         JavascriptExecutor js = (JavascriptExecutor)driver;
-        Double dpr = (Double)js.executeScript("return window.devicePixelRatio;");
-        float dprFloat = (dpr == null) ? 1.0f : dpr.floatValue();
+        // look up the device-pixel-ratio of the current machine
+        float dpr = resolveDevicePixelRatio(js);
         AShot aShot = new AShot()
                 .coordsProvider(new WebDriverCoordsProvider())
                 .shootingStrategy(ShootingStrategies.viewportPasting(
-                                ShootingStrategies.scaling(dprFloat),
+                                ShootingStrategies.scaling(dpr),
                                 timeout));
         // take a screenshot of entire view of the page
         Screenshot screenshot = aShot.takeScreenshot(driver);
@@ -96,4 +100,21 @@ public class WebPageMaterializingFunctions {
                 FileType.PNG, metadata, bufferedImage);
     };
 
+    float resolveDevicePixelRatio(JavascriptExecutor js) {
+        // look up the device-pixel-ratio of the current machine
+        Object jsValue = js.executeScript("return window.devicePixelRatio;");
+        float dprFloat = 1.0f;
+        if (jsValue == null) {
+            logger.warn("jsValue was null. will use 1.0f.");
+            dprFloat = 1.0f;
+        } else if (jsValue instanceof Double) {
+            dprFloat = ((Double)jsValue).floatValue();
+        } else if (jsValue instanceof Long) {
+            dprFloat = (Long)jsValue;
+        } else {
+            logger.warn("jsValue was unknown type: "
+                    + jsValue.getClass().getName() + ". will use 1.0f");
+        }
+        return dprFloat;
+    }
 }

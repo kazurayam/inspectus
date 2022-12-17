@@ -74,11 +74,12 @@ public class WebPageMaterializingFunctions {
         int timeout = 500;  // milli-seconds
         // look up the device-pixel-ratio of the current machine
         JavascriptExecutor js = (JavascriptExecutor)driver;
-        float dpr = (Float)js.executeScript("return window.devicePixelRatio;") * 1.0f;
+        Double dpr = (Double)js.executeScript("return window.devicePixelRatio;");
+        float dprFloat = (dpr == null) ? 1.0f : dpr.floatValue();
         AShot aShot = new AShot()
                 .coordsProvider(new WebDriverCoordsProvider())
                 .shootingStrategy(ShootingStrategies.viewportPasting(
-                                ShootingStrategies.scaling(dpr),
+                                ShootingStrategies.scaling(dprFloat),
                                 timeout));
         // take a screenshot of entire view of the page
         Screenshot screenshot = aShot.takeScreenshot(driver);

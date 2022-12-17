@@ -74,7 +74,7 @@ public class WebPageMaterializingFunctions {
         int timeout = 500;  // milli-seconds
         // look up the device-pixel-ratio of the current machine
         JavascriptExecutor js = (JavascriptExecutor)driver;
-        float dpr = (Long)js.executeScript("return window.devicePixelRatio;") * 1.0f;
+        float dpr = (Float)js.executeScript("return window.devicePixelRatio;") * 1.0f;
         AShot aShot = new AShot()
                 .coordsProvider(new WebDriverCoordsProvider())
                 .shootingStrategy(ShootingStrategies.viewportPasting(

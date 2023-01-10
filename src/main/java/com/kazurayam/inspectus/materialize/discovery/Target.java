@@ -5,8 +5,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.kazurayam.inspectus.core.InspectusException;
-import com.kazurayam.materialstore.core.filesystem.Jsonifiable;
-import com.kazurayam.materialstore.core.util.JsonUtil;
+import com.kazurayam.materialstore.core.Jsonifiable;
+import com.kazurayam.materialstore.util.JsonUtil;
 import org.openqa.selenium.By;
 
 import java.net.MalformedURLException;

@@ -1,7 +1,7 @@
 package com.kazurayam.inspectus.core;
 
-import com.kazurayam.materialstore.core.filesystem.JobTimestamp;
-import com.kazurayam.materialstore.core.filesystem.metadata.IgnoreMetadataKeys;
+import com.kazurayam.materialstore.core.JobTimestamp;
+import com.kazurayam.materialstore.core.metadata.IgnoreMetadataKeys;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;

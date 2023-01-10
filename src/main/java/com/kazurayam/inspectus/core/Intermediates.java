@@ -1,8 +1,8 @@
 package com.kazurayam.inspectus.core;
 
 import com.kazurayam.materialstore.base.reduce.MaterialProductGroup;
-import com.kazurayam.materialstore.core.filesystem.JobTimestamp;
-import com.kazurayam.materialstore.core.filesystem.MaterialList;
+import com.kazurayam.materialstore.core.JobTimestamp;
+import com.kazurayam.materialstore.core.MaterialList;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

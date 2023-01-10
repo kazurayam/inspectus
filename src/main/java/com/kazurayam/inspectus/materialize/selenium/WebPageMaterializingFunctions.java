@@ -1,13 +1,12 @@
 package com.kazurayam.inspectus.materialize.selenium;
 
-import com.kazurayam.inspectus.core.UncheckedInspectusException;
 import com.kazurayam.inspectus.materialize.discovery.Target;
-import com.kazurayam.materialstore.core.filesystem.FileType;
-import com.kazurayam.materialstore.core.filesystem.JobName;
-import com.kazurayam.materialstore.core.filesystem.JobTimestamp;
-import com.kazurayam.materialstore.core.filesystem.Material;
-import com.kazurayam.materialstore.core.filesystem.Metadata;
-import com.kazurayam.materialstore.core.filesystem.Store;
+import com.kazurayam.materialstore.core.FileType;
+import com.kazurayam.materialstore.core.JobName;
+import com.kazurayam.materialstore.core.JobTimestamp;
+import com.kazurayam.materialstore.core.Material;
+import com.kazurayam.materialstore.core.Metadata;
+import com.kazurayam.materialstore.core.Store;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.parser.Parser;

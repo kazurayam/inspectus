@@ -1,12 +1,11 @@
 package com.kazurayam.inspectus.core;
 
 import java.util.Objects;
-
 public class Environment implements Comparable<Environment> {
 
     public static final Environment NULL_OBJECT = new Environment("");
 
-    private String value;
+    private final String value;
 
     public Environment(String value) {
         Objects.requireNonNull(value);

@@ -4,14 +4,14 @@ import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.materialize.TestHelper;
 import com.kazurayam.inspectus.materialize.discovery.Handle;
 import com.kazurayam.inspectus.materialize.discovery.Target;
-import com.kazurayam.materialstore.core.filesystem.FileType;
-import com.kazurayam.materialstore.core.filesystem.JobName;
-import com.kazurayam.materialstore.core.filesystem.JobTimestamp;
-import com.kazurayam.materialstore.core.filesystem.Material;
-import com.kazurayam.materialstore.core.filesystem.MaterialstoreException;
-import com.kazurayam.materialstore.core.filesystem.QueryOnMetadata;
-import com.kazurayam.materialstore.core.filesystem.Store;
-import com.kazurayam.materialstore.core.filesystem.Stores;
+import com.kazurayam.materialstore.core.FileType;
+import com.kazurayam.materialstore.core.JobName;
+import com.kazurayam.materialstore.core.JobTimestamp;
+import com.kazurayam.materialstore.core.Material;
+import com.kazurayam.materialstore.core.MaterialstoreException;
+import com.kazurayam.materialstore.core.QueryOnMetadata;
+import com.kazurayam.materialstore.core.Store;
+import com.kazurayam.materialstore.core.Stores;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -71,7 +71,7 @@ public class WebPageMaterializingFunctionsTest {
         assertNotNull(createdMaterial);
         // assert that a material has been created
         Material selectedMaterial = store.selectSingle(jobName, jobTimestamp, FileType.HTML, QueryOnMetadata.ANY);
-        assertTrue(Files.exists(selectedMaterial.toPath(store.getRoot())));
+        assertTrue(Files.exists(selectedMaterial.toPath()));
         assertEquals(createdMaterial, selectedMaterial);
     }
 
@@ -91,7 +91,7 @@ public class WebPageMaterializingFunctionsTest {
         assertNotNull(createdMaterial);
         // assert that a material has been created
         Material selectedMaterial = store.selectSingle(jobName, jobTimestamp, FileType.PNG, QueryOnMetadata.ANY);
-        assertTrue(Files.exists(selectedMaterial.toPath(store.getRoot())));
+        assertTrue(Files.exists(selectedMaterial.toPath()));
         assertEquals(createdMaterial, selectedMaterial);
     }
 

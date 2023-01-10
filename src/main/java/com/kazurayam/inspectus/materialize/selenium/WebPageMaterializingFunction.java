@@ -1,7 +1,7 @@
 package com.kazurayam.inspectus.materialize.selenium;
 
 
-import com.kazurayam.materialstore.core.filesystem.MaterialstoreException;
+import com.kazurayam.materialstore.core.MaterialstoreException;
 
 @FunctionalInterface
 public interface WebPageMaterializingFunction<WebDriver, Target, Map, Material> {

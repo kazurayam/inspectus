@@ -1,7 +1,7 @@
 package com.kazurayam.inspectus.materialize.url;
 
 
-import com.kazurayam.materialstore.core.filesystem.MaterialstoreException;
+import com.kazurayam.materialstore.core.MaterialstoreException;
 
 public interface URLMaterializingFunction<Target, Material> {
 

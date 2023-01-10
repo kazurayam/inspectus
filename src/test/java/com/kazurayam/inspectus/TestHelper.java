@@ -1,7 +1,7 @@
 package com.kazurayam.inspectus;
 
-import com.kazurayam.materialstore.core.util.CopyDir;
-import com.kazurayam.materialstore.core.util.DeleteDir;
+import com.kazurayam.materialstore.util.CopyDir;
+import com.kazurayam.materialstore.util.DeleteDir;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

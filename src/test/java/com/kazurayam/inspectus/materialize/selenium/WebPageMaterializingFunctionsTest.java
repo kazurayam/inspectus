@@ -50,6 +50,7 @@ public class WebPageMaterializingFunctionsTest {
     public void beforeEach() {
         ChromeOptions opt = new ChromeOptions();
         opt.addArguments("headless");
+        opt.addArguments("--remote-allow-origins=*");  // https://stackoverflow.com/questions/75718422/org-openqa-selenium-remote-http-connectionfailedexception-unable-to-establish-w
         driver = new ChromeDriver(opt);
         driver.manage().window().setSize(new Dimension(1024, 768));
     }

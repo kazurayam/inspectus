@@ -23,6 +23,11 @@ import java.util.Objects;
 public abstract class ChronosDiff extends AbstractDiffService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private Boolean isDiagramRequired = false;
+
+    protected void isDiagramRequired(Boolean required) {
+        this.isDiagramRequired = required;
+    }
 
     @Override
     public Intermediates process(Parameters parameters, Intermediates intermediates)
@@ -65,6 +70,7 @@ public abstract class ChronosDiff extends AbstractDiffService {
 
     public Intermediates step3_reduceChronos(Parameters parameters,
                                     Intermediates intermediates) throws InspectusException {
+        listener.stepStarted("step3_reduceChronos");
         Store store = parameters.getStore();
         JobName jobName = parameters.getJobName();
         JobTimestamp jobTimestamp = parameters.getJobTimestamp();
@@ -74,11 +80,11 @@ public abstract class ChronosDiff extends AbstractDiffService {
             //
             MaterialProductGroup reduced;
             if (parameters.containsBaselinePriorTo()) {
-                // compare the current JobTimestamp against the baseline specified as parameter
+                logger.info("will compare the current JobTimestamp against the baseline specified as parameter");
                 reduced = Reducer.chronos(store, currentMaterialList,
                         parameters.getBaselinePriorTo());
             } else {
-                // take the previous-latest JobTimestamp as the baseline to compare the current one against
+                logger.info("will take the previous-latest JobTimestamp as the baseline to compare the current one against");
                 reduced = Reducer.chronos(store, currentMaterialList);
             }
             //
@@ -86,16 +92,14 @@ public abstract class ChronosDiff extends AbstractDiffService {
             inspector.setSortKeys(sortKeys);
             MaterialProductGroup inspected =
                     inspector.reduceAndSort(reduced);
-            //
-            if (inspected.getNumberOfBachelors() > 0) {
+            if (isDiagramRequired && inspected.getNumberOfBachelors() > 0) {
                 // if any bachelor found, generate diagram of MaterialProductGroup object
                 MPGVisualizer visualizer = new MPGVisualizer(store);
                 visualizer.visualize(inspected.getJobName(),
                         JobTimestamp.now(), inspected);
             }
-
+            listener.stepFinished("step3_reduceChronos");
             return new Intermediates.Builder().materialProductGroup(inspected).build();
-
         } catch (MaterialstoreException e) {
             throw new InspectusException(e);
         }

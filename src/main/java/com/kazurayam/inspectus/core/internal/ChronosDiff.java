@@ -76,23 +76,26 @@ public abstract class ChronosDiff extends AbstractDiffService {
         JobTimestamp jobTimestamp = parameters.getJobTimestamp();
         SortKeys sortKeys = parameters.getSortKeys();
         try {
+            listener.info("going to select the current MaterialList");
             MaterialList currentMaterialList = store.select(jobName, jobTimestamp);
             //
             MaterialProductGroup reduced;
             if (parameters.containsBaselinePriorTo()) {
-                logger.info("will compare the current JobTimestamp against the baseline specified as parameter");
+                listener.info("will compare the current JobTimestamp against the baseline specified as parameter");
                 reduced = Reducer.chronos(store, currentMaterialList,
                         parameters.getBaselinePriorTo());
             } else {
-                logger.info("will take the previous-latest JobTimestamp as the baseline to compare the current one against");
+                listener.info("going to take the previous-latest JobTimestamp as the baseline to compare the current one against");
                 reduced = Reducer.chronos(store, currentMaterialList);
             }
             //
             Inspector inspector = Inspector.newInstance(store);
             inspector.setSortKeys(sortKeys);
+            listener.info("going to call inspector.reduceAndSort(reduced)");
             MaterialProductGroup inspected =
                     inspector.reduceAndSort(reduced);
             if (isDiagramRequired && inspected.getNumberOfBachelors() > 0) {
+                listener.info("going to call MPGVisualizer to draw a diagram of MaterialProductGroup");
                 // if any bachelor found, generate diagram of MaterialProductGroup object
                 MPGVisualizer visualizer = new MPGVisualizer(store);
                 visualizer.visualize(inspected.getJobName(),

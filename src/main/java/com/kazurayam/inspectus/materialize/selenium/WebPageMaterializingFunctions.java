@@ -74,6 +74,36 @@ public class WebPageMaterializingFunctions {
         Objects.requireNonNull(driver);
         Objects.requireNonNull(target);
         Objects.requireNonNull(attributes);
+        // take screenshot
+        BufferedImage bufferedImage = takeScreenshot(driver);
+        // write the PNG image into the store
+        Metadata metadata = Metadata.builder(target.getUrl())
+                .putAll(target.getAttributes())
+                .putAll(attributes)
+                .build();
+        return this.store.write(this.jobName, this.jobTimestamp,
+                FileType.PNG,
+                metadata, bufferedImage);
+    };
+
+    public WebPageMaterializingFunction<WebDriver, Target, Map<String, String>, Material>
+            storeEntirePageScreenshotAsJpeg = (driver, target, attributes) -> {
+        Objects.requireNonNull(driver);
+        Objects.requireNonNull(target);
+        Objects.requireNonNull(attributes);
+        // take screenshot
+        BufferedImage bufferedImage = takeScreenshot(driver);
+        // write the PNG image into the store
+        Metadata metadata = Metadata.builder(target.getUrl())
+                .putAll(target.getAttributes())
+                .putAll(attributes)
+                .build();
+        return this.store.write(this.jobName, this.jobTimestamp,
+                FileType.JPEG,
+                metadata, bufferedImage);
+    };
+
+    BufferedImage takeScreenshot(WebDriver driver) {
         //-------------------------------------------------------------
         int timeout = 500;  // milli-seconds
         JavascriptExecutor js = (JavascriptExecutor)driver;
@@ -82,22 +112,15 @@ public class WebPageMaterializingFunctions {
         AShot aShot = new AShot()
                 .coordsProvider(new WebDriverCoordsProvider())
                 .shootingStrategy(ShootingStrategies.viewportPasting(
-                                ShootingStrategies.scaling(dpr),
-                                timeout));
+                        ShootingStrategies.scaling(dpr),
+                        timeout));
         // take a screenshot of entire view of the page
         Screenshot screenshot = aShot.takeScreenshot(driver);
         BufferedImage bufferedImage = screenshot.getImage();
         // scroll the view to the top of the page
         js.executeScript("window.scrollTo(0, 0);");
-        //-------------------------------------------------------------
-        // write the PNG image into the store
-        Metadata metadata = Metadata.builder(target.getUrl())
-                .putAll(target.getAttributes())
-                .putAll(attributes)
-                .build();
-        return this.store.write(this.jobName, this.jobTimestamp,
-                FileType.PNG, metadata, bufferedImage);
-    };
+        return bufferedImage;
+    }
 
     float resolveDevicePixelRatio(JavascriptExecutor js) {
         // look up the device-pixel-ratio of the current machine

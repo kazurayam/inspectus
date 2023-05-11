@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.kazurayam"
-version = "0.9.4"
+version = "0.9.5"
 
 ext {
     isReleaseVersion = !version.endsWith("SNAPSHOT")
@@ -36,6 +36,7 @@ tasks.withType(JavaCompile) {
 dependencies {
     api libs.materialstore
     implementation libs.ashot
+    implementation libs.ashotwrapper
     implementation libs.commons.csv
     implementation libs.httpclient
     implementation libs.jsoup

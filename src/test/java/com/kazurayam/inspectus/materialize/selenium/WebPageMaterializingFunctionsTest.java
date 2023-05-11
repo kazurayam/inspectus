@@ -96,6 +96,26 @@ public class WebPageMaterializingFunctionsTest {
         assertEquals(createdMaterial, selectedMaterial);
     }
 
+    @Test
+    void test_storeEntirePageScreenshotAsJpeg() throws InspectusException, MaterialstoreException {
+        Target target = new Target.Builder("https://github.com/kazurayam")
+                .handle(new Handle(By.cssSelector("div.application-main main")))
+                .put("description", "GitHub/kazurayam")
+                .build();
+        JobName jobName = new JobName("test_storeEntirePageScreenshot");
+        JobTimestamp jobTimestamp = JobTimestamp.now();
+        // open the page in browser
+        driver.navigate().to(target.getUrl());
+        // take an entire page screenshot, write the image into the store
+        WebPageMaterializingFunctions pmf = new WebPageMaterializingFunctions(store, jobName, jobTimestamp);
+        Material createdMaterial = pmf.storeEntirePageScreenshotAsJpeg.accept(driver, target, Collections.emptyMap());
+        assertNotNull(createdMaterial);
+        // assert that a material has been created
+        Material selectedMaterial = store.selectSingle(jobName, jobTimestamp, FileType.JPEG, QueryOnMetadata.ANY);
+        assertTrue(Files.exists(selectedMaterial.toPath()));
+        assertEquals(createdMaterial, selectedMaterial);
+    }
+
 
     @AfterEach
     public void afterEach() {

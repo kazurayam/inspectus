@@ -14,6 +14,8 @@ import com.kazurayam.materialstore.core.JobNameNotFoundException;
 import com.kazurayam.materialstore.core.JobTimestamp;
 import com.kazurayam.materialstore.core.MaterialstoreException;
 import com.kazurayam.materialstore.core.Store;
+
+import java.nio.file.Files;
 import java.nio.file.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +47,7 @@ public abstract class AbstractService implements Inspectus {
      */
     @Override
     public final Intermediates preProcess(Parameters parameters) throws InspectusException {
-        return step0_restorePrevious(parameters);
+        return step1_restorePrevious(parameters);
     }
 
     @Override
@@ -54,32 +56,34 @@ public abstract class AbstractService implements Inspectus {
         Intermediates result4 = step4_report(parameters, intermediates);
         Intermediates result5 = step5_backupLatest(parameters, result4);
         Intermediates result6 = step6_cleanup(parameters, result5);
-        Intermediates result7 = step7_index(parameters, result6);
-        return result7;
+        return step7_index(parameters, result6);
     }
 
-    protected final Intermediates step0_restorePrevious(Parameters parameters)
+    protected final Intermediates step1_restorePrevious(Parameters parameters)
             throws InspectusException {
         listener.stepStarted("step0_restorePrevious");
         Store backup = parameters.getBackup();
-        Store store = parameters.getStore();
-        JobName jobName = parameters.getJobName();
-        JobTimestamp newerThanOrEqualTo = parameters.getJobTimestamp();
-        try {
-            if (backup != Store.NULL_OBJECT) {
-                if (backup.contains(jobName)) {
+        if (backup != Store.NULL_OBJECT) {
+            if ( ! Files.exists(backup.getRoot())) {
+                logger.warn(backup.getRoot() + " is not found");
+                logger.info("Possibly this is the first time you ran this test. Will be OK next time. Try again.");
+            } else {
+                Store store = parameters.getStore();
+                JobName jobName = parameters.getJobName();
+                JobTimestamp newerThanOrEqualTo = parameters.getJobTimestamp();
+                try {
                     StoreImport importer = StoreImport.newInstance(backup, store);
                     importer.importReports(jobName, newerThanOrEqualTo);
-                } else {
-                    logger.warn(String.format("JobName %s is not found in the backup store %s",
-                            jobName, backup.toString()));
+                } catch (JobNameNotFoundException jnnf) {
+                    logger.warn(jnnf.getMessage());
+                    logger.info("This warning may happen. You should try again.");
+                } catch (MaterialstoreException me) {
+                    throw new InspectusException(me);
                 }
-            } else {
-                logger.warn("backup is not specified in the parameters." +
-                        " will skip restoring the previous JobTimestamp directories from the backup store.");
             }
-        } catch (MaterialstoreException | JobNameNotFoundException e) {
-            throw new InspectusException(e);
+        } else {
+            logger.warn("backup is not specified in the parameters." +
+                    " will skip restoring the previous JobTimestamp directories from the backup store.");
         }
         listener.stepFinished("step0_restorePrevious");
         return Intermediates.builder().build();

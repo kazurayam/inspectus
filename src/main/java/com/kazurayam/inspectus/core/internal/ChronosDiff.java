@@ -35,34 +35,8 @@ public abstract class ChronosDiff extends AbstractDiffService {
             throws InspectusException {
         Objects.requireNonNull(parameters);
         Objects.requireNonNull(intermediates);
-        Intermediates result1 = step1_restorePrevious(parameters, intermediates);
-        Intermediates result2 = step2_materialize(parameters, result1);
+        Intermediates result2 = step2_materialize(parameters, intermediates);
         return step3_reduceChronos(parameters, result2);
-    }
-
-    public Intermediates step1_restorePrevious(Parameters parameters,
-                                               Intermediates intermediates)
-            throws InspectusException {
-        listener.stepStarted("step1_restorePrevious");
-        Store backup = parameters.getBackup();
-        if ( ! Files.exists(backup.getRoot()) ) {
-            logger.warn(backup.getRoot() + " is not found");
-            logger.info("Possibly this is the first time you ran this test. Will be OK next time. Try again.");
-        } else {
-            Store store = parameters.getStore();
-            JobName jobName = parameters.getJobName();
-            try {
-                StoreImport importer = StoreImport.newInstance(backup, store);
-                importer.importReports(jobName);
-            } catch (JobNameNotFoundException jnnf) {
-                logger.warn(jnnf.getMessage());
-                logger.info("This warning may happen. You should try again.");
-            } catch (MaterialstoreException me) {
-                throw new InspectusException(me);
-            }
-        }
-        listener.stepFinished("step1_restorePrevious");
-        return Intermediates.builder(intermediates).build();
     }
 
     public abstract Intermediates step2_materialize(Parameters parameters, Intermediates intermediates)

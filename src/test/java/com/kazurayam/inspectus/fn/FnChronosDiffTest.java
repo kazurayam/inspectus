@@ -9,6 +9,7 @@ import com.kazurayam.inspectus.core.Parameters;
 import com.kazurayam.inspectus.core.UncheckedInspectusException;
 import com.kazurayam.materialstore.core.FileType;
 import com.kazurayam.materialstore.core.JobName;
+import com.kazurayam.materialstore.core.JobNameNotFoundException;
 import com.kazurayam.materialstore.core.JobTimestamp;
 import com.kazurayam.materialstore.core.Material;
 import com.kazurayam.materialstore.core.MaterialList;
@@ -86,7 +87,7 @@ public class FnChronosDiffTest {
             assertTrue(store.contains(jobName, jobTimestamp2));
             assertTrue(result2.getWarnings() > 0);
             logger.info("result2.getWarnings()=" + result2.getWarnings());
-        } catch (MaterialstoreException e) {
+        } catch (MaterialstoreException | JobNameNotFoundException e) {
             throw new UncheckedInspectusException(e);
         }
     }
@@ -101,7 +102,9 @@ public class FnChronosDiffTest {
      * rather than the 2nd JobTimestamp.
      */
     @Test
-    public void test_baselinePriorTo() throws InterruptedException, InspectusException, MaterialstoreException {
+    public void test_baselinePriorTo()
+            throws InterruptedException, InspectusException,
+            MaterialstoreException, JobNameNotFoundException {
         // setup
         JobName jobName = new JobName("test_baselinePriorTo");
         // 1st execution

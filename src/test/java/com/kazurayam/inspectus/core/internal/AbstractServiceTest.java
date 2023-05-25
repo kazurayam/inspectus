@@ -7,6 +7,7 @@ import com.kazurayam.inspectus.TestHelper;
 import com.kazurayam.inspectus.fn.FnShootings;
 import com.kazurayam.materialstore.core.FileType;
 import com.kazurayam.materialstore.core.JobName;
+import com.kazurayam.materialstore.core.JobNameNotFoundException;
 import com.kazurayam.materialstore.core.JobTimestamp;
 import com.kazurayam.materialstore.core.MaterialList;
 import com.kazurayam.materialstore.core.MaterialstoreException;
@@ -39,7 +40,9 @@ public class AbstractServiceTest {
      * implemented to deal with the parameter as intended.
      */
     @Test
-    public void test_parameters_cleanOlderThan() throws InterruptedException, InspectusException, MaterialstoreException {
+    public void test_parameters_cleanOlderThan()
+            throws InterruptedException, InspectusException,
+            MaterialstoreException, JobNameNotFoundException {
         // setup
         JobName jobName = new JobName("test_parameters_cleanOlderThan");
         JobTimestamp ts1 = JobTimestamp.now();

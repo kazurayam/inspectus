@@ -8,6 +8,7 @@ import com.kazurayam.materialstore.base.manage.StoreImport;
 import com.kazurayam.materialstore.base.reduce.MaterialProductGroup;
 import com.kazurayam.materialstore.base.reduce.Reducer;
 import com.kazurayam.materialstore.core.JobName;
+import com.kazurayam.materialstore.core.JobNameNotFoundException;
 import com.kazurayam.materialstore.core.JobTimestamp;
 import com.kazurayam.materialstore.core.MaterialList;
 import com.kazurayam.materialstore.core.MaterialstoreException;
@@ -42,6 +43,7 @@ public abstract class ChronosDiff extends AbstractDiffService {
     public Intermediates step1_restorePrevious(Parameters parameters,
                                                Intermediates intermediates)
             throws InspectusException {
+        listener.stepStarted("step1_restorePrevious");
         Store backup = parameters.getBackup();
         if ( ! Files.exists(backup.getRoot()) ) {
             logger.warn(backup.getRoot() + " is not found");
@@ -52,16 +54,14 @@ public abstract class ChronosDiff extends AbstractDiffService {
             try {
                 StoreImport importer = StoreImport.newInstance(backup, store);
                 importer.importReports(jobName);
-            } catch (MaterialstoreException e) {
-                if (e.getMessage().contains(
-                        String.format("JobName \"%s\" is not found in %s", jobName, backup))) {
-                    logger.warn(e.getMessage());
-                    logger.info("This warning may happen. You should try again.");
-                } else {
-                    throw new InspectusException(e);
-                }
+            } catch (JobNameNotFoundException jnnf) {
+                logger.warn(jnnf.getMessage());
+                logger.info("This warning may happen. You should try again.");
+            } catch (MaterialstoreException me) {
+                throw new InspectusException(me);
             }
         }
+        listener.stepFinished("step1_restorePrevious");
         return Intermediates.builder(intermediates).build();
     }
 
@@ -103,7 +103,7 @@ public abstract class ChronosDiff extends AbstractDiffService {
             }
             listener.stepFinished("step3_reduceChronos");
             return new Intermediates.Builder().materialProductGroup(inspected).build();
-        } catch (MaterialstoreException e) {
+        } catch (MaterialstoreException | JobNameNotFoundException e) {
             throw new InspectusException(e);
         }
     }

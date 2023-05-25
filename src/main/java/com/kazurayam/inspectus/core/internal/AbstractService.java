@@ -10,6 +10,7 @@ import com.kazurayam.materialstore.base.manage.StoreExport;
 import com.kazurayam.materialstore.base.manage.StoreImport;
 import com.kazurayam.materialstore.base.report.IndexCreator;
 import com.kazurayam.materialstore.core.JobName;
+import com.kazurayam.materialstore.core.JobNameNotFoundException;
 import com.kazurayam.materialstore.core.JobTimestamp;
 import com.kazurayam.materialstore.core.MaterialstoreException;
 import com.kazurayam.materialstore.core.Store;
@@ -77,7 +78,7 @@ public abstract class AbstractService implements Inspectus {
                 logger.warn("backup is not specified in the parameters." +
                         " will skip restoring the previous JobTimestamp directories from the backup store.");
             }
-        } catch (MaterialstoreException e) {
+        } catch (MaterialstoreException | JobNameNotFoundException e) {
             throw new InspectusException(e);
         }
         listener.stepFinished("step0_restorePrevious");
@@ -108,7 +109,7 @@ public abstract class AbstractService implements Inspectus {
                 logger.warn("backup is not specified." +
                         " will skip exporting the JobTimestamp directories into backup");
             }
-        } catch (MaterialstoreException | IOException e) {
+        } catch (MaterialstoreException | JobNameNotFoundException | IOException e) {
             throw new InspectusException(e);
         }
         listener.stepFinished("step5_backupLatest");
@@ -124,7 +125,7 @@ public abstract class AbstractService implements Inspectus {
             StoreCleaner cleaner = StoreCleaner.newInstance(store);
             cleaner.cleanup(jobName,
                     parameters.getCleanOlderThan());  // default: JobTimestamp.now().minusHours(3)
-        } catch (MaterialstoreException e) {
+        } catch (MaterialstoreException | JobNameNotFoundException e) {
             throw new InspectusException(e);
         }
         listener.stepFinished("step6_cleanup");

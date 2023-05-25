@@ -8,6 +8,7 @@ import com.kazurayam.inspectus.core.Parameters;
 import com.kazurayam.inspectus.TestHelper;
 import com.kazurayam.materialstore.core.FileType;
 import com.kazurayam.materialstore.core.JobName;
+import com.kazurayam.materialstore.core.JobNameNotFoundException;
 import com.kazurayam.materialstore.core.JobTimestamp;
 import com.kazurayam.materialstore.core.MaterialList;
 import com.kazurayam.materialstore.core.MaterialstoreException;
@@ -39,7 +40,8 @@ public class FnTwinsDiffTest {
     }
 
     @Test
-    public void test_storingImageFiles() throws InspectusException {
+    public void test_storingImageFiles()
+            throws InspectusException, JobNameNotFoundException {
         JobName jobName = new JobName("test_storingImageFiles");
         JobTimestamp jobTimestamp = JobTimestamp.now();
         Parameters parameters = Parameters.builder()

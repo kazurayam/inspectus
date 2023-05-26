@@ -8,6 +8,7 @@ import com.kazurayam.materialstore.base.manage.StoreImport;
 import com.kazurayam.materialstore.base.reduce.MaterialProductGroup;
 import com.kazurayam.materialstore.base.reduce.Reducer;
 import com.kazurayam.materialstore.core.JobName;
+import com.kazurayam.materialstore.core.JobNameNotFoundException;
 import com.kazurayam.materialstore.core.JobTimestamp;
 import com.kazurayam.materialstore.core.MaterialList;
 import com.kazurayam.materialstore.core.MaterialstoreException;
@@ -34,35 +35,8 @@ public abstract class ChronosDiff extends AbstractDiffService {
             throws InspectusException {
         Objects.requireNonNull(parameters);
         Objects.requireNonNull(intermediates);
-        Intermediates result1 = step1_restorePrevious(parameters, intermediates);
-        Intermediates result2 = step2_materialize(parameters, result1);
+        Intermediates result2 = step2_materialize(parameters, intermediates);
         return step3_reduceChronos(parameters, result2);
-    }
-
-    public Intermediates step1_restorePrevious(Parameters parameters,
-                                               Intermediates intermediates)
-            throws InspectusException {
-        Store backup = parameters.getBackup();
-        if ( ! Files.exists(backup.getRoot()) ) {
-            logger.warn(backup.getRoot() + " is not found");
-            logger.info("Possibly this is the first time you ran this test. Will be OK next time. Try again.");
-        } else {
-            Store store = parameters.getStore();
-            JobName jobName = parameters.getJobName();
-            try {
-                StoreImport importer = StoreImport.newInstance(backup, store);
-                importer.importReports(jobName);
-            } catch (MaterialstoreException e) {
-                if (e.getMessage().contains(
-                        String.format("JobName \"%s\" is not found in %s", jobName, backup))) {
-                    logger.warn(e.getMessage());
-                    logger.info("This warning may happen. You should try again.");
-                } else {
-                    throw new InspectusException(e);
-                }
-            }
-        }
-        return Intermediates.builder(intermediates).build();
     }
 
     public abstract Intermediates step2_materialize(Parameters parameters, Intermediates intermediates)
@@ -103,7 +77,7 @@ public abstract class ChronosDiff extends AbstractDiffService {
             }
             listener.stepFinished("step3_reduceChronos");
             return new Intermediates.Builder().materialProductGroup(inspected).build();
-        } catch (MaterialstoreException e) {
+        } catch (MaterialstoreException | JobNameNotFoundException e) {
             throw new InspectusException(e);
         }
     }

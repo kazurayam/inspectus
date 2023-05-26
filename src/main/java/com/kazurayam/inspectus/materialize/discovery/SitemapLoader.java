@@ -7,6 +7,8 @@ import com.google.gson.JsonParser;
 import com.kazurayam.inspectus.core.InspectusException;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +24,7 @@ import java.util.Objects;
 
 public final class SitemapLoader {
 
+    private static final Logger logger = LoggerFactory.getLogger(SitemapLoader.class);
     private final Target baseTopPage;
     private final Target twinTopPage;
 
@@ -95,6 +98,10 @@ public final class SitemapLoader {
                         sitemap.add(t);
                     }
                 }
+                if (sitemap.size() == 0) {
+                    logger.warn("parseCSV() withHeaderRecord=true returned an empty Sitemap. " +
+                            "You should check the CSV file if it has the header or not");
+                }
             } catch (IOException e) {
                 throw new InspectusException(e);
             }
@@ -117,6 +124,9 @@ public final class SitemapLoader {
                             sitemap.add(t);
                         }
                     }
+                }
+                if (sitemap.size() == 0) {
+                    logger.warn("parseCSV() withHeaderRecord=false returned an empty Sitemap.");
                 }
             } catch (IOException e) {
                 throw new InspectusException(e);

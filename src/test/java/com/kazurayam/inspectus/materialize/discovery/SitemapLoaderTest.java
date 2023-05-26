@@ -2,7 +2,9 @@ package com.kazurayam.inspectus.materialize.discovery;
 
 import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.materialize.TestHelper;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +73,16 @@ public class SitemapLoaderTest {
         assertEquals("By.cssSelector: #main",
                 sitemap.getBaseTarget(2).getHandle().toString());
         assertNull(sitemap.getBaseTarget(2).getAttributes().get("step"));
+    }
+
+    @Disabled
+    @Test
+    public void test_parseCSV_noHeader_setWitHeaderRecordTrue() throws InspectusException {
+        Path csv = fixtureDir.resolve("sitemap_no_header.csv");
+        assert Files.exists(csv);
+        //loader.setWithHeaderRecord(true);  // intentional mistake!
+        Sitemap sitemap = loader.parseCSV(csv);
+        assertEquals(3, sitemap.size());
     }
 
     @Test

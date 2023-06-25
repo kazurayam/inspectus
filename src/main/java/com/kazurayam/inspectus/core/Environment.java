@@ -4,7 +4,7 @@ import java.util.Objects;
 public class Environment implements Comparable<Environment> {
 
     public static final Environment NULL_OBJECT = new Environment("");
-
+    public static final Environment DEFAULT = new Environment("default");
     private final String value;
 
     public Environment(String value) {

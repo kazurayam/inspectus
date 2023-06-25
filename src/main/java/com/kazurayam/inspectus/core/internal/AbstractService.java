@@ -40,7 +40,7 @@ public abstract class AbstractService implements Inspectus {
     }
 
     /*
-     * import the lastest artifacts from the remote/backup store
+     * import the latest artifacts from the remote/backup store
      * into the local/current store
      * @param parameters must contain the keys of "store", "back" and "jobName"
      * @throws InspectusException
@@ -89,6 +89,8 @@ public abstract class AbstractService implements Inspectus {
         return Intermediates.builder().build();
     }
 
+    abstract protected Intermediates step2_materialize(Parameters parameters, Intermediates intermediates)
+            throws InspectusException;
 
     abstract protected Intermediates step4_report(Parameters parameters, Intermediates intermediates)
             throws InspectusException;

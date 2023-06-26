@@ -1,5 +1,6 @@
 package com.kazurayam.inspectus.katalon;
 
+import com.kazurayam.inspectus.core.Environment;
 import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;
 import com.kazurayam.inspectus.core.Parameters;
@@ -12,10 +13,32 @@ public final class KatalonChronosDiff extends ChronosDiff implements ITestCaseCa
     private String materializeTestCaseName = null;
 
     public KatalonChronosDiff(String materializeTestCaseName) {
+        this(materializeTestCaseName, Environment.DEFAULT);
+    }
+
+    public KatalonChronosDiff(String materializeTestCaseName,
+                              Environment environment) {
         Objects.requireNonNull(materializeTestCaseName);
+        Objects.requireNonNull(environment);
         this.materializeTestCaseName = materializeTestCaseName;
+        this.environment = environment;
         super.setListener(new KatalonStepListener());
     }
+
+    /**
+     * call the "materialize" Test Case
+     */
+    @Override
+    public Intermediates processEnvironment(Parameters params,
+                                            Environment env,
+                                            Intermediates intermediates)
+            throws InspectusException {
+        Parameters decoratedParameters =
+                Parameters.builder(params)
+                        .environment(env).build();
+        return callTestCase(materializeTestCaseName, decoratedParameters, intermediates);
+    }
+
     @Override
     public Intermediates step2_materialize(Parameters parameters,
                                            Intermediates intermediates)
@@ -25,7 +48,7 @@ public final class KatalonChronosDiff extends ChronosDiff implements ITestCaseCa
             throw new InspectusException("materializeTestCaseName is not specified");
         }
         Intermediates result =
-                callTestCase(materializeTestCaseName, parameters, intermediates);
+                processEnvironment(parameters, environment, intermediates);
         listener.stepFinished("step2_materialize");
         return result;
     }

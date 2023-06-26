@@ -30,7 +30,9 @@ public class Handle {
         } else if (tokens[0].startsWith("By.xpath")) {
             return new Handle(By.xpath(tokens[1]));
         } else {
-            throw new IllegalArgumentException("unknown " + handleAsString);
+            throw new IllegalArgumentException("unknown handle: " +
+                    handleAsString + "; the handle must start with " +
+                    "either of By.cssSelector or By.xpath");
         }
     }
 

@@ -61,10 +61,10 @@ public abstract class TwinsDiff extends AbstractDiffService {
         return step3_reduceTwins(parameters, stuffedIntermediates);
     }
 
+    @Override
     public Intermediates step2_materialize(Parameters parameters, Intermediates intermediates)
             throws InspectusException {
         listener.stepStarted("step2_materialize");
-        //return fn.apply(parameters);
         if ( ! parameters.containsJobTimestamp()) {
             throw new InspectusException("jobTimestamp is required");
         }

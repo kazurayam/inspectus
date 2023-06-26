@@ -26,10 +26,10 @@ import java.util.Objects;
 public class WebPageMaterializingFunctions {
 
     Logger logger = LoggerFactory.getLogger(WebPageMaterializingFunctions.class);
-
     private Store store;
     private JobName jobName;
     private JobTimestamp jobTimestamp;
+    private int scrollTimeout = 500;  // in milliseconds
 
     public WebPageMaterializingFunctions(Store store, JobName jobName, JobTimestamp jobTimestamp) {
         Objects.requireNonNull(store);
@@ -38,6 +38,14 @@ public class WebPageMaterializingFunctions {
         this.store = store;
         this.jobName = jobName;
         this.jobTimestamp = jobTimestamp;
+    }
+
+    public void setScrollTimeout(int scrollTimeout) {
+        if (scrollTimeout < 0 || 8000 < scrollTimeout) {
+            throw new IllegalArgumentException("scrollTimeout(" + scrollTimeout
+                    + ") must be in the range of [0, 8000]");
+        }
+        this.scrollTimeout = scrollTimeout;
     }
 
     /**
@@ -105,7 +113,6 @@ public class WebPageMaterializingFunctions {
 
     BufferedImage takeScreenshot(WebDriver driver) {
         //-------------------------------------------------------------
-        int timeout = 500;  // milli-seconds
         JavascriptExecutor js = (JavascriptExecutor)driver;
         // look up the device-pixel-ratio of the current machine
         float dpr = resolveDevicePixelRatio(js);
@@ -113,7 +120,7 @@ public class WebPageMaterializingFunctions {
                 .coordsProvider(new WebDriverCoordsProvider())
                 .shootingStrategy(ShootingStrategies.viewportPasting(
                         ShootingStrategies.scaling(dpr),
-                        timeout));
+                        this.scrollTimeout));
         // take a screenshot of entire view of the page
         Screenshot screenshot = aShot.takeScreenshot(driver);
         BufferedImage bufferedImage = screenshot.getImage();

@@ -1,10 +1,10 @@
 package com.kazurayam.inspectus.core.internal;
 
+import com.kazurayam.inspectus.core.Environment;
 import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;
 import com.kazurayam.inspectus.core.Parameters;
 import com.kazurayam.materialstore.base.inspector.Inspector;
-import com.kazurayam.materialstore.base.manage.StoreImport;
 import com.kazurayam.materialstore.base.reduce.MaterialProductGroup;
 import com.kazurayam.materialstore.base.reduce.Reducer;
 import com.kazurayam.materialstore.core.JobName;
@@ -18,13 +18,14 @@ import com.kazurayam.materialstore.diagram.dot.MPGVisualizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.file.Files;
 import java.util.Objects;
 
 public abstract class ChronosDiff extends AbstractDiffService {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private Boolean isDiagramRequired = false;
+
+    protected Environment environment = Environment.NULL_OBJECT;
 
     protected void isDiagramRequired(Boolean required) {
         this.isDiagramRequired = required;
@@ -35,12 +36,32 @@ public abstract class ChronosDiff extends AbstractDiffService {
             throws InspectusException {
         Objects.requireNonNull(parameters);
         Objects.requireNonNull(intermediates);
+        if (environment == null) {
+            throw new InspectusException("environment must not be null");
+        }
+        if (environment == Environment.NULL_OBJECT) {
+            throw new InspectusException("environment must be set");
+        }
+
         Intermediates result2 = step2_materialize(parameters, intermediates);
-        return step3_reduceChronos(parameters, result2);
+        assert result2 != null;
+
+        Intermediates stuffedIntermediates =
+                Intermediates.builder(result2)
+                        .environmentLeft(environment)
+                        .environmentRight(environment)
+                        .jobTimestampLeft(result2.getJobTimestampLeft())
+                        .jobTimestampRight(result2.getJobTimestampRight())
+                        .build();
+
+        return step3_reduceChronos(parameters, stuffedIntermediates);
     }
 
-    public abstract Intermediates step2_materialize(Parameters parameters, Intermediates intermediates)
-            throws InspectusException;
+    public abstract Intermediates processEnvironment(Parameters params,
+                                                     Environment env,
+                                                     Intermediates intermediates)
+        throws InspectusException;
+
 
     public Intermediates step3_reduceChronos(Parameters parameters,
                                     Intermediates intermediates) throws InspectusException {

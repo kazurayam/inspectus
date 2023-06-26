@@ -13,6 +13,7 @@ import java.nio.file.Path;
 
 public abstract class AbstractDiffService extends AbstractService {
 
+
     @Override
     public Intermediates step4_report(Parameters parameters, Intermediates intermediates)
             throws InspectusException {

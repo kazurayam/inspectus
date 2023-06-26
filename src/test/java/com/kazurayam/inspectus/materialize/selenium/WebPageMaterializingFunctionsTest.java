@@ -88,6 +88,7 @@ public class WebPageMaterializingFunctionsTest {
         driver.navigate().to(target.getUrl());
         // take an entire page screenshot, write the image into the store
         WebPageMaterializingFunctions pmf = new WebPageMaterializingFunctions(store, jobName, jobTimestamp);
+        pmf.setScrollTimeout(1000);
         Material createdMaterial = pmf.storeEntirePageScreenshot.accept(driver, target, Collections.emptyMap());
         assertNotNull(createdMaterial);
         // assert that a material has been created
@@ -108,6 +109,7 @@ public class WebPageMaterializingFunctionsTest {
         driver.navigate().to(target.getUrl());
         // take an entire page screenshot, write the image into the store
         WebPageMaterializingFunctions pmf = new WebPageMaterializingFunctions(store, jobName, jobTimestamp);
+        pmf.setScrollTimeout(1000);
         Material createdMaterial = pmf.storeEntirePageScreenshotAsJpeg.accept(driver, target, Collections.emptyMap());
         assertNotNull(createdMaterial);
         // assert that a material has been created

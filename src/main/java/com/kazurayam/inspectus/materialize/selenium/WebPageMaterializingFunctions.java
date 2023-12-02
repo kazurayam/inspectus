@@ -16,37 +16,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.yandex.qatools.ashot.AShot;
 import ru.yandex.qatools.ashot.Screenshot;
-import ru.yandex.qatools.ashot.coordinates.WebDriverCoordsProvider;
-import ru.yandex.qatools.ashot.shooting.ShootingStrategies;
 
 import java.awt.image.BufferedImage;
 import java.util.Map;
 import java.util.Objects;
 
-public class WebPageMaterializingFunctions {
+public class WebPageMaterializingFunctions extends AbstractMaterializingFunctions {
 
     Logger logger = LoggerFactory.getLogger(WebPageMaterializingFunctions.class);
-    private Store store;
-    private JobName jobName;
-    private JobTimestamp jobTimestamp;
-    private int scrollTimeout = 500;  // in milliseconds
 
     public WebPageMaterializingFunctions(Store store, JobName jobName, JobTimestamp jobTimestamp) {
-        Objects.requireNonNull(store);
-        Objects.requireNonNull(jobName);
-        Objects.requireNonNull(jobTimestamp);
-        this.store = store;
-        this.jobName = jobName;
-        this.jobTimestamp = jobTimestamp;
+        super(store, jobName, jobTimestamp);
     }
 
-    public void setScrollTimeout(int scrollTimeout) {
-        if (scrollTimeout < 0 || 8000 < scrollTimeout) {
-            throw new IllegalArgumentException("scrollTimeout(" + scrollTimeout
-                    + ") must be in the range of [0, 8000]");
-        }
-        this.scrollTimeout = scrollTimeout;
-    }
 
     /**
      * get HTML source of the target web page, pretty-print it, save it into
@@ -83,7 +65,7 @@ public class WebPageMaterializingFunctions {
         Objects.requireNonNull(target);
         Objects.requireNonNull(attributes);
         // take screenshot
-        BufferedImage bufferedImage = takeScreenshot(driver);
+        BufferedImage bufferedImage = takeFullPageScreenshot(driver);
         // write the PNG image into the store
         Metadata metadata = Metadata.builder(target.getUrl())
                 .putAll(target.getAttributes())
@@ -100,7 +82,7 @@ public class WebPageMaterializingFunctions {
         Objects.requireNonNull(target);
         Objects.requireNonNull(attributes);
         // take screenshot
-        BufferedImage bufferedImage = takeScreenshot(driver);
+        BufferedImage bufferedImage = takeFullPageScreenshot(driver);
         // write the PNG image into the store
         Metadata metadata = Metadata.builder(target.getUrl())
                 .putAll(target.getAttributes())
@@ -111,16 +93,10 @@ public class WebPageMaterializingFunctions {
                 metadata, bufferedImage);
     };
 
-    BufferedImage takeScreenshot(WebDriver driver) {
-        //-------------------------------------------------------------
+
+    BufferedImage takeFullPageScreenshot(WebDriver driver) {
         JavascriptExecutor js = (JavascriptExecutor)driver;
-        // look up the device-pixel-ratio of the current machine
-        float dpr = resolveDevicePixelRatio(js);
-        AShot aShot = new AShot()
-                .coordsProvider(new WebDriverCoordsProvider())
-                .shootingStrategy(ShootingStrategies.viewportPasting(
-                        ShootingStrategies.scaling(dpr),
-                        this.scrollTimeout));
+        AShot aShot = createAShot(js);
         // take a screenshot of entire view of the page
         Screenshot screenshot = aShot.takeScreenshot(driver);
         BufferedImage bufferedImage = screenshot.getImage();
@@ -129,21 +105,4 @@ public class WebPageMaterializingFunctions {
         return bufferedImage;
     }
 
-    float resolveDevicePixelRatio(JavascriptExecutor js) {
-        // look up the device-pixel-ratio of the current machine
-        Object jsValue = js.executeScript("return window.devicePixelRatio;");
-        float dprFloat = 1.0f;
-        if (jsValue == null) {
-            logger.warn("jsValue was null. will use 1.0f.");
-            dprFloat = 1.0f;
-        } else if (jsValue instanceof Double) {
-            dprFloat = ((Double)jsValue).floatValue();
-        } else if (jsValue instanceof Long) {
-            dprFloat = (Long)jsValue;
-        } else {
-            logger.warn("jsValue was unknown type: "
-                    + jsValue.getClass().getName() + ". will use 1.0f");
-        }
-        return dprFloat;
-    }
 }

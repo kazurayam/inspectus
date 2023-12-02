@@ -2,7 +2,6 @@ package com.kazurayam.inspectus.materialize.discovery;
 
 import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.materialize.TestHelper;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

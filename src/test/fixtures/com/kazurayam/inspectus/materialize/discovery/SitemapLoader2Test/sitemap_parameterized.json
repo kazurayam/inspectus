@@ -1,0 +1,19 @@
+{
+  "topPage": {
+    "url": "${URL_PREFIX}",
+    "handle": "By.xpath: //h1/a[@href\u003d\u0027${URL_PREFIX}/\u0027]",
+    "attributes": {}
+  },
+  "targetList": [
+    {
+      "url": "${URL_PREFIX}page1.html",
+      "handle": "By.xpath: //img[@id\u003d\u0027apple\u0027]",
+      "attributes": {}
+    },
+    {
+      "url": "${URL_PREFIX}page2.html",
+      "handle": "By.xpath: //img[@id\u003d\u0027apple\u0027]",
+      "attributes": {}
+    }
+  ]
+}

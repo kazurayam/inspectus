@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.kazurayam"
-version = "0.10.2"
+version = "0.11.0-SNAPSHOT"
 
 ext {
     isReleaseVersion = !version.endsWith("SNAPSHOT")
@@ -37,6 +37,7 @@ dependencies {
     api libs.materialstore
     implementation libs.ashot
     implementation libs.ashotwrapper
+    implementation libs.commons.text
     implementation libs.commons.csv
     implementation libs.httpclient
     implementation libs.jsoup

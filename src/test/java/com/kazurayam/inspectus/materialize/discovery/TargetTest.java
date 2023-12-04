@@ -3,6 +3,8 @@ package com.kazurayam.inspectus.materialize.discovery;
 import com.kazurayam.inspectus.core.InspectusException;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -14,13 +16,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TargetTest {
 
+    Logger logger = LoggerFactory.getLogger(TargetTest.class);
+
     @Test
     public void test_default_By() throws InspectusException, MalformedURLException {
         Target target =
                 new Target.Builder("http://example.com").build();
         assertEquals(new URL("http://example.com"), target.getUrl());
         assertEquals("By.xpath: /html/body", target.getHandle().toString());
-        System.out.println(target.toJson(true));
+        logger.info(target.toJson(true));
     }
 
     @Test

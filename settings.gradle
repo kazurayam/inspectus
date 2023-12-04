@@ -19,6 +19,9 @@ dependencyResolutionManagement {
             version('commons-io', '2.11.0')
             library('commons-io', 'commons-io', 'commons-io').versionRef('commons-io')
 
+            version('commons-text', '1.11.0')
+            library('commons-text', 'org.apache.commons', 'commons-text').versionRef('commons-text')
+
             version('httpclient', '5.2')
             library('httpclient', 'org.apache.httpcomponents.client5', 'httpclient5').versionRef('httpclient')
 
@@ -45,7 +48,7 @@ dependencyResolutionManagement {
             version('selenium4', '4.6.0')
             library('selenium4', 'org.seleniumhq.selenium', 'selenium-java').versionRef('selenium4')
 
-            version('slf4j', '1.7.25')
+            version('slf4j', '2.0.9')
             library('slf4j-api', 'org.slf4j', 'slf4j-api').versionRef('slf4j')
             library('slf4j-simple', 'org.slf4j', 'slf4j-simple').versionRef('slf4j')
 

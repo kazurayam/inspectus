@@ -42,6 +42,10 @@ public class Sitemap2 implements Iterable<Target>{
         return targetList.iterator();
     }
 
+    public List<Target> getTargetList() {
+        return targetList;
+    }
+
     public Target get(int i) {
         if (i < 0 || i >= this.size()) {
             throw new IndexOutOfBoundsException("i=" + i + " is out of the range");

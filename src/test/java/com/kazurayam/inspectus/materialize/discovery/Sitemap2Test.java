@@ -41,4 +41,15 @@ public class Sitemap2Test {
         logger.info(sm.toJson(true));
     }
 
+    @Test
+    public void test_getTargetList() {
+        // when
+        Sitemap2 sm = new Sitemap2();
+        sm.setBaseUrl(topPage);
+        sm.add(page1);
+        sm.add(page2);
+        // then
+        assertEquals(2, sm.getTargetList().size());
+    }
+
 }

@@ -13,6 +13,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TargetTest {
 
@@ -100,5 +101,17 @@ public class TargetTest {
         assertEquals("http://myadmin.kazurayam.com/index.html", t.getUrl().toString());
         assertEquals("By.cssSelector: #main", t.getHandle().toString());
         assertEquals("01", t.getAttributes().get("step"));
+    }
+
+    @Test
+    public void test_getHandle_getBy() throws InspectusException {
+        Target target =
+                new Target.Builder("https://www.google.com")
+                        .handle(new Handle(By.cssSelector("input[name=\"q\"]")))
+                        .build();
+        Handle handle = target.getHandle();
+        By by = handle.getBy();
+        assertTrue(by instanceof By.ByCssSelector);
+        logger.info("[test_getHandle_getBy] " + by);
     }
 }

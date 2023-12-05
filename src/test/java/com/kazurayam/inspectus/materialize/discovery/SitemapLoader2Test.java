@@ -40,7 +40,7 @@ public class SitemapLoader2Test {
     }
 
     @Test
-    public void test_loadJson() throws InspectusException {
+    public void test_loadSitemapJson() throws InspectusException {
         // when
         Path jsonFile = fixtureDir.resolve("sitemap.json");
         Sitemap2 sitemap = SitemapLoader2.loadSitemapJson(jsonFile);
@@ -49,7 +49,7 @@ public class SitemapLoader2Test {
     }
 
     @Test
-    public void test_loadJson_parameterized() throws InspectusException {
+    public void test_loadSitemapJson_parameterized() throws InspectusException {
         // when
         Path jsonFile = fixtureDir.resolve("sitemap_parameterized.json");
         Map<String, String> bindings = new HashMap<>();

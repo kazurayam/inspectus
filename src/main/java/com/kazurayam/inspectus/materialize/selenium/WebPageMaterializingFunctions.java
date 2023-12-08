@@ -70,6 +70,8 @@ public class WebPageMaterializingFunctions extends AbstractMaterializingFunction
         Metadata metadata = Metadata.builder(target.getUrl())
                 .putAll(target.getAttributes())
                 .putAll(attributes)
+                .put("image-width", String.valueOf(bufferedImage.getWidth()))
+                .put("image-height", String.valueOf(bufferedImage.getHeight()))
                 .build();
         return this.store.write(this.jobName, this.jobTimestamp,
                 FileType.PNG,
@@ -87,6 +89,8 @@ public class WebPageMaterializingFunctions extends AbstractMaterializingFunction
         Metadata metadata = Metadata.builder(target.getUrl())
                 .putAll(target.getAttributes())
                 .putAll(attributes)
+                .put("image-width", String.valueOf(bufferedImage.getWidth()))
+                .put("image-height", String.valueOf(bufferedImage.getHeight()))
                 .build();
         return this.store.write(this.jobName, this.jobTimestamp,
                 FileType.JPEG,

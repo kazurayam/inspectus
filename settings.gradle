@@ -19,6 +19,9 @@ dependencyResolutionManagement {
             version('commons-io', '2.11.0')
             library('commons-io', 'commons-io', 'commons-io').versionRef('commons-io')
 
+            version('commons-text', '1.11.0')
+            library('commons-text', 'org.apache.commons', 'commons-text').versionRef('commons-text')
+
             version('httpclient', '5.2')
             library('httpclient', 'org.apache.httpcomponents.client5', 'httpclient5').versionRef('httpclient')
 
@@ -33,7 +36,7 @@ dependencyResolutionManagement {
             version('log4j', '2.19.0')
             library('log4j-core', 'org.apache.logging.log4j', 'log4j-core').versionRef('log4j')
 
-            version('materialstore', '0.16.6')
+            version('materialstore', '0.17.0')
             library('materialstore', 'com.kazurayam', 'materialstore').versionRef('materialstore')
 
             version('poi', '5.2.3')
@@ -45,11 +48,11 @@ dependencyResolutionManagement {
             version('selenium4', '4.6.0')
             library('selenium4', 'org.seleniumhq.selenium', 'selenium-java').versionRef('selenium4')
 
-            version('slf4j', '1.7.25')
+            version('slf4j', '2.0.9')
             library('slf4j-api', 'org.slf4j', 'slf4j-api').versionRef('slf4j')
             library('slf4j-simple', 'org.slf4j', 'slf4j-simple').versionRef('slf4j')
 
-            version('webdrivermanager', '5.2.0')
+            version('webdrivermanager', '5.6.2')
             library('webdrivermanager', 'io.github.bonigarcia', 'webdrivermanager').versionRef('webdrivermanager')
         }
     }

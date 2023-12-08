@@ -136,8 +136,7 @@ public final class Sitemap {
     public String toJson(boolean prettyPrint) {
         if (prettyPrint) {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            JsonParser jp = new JsonParser();
-            JsonElement je = jp.parse(this.toJson());
+            JsonElement je = JsonParser.parseString(this.toJson());
             return gson.toJson(je);
         } else {
             return toJson();

@@ -49,7 +49,7 @@ public final class SitemapLoader {
     }
 
     public Sitemap parseJson(String jsonText) throws InspectusException {
-        JsonElement jsonElement = new JsonParser().parse(jsonText);
+        JsonElement jsonElement = JsonParser.parseString(jsonText);
         JsonObject jo = jsonElement.getAsJsonObject();
         Target baseTopPage = Target.deserialize(jo.getAsJsonObject("baseTopPage"));
         Target twinTopPage = Target.deserialize(jo.getAsJsonObject("twinTopPage"));

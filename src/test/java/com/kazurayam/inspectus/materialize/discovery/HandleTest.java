@@ -22,4 +22,5 @@ public class HandleTest {
         assertNotNull(h);
         assertEquals(s, h.getBy().toString());
     }
+
 }

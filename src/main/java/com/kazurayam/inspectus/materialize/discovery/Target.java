@@ -187,7 +187,7 @@ public final class Target implements Jsonifiable {
     public static Target deserialize(String jsonText)
             throws InspectusException {
         Objects.requireNonNull(jsonText);
-        JsonElement jsonElement = new JsonParser().parse(jsonText);
+        JsonElement jsonElement = JsonParser.parseString(jsonText);
         JsonObject jo = jsonElement.getAsJsonObject();
         return deserialize(jo);
     }

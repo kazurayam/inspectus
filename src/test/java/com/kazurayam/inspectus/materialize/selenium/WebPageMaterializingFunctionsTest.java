@@ -95,6 +95,11 @@ public class WebPageMaterializingFunctionsTest {
         Material selectedMaterial = store.selectSingle(jobName, jobTimestamp, FileType.PNG, QueryOnMetadata.ANY);
         assertTrue(Files.exists(selectedMaterial.toPath()));
         assertEquals(createdMaterial, selectedMaterial);
+        assertTrue(selectedMaterial.getMetadata().containsKey("image-width"), "image-width is missing");
+        assertTrue(Integer.valueOf(selectedMaterial.getMetadata().get("image-width")) > 0);
+        assertTrue(selectedMaterial.getMetadata().containsKey("image-height"), "image-height is missing");
+        assertTrue(Integer.valueOf(selectedMaterial.getMetadata().get("image-height")) > 0);
+
     }
 
     @Test
@@ -116,7 +121,13 @@ public class WebPageMaterializingFunctionsTest {
         Material selectedMaterial = store.selectSingle(jobName, jobTimestamp, FileType.JPEG, QueryOnMetadata.ANY);
         assertTrue(Files.exists(selectedMaterial.toPath()));
         assertEquals(createdMaterial, selectedMaterial);
+        assertTrue(selectedMaterial.getMetadata().containsKey("image-width"), "image-width is missing");
+        assertTrue(Integer.valueOf(selectedMaterial.getMetadata().get("image-width")) > 0);
+        assertTrue(selectedMaterial.getMetadata().containsKey("image-height"), "image-height is missing");
+        assertTrue(Integer.valueOf(selectedMaterial.getMetadata().get("image-height")) > 0);
     }
+
+
 
 
     @AfterEach

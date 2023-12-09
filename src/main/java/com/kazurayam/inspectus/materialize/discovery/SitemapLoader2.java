@@ -24,7 +24,7 @@ import java.util.Objects;
 
 public class SitemapLoader2 {
 
-    private static final Logger logger = LoggerFactory.getLogger(SitemapLoader.class);
+    private static final Logger logger = LoggerFactory.getLogger(SitemapLoader2.class);
 
     private SitemapLoader2() {}
 

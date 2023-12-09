@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SitemapLoader2Test {
@@ -40,12 +41,37 @@ public class SitemapLoader2Test {
     }
 
     @Test
+    public void test_loadSitemapCSV_withHeaderRecord() throws InspectusException {
+        Path csvFile = fixtureDir.resolve("sitemap.csv");
+        String text = SitemapLoader2.readFully(csvFile);
+        Map<String, String> bindings = new HashMap<String,String>();
+        bindings.put("URL_PREFIX", "http://myadmin.kazurayam.com");
+        Sitemap2 sitemap = SitemapLoader2.parseSitemapCSV(text, true, bindings);
+        assertNotNull(sitemap);
+        logger.info(sitemap.toJson(true));
+    }
+
+    @Test
+    public void test_loadSitemapCSV_withoutHeaderRecord() throws InspectusException {
+        Path csvFile = fixtureDir.resolve("sitemap_no_header.csv");
+        String text = SitemapLoader2.readFully(csvFile);
+        Map<String, String> bindings = new HashMap<String,String>();
+        bindings.put("URL_PREFIX", "http://myadmin.kazurayam.com");
+        Sitemap2 sitemap = SitemapLoader2.parseSitemapCSV(text, false, bindings);
+        assertNotNull(sitemap);
+        logger.info(sitemap.toJson(true));
+    }
+
+
+    @Test
     public void test_loadSitemapJson() throws InspectusException {
         // when
         Path jsonFile = fixtureDir.resolve("sitemap.json");
         Sitemap2 sitemap = SitemapLoader2.loadSitemapJson(jsonFile);
         // then
         logger.info(sitemap.toJson(true));
+        assertTrue(sitemap.get(0).getAttributes().containsKey("description"));
+        assertEquals(sitemap.get(0).getAttributes().get("description"), "original");
     }
 
     @Test
@@ -59,6 +85,8 @@ public class SitemapLoader2Test {
         logger.info(sitemap.toJson(true));
         assertEquals("https://kazurayam.github.com/myApple/page1.html",
                 sitemap.get(0).getUrl().toString());
+        assertTrue(sitemap.get(0).getAttributes().containsKey("description"));
+        assertEquals(sitemap.get(0).getAttributes().get("description"), "original");
     }
 
 }

@@ -8,12 +8,16 @@
     {
       "url": "https://kazurayam.github.com/myApple/page1.html",
       "handle": "By.xpath: //img[@id\u003d\u0027apple\u0027]",
-      "attributes": {}
+      "attributes": {
+        "description": "original"
+      }
     },
     {
       "url": "https://kazurayam.github.com/myApple/page2.html",
       "handle": "By.xpath: //img[@id\u003d\u0027apple\u0027]",
-      "attributes": {}
+      "attributes": {
+        "description": "resized"
+      }
     }
   ]
 }

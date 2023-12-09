@@ -1,0 +1,4 @@
+#
+"http://myadmin.kazurayam.com/index.html","By.cssSelector: #main",
+"http://myadmin.kazurayam.com/repositories.html","By.cssSelector: #main"
+"${URL_PREFIX}/proverbs.html","By.cssSelector: #main","03"

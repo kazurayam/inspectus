@@ -115,12 +115,10 @@ public final class SitemapLoader {
                         URL url = resolveUrl(record.get(0));
                         if (record.size() > 1) {
                             Handle handle = Handle.deserialize(record.get(1));
-                            Target t =
-                                    Target.builder(url).handle(handle).build();
+                            Target t = Target.builder(url).handle(handle).build();
                             sitemap.add(t);
                         } else {
-                            Target t =
-                                    Target.builder(url).build();
+                            Target t = Target.builder(url).build();
                             sitemap.add(t);
                         }
                     }

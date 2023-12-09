@@ -13,7 +13,6 @@ import com.kazurayam.materialstore.core.Material;
 import com.kazurayam.materialstore.core.MaterialList;
 import com.kazurayam.materialstore.core.MaterialstoreException;
 import com.kazurayam.materialstore.core.Metadata;
-import com.kazurayam.materialstore.core.QueryOnMetadata;
 import com.kazurayam.materialstore.core.SortKeys;
 import com.kazurayam.materialstore.core.Store;
 import com.kazurayam.materialstore.diagram.dot.DotGenerator;
@@ -129,14 +128,14 @@ public abstract class TwinsDiff extends AbstractDiffService {
 
         try {
             // get the MaterialList of the left (Production Environment)
-            MaterialList left = store.select(jobName, jobTimestampLeft, QueryOnMetadata.ANY);
+            MaterialList left = store.select(jobName, jobTimestampLeft);
 
             logger.debug("llllllllllllll MaterialList left llllllllllllllllllll\n" +
                     left.toJson(true) +
                     "llllllllllllllllllll");
 
             // get the MaterialList of the right (Development Environment)
-            MaterialList right = store.select(jobName, jobTimestampRight, QueryOnMetadata.ANY);
+            MaterialList right = store.select(jobName, jobTimestampRight);
 
             logger.debug("rrrrrrrrrrrrrr + MaterialList right rrrrrrrrrrrrrrrrrr\n" +
                     right.toJson(true) +

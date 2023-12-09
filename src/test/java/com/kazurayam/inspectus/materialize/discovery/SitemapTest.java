@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class Sitemap2Test {
+public class SitemapTest {
     private static final Logger logger =
-            LoggerFactory.getLogger(Sitemap2Test.class);
+            LoggerFactory.getLogger(SitemapTest.class);
     private static Target topPage;
     private static Target page1;
     private static Target page2;
@@ -30,7 +30,7 @@ public class Sitemap2Test {
 
     @Test
     public void test_toJson_prettyPrint() {
-        Sitemap2 sm = new Sitemap2();
+        Sitemap sm = new Sitemap();
         sm.setBaseUrl(topPage);
         sm.add(page1);
         sm.add(page2);
@@ -44,7 +44,7 @@ public class Sitemap2Test {
     @Test
     public void test_getTargetList() {
         // when
-        Sitemap2 sm = new Sitemap2();
+        Sitemap sm = new Sitemap();
         sm.setBaseUrl(topPage);
         sm.add(page1);
         sm.add(page2);

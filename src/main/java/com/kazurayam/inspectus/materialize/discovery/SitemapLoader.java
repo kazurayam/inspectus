@@ -22,22 +22,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class SitemapLoader2 {
+public class SitemapLoader {
 
-    private static final Logger logger = LoggerFactory.getLogger(SitemapLoader2.class);
+    private static final Logger logger = LoggerFactory.getLogger(SitemapLoader.class);
 
-    private SitemapLoader2() {}
+    private SitemapLoader() {}
 
 
 
-    public static Sitemap2 parseSitemapCSV(String csvText, boolean withHeaderRecord, Map<String, String> bindings) throws InspectusException {
+    public static Sitemap parseSitemapCSV(String csvText, boolean withHeaderRecord, Map<String, String> bindings) throws InspectusException {
         Objects.requireNonNull(csvText);
         Objects.requireNonNull(bindings);
         // ${URL_PREFIX} => https://hostname etc
         String text = interpolateString(csvText, bindings);
         //
         Reader in = new StringReader(text);
-        Sitemap2 sitemap = new Sitemap2();
+        Sitemap sitemap = new Sitemap();
         if (withHeaderRecord) {
             CSVFormat csvFormat =
                     CSVFormat.RFC4180.builder().setHeader()
@@ -92,27 +92,27 @@ public class SitemapLoader2 {
         return sitemap;
     }
 
-    public static Sitemap2 parseSitemapCSV(String csvText) throws InspectusException {
+    public static Sitemap parseSitemapCSV(String csvText) throws InspectusException {
         return parseSitemapCSV(csvText, true, new HashMap<String, String>());
     }
 
-    public static Sitemap2 parseSitemapCSV(String csvText, Map<String, String> bindings)
+    public static Sitemap parseSitemapCSV(String csvText, Map<String, String> bindings)
         throws InspectusException {
         return parseSitemapCSV(csvText, true, bindings);
     }
 
-    public static Sitemap2 parseSitemapCSV(String csvText, boolean withHeaderRecord)
+    public static Sitemap parseSitemapCSV(String csvText, boolean withHeaderRecord)
             throws InspectusException {
         return parseSitemapCSV(csvText, withHeaderRecord, new HashMap<String, String>());
     }
 
-    public static Sitemap2 parseSitemapJson(String jsonText, Map<String, String> bindings) throws InspectusException {
+    public static Sitemap parseSitemapJson(String jsonText, Map<String, String> bindings) throws InspectusException {
         Objects.requireNonNull(jsonText);
         Objects.requireNonNull(bindings);
         String text = interpolateString(jsonText, bindings);
         JsonElement jsonElement = JsonParser.parseString(text);
         JsonObject jo = jsonElement.getAsJsonObject();
-        Sitemap2 sitemap = new Sitemap2();
+        Sitemap sitemap = new Sitemap();
         JsonObject topPageObject = jo.getAsJsonObject("topPage");
         if (topPageObject != null) {
             sitemap.setBaseUrl(Target.deserialize(topPageObject));
@@ -126,15 +126,15 @@ public class SitemapLoader2 {
         return sitemap;
     }
 
-    public static Sitemap2 parseSitemapJson(String jsonText) throws InspectusException {
+    public static Sitemap parseSitemapJson(String jsonText) throws InspectusException {
         return parseSitemapJson(jsonText, new HashMap<String, String>());
     }
 
-    public static Sitemap2 loadSitemapJson(Path jsonPath) throws InspectusException {
+    public static Sitemap loadSitemapJson(Path jsonPath) throws InspectusException {
         return loadSitemapJson(jsonPath, new HashMap<String, String>());
     }
 
-    public static Sitemap2 loadSitemapJson(Path jsonPath, Map<String, String> bindings) throws InspectusException {
+    public static Sitemap loadSitemapJson(Path jsonPath, Map<String, String> bindings) throws InspectusException {
         return parseSitemapJson(readFully(jsonPath), bindings);
     }
 

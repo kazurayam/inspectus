@@ -12,13 +12,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-public class Sitemap2 implements Iterable<Target>{
+public class Sitemap implements Iterable<Target>{
 
-    private final Logger logger = LoggerFactory.getLogger(Sitemap2.class);
+    private final Logger logger = LoggerFactory.getLogger(Sitemap.class);
     private Target baseUrl = null;
     private List<Target> targetList = new ArrayList<>();
 
-    public Sitemap2() {}
+    public Sitemap() {}
 
     public void setBaseUrl(Target baseUrl) {
         this.baseUrl = baseUrl;

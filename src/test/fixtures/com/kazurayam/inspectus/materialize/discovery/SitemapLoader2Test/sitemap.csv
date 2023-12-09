@@ -1,6 +1,0 @@
-url,handle,step
-#
-"http://myadmin.kazurayam.com/index.html","By.cssSelector: #main","01"
-""
-"http://myadmin.kazurayam.com/repositories.html","By.cssSelector: #main","02"
-"${URL_PREFIX}/proverbs.html","By.cssSelector: #main","03"

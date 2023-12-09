@@ -39,6 +39,9 @@ dependencyResolutionManagement {
             version('materialstore', '0.17.1')
             library('materialstore', 'com.kazurayam', 'materialstore').versionRef('materialstore')
 
+            version('unittesthelper', '0.3.0')
+            library('unittesthelper', 'com.kazurayam', 'unittest-helper').versionRef('unittesthelper')
+
             version('poi', '5.2.3')
             library('poi', 'org.apache.poi','poi-ooxml').versionRef('poi')
 

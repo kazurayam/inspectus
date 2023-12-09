@@ -131,8 +131,16 @@ public abstract class TwinsDiff extends AbstractDiffService {
             // get the MaterialList of the left (Production Environment)
             MaterialList left = store.select(jobName, jobTimestampLeft, QueryOnMetadata.ANY);
 
+            logger.debug("llllllllllllll MaterialList left llllllllllllllllllll\n" +
+                    left.toJson(true) +
+                    "llllllllllllllllllll");
+
             // get the MaterialList of the right (Development Environment)
             MaterialList right = store.select(jobName, jobTimestampRight, QueryOnMetadata.ANY);
+
+            logger.debug("rrrrrrrrrrrrrr + MaterialList right rrrrrrrrrrrrrrrrrr\n" +
+                    right.toJson(true) +
+                    "rrrrrrrrrrrrrrrrrrrr");
 
             // weave 2 MaterialList objects into a MaterialProductGroup,
             // which is a List of pairs of corresponding Material
@@ -145,6 +153,10 @@ public abstract class TwinsDiff extends AbstractDiffService {
                             .labelRight(environmentRight.getValue())
                             .build();
 
+            logger.debug("============= MaterialProductGroup just after built ==========================\n" +
+                    reduced.toJson(true) +
+                    "=========================================");
+
             // logger.info("parameters.getIgnoreMetadataKeys=" + parameters.getIgnoreMetadataKeys().toString());
             // logger.info("reduced.getIgnoreMetadataKeys=" + reduced.getIgnoreMetadataKeys().toString());
 
@@ -155,6 +167,9 @@ public abstract class TwinsDiff extends AbstractDiffService {
             MaterialProductGroup inspected;
             try {
                 inspected = inspector.reduceAndSort(reduced);
+                logger.debug("+++++++++++++ MaterialProductGroup after inspector.reduceAndSort() ++++++++++++++++\n"+
+                        inspected.toJson(true) +
+                        "++++++++++++++++++++++++++++++++++++++++++++");
             } catch (MaterialstoreException e) {
                 /*
                  * if any problem occurred while taking diff,

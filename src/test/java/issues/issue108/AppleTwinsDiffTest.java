@@ -69,8 +69,11 @@ public class AppleTwinsDiffTest extends AbstractMaterializingTest {
         // change the log level to monitor the MaterialProductGroup object that is
         // passed to the reporting.
         System.setProperty("org.slf4j.simpleLogger.log." +
-                "com.kazurayam.inspectus.core.internal.AbstractDiffService",
-                "DEBUG");
+                "com.kazurayam.inspectus.core.internal.AbstractDiffService", "DEBUG");
+        System.setProperty("org.slf4j.simpleLogger.log." +
+                "com.kazurayam.inspectus.core.internal.TwinsDiff", "DEBUG");
+        System.setProperty("org.slf4j.simpleLogger.log." +
+                "com.kazurayam.materialstore.base.reduce.zipper.Zipper", "DEBUG");
     }
 
     @BeforeEach

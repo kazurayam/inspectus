@@ -165,7 +165,9 @@ public abstract class TwinsDiff extends AbstractDiffService {
             // take diff, measure the difference, sort them
             MaterialProductGroup inspected;
             try {
+
                 inspected = inspector.reduceAndSort(reduced);
+
                 logger.debug("+++++++++++++ MaterialProductGroup after inspector.reduceAndSort() ++++++++++++++++\n"+
                         inspected.toJson(true) +
                         "++++++++++++++++++++++++++++++++++++++++++++");

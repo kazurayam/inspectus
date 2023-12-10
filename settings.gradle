@@ -36,8 +36,11 @@ dependencyResolutionManagement {
             version('log4j', '2.19.0')
             library('log4j-core', 'org.apache.logging.log4j', 'log4j-core').versionRef('log4j')
 
-            version('materialstore', '0.17.0')
+            version('materialstore', '0.17.2')
             library('materialstore', 'com.kazurayam', 'materialstore').versionRef('materialstore')
+
+            version('unittesthelper', '0.3.0')
+            library('unittesthelper', 'com.kazurayam', 'unittest-helper').versionRef('unittesthelper')
 
             version('poi', '5.2.3')
             library('poi', 'org.apache.poi','poi-ooxml').versionRef('poi')

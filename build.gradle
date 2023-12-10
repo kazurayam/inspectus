@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.kazurayam"
-version = "0.11.0-SNAPSHOT"
+version = "0.11.2"
 
 ext {
     isReleaseVersion = !version.endsWith("SNAPSHOT")
@@ -48,6 +48,7 @@ dependencies {
     testImplementation libs.commons.io
     testImplementation libs.junit.jupiter.api
     testImplementation libs.webdrivermanager
+    testImplementation libs.unittesthelper
     testRuntimeOnly libs.junit.jupiter.engine
     testRuntimeOnly libs.log4j.core
 }

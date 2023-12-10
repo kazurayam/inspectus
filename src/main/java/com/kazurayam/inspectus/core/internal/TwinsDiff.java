@@ -13,7 +13,6 @@ import com.kazurayam.materialstore.core.Material;
 import com.kazurayam.materialstore.core.MaterialList;
 import com.kazurayam.materialstore.core.MaterialstoreException;
 import com.kazurayam.materialstore.core.Metadata;
-import com.kazurayam.materialstore.core.QueryOnMetadata;
 import com.kazurayam.materialstore.core.SortKeys;
 import com.kazurayam.materialstore.core.Store;
 import com.kazurayam.materialstore.diagram.dot.DotGenerator;
@@ -129,10 +128,18 @@ public abstract class TwinsDiff extends AbstractDiffService {
 
         try {
             // get the MaterialList of the left (Production Environment)
-            MaterialList left = store.select(jobName, jobTimestampLeft, QueryOnMetadata.ANY);
+            MaterialList left = store.select(jobName, jobTimestampLeft);
+
+            logger.debug("llllllllllllll MaterialList left llllllllllllllllllll\n" +
+                    left.toJson(true) +
+                    "llllllllllllllllllll");
 
             // get the MaterialList of the right (Development Environment)
-            MaterialList right = store.select(jobName, jobTimestampRight, QueryOnMetadata.ANY);
+            MaterialList right = store.select(jobName, jobTimestampRight);
+
+            logger.debug("rrrrrrrrrrrrrr + MaterialList right rrrrrrrrrrrrrrrrrr\n" +
+                    right.toJson(true) +
+                    "rrrrrrrrrrrrrrrrrrrr");
 
             // weave 2 MaterialList objects into a MaterialProductGroup,
             // which is a List of pairs of corresponding Material
@@ -145,6 +152,10 @@ public abstract class TwinsDiff extends AbstractDiffService {
                             .labelRight(environmentRight.getValue())
                             .build();
 
+            logger.debug("============= MaterialProductGroup just after built ==========================\n" +
+                    reduced.toJson(true) +
+                    "=========================================");
+
             // logger.info("parameters.getIgnoreMetadataKeys=" + parameters.getIgnoreMetadataKeys().toString());
             // logger.info("reduced.getIgnoreMetadataKeys=" + reduced.getIgnoreMetadataKeys().toString());
 
@@ -155,6 +166,9 @@ public abstract class TwinsDiff extends AbstractDiffService {
             MaterialProductGroup inspected;
             try {
                 inspected = inspector.reduceAndSort(reduced);
+                logger.debug("+++++++++++++ MaterialProductGroup after inspector.reduceAndSort() ++++++++++++++++\n"+
+                        inspected.toJson(true) +
+                        "++++++++++++++++++++++++++++++++++++++++++++");
             } catch (MaterialstoreException e) {
                 /*
                  * if any problem occurred while taking diff,

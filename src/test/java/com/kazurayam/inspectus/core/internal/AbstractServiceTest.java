@@ -3,8 +3,8 @@ package com.kazurayam.inspectus.core.internal;
 import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;
 import com.kazurayam.inspectus.core.Parameters;
-import com.kazurayam.inspectus.TestHelper;
 import com.kazurayam.inspectus.fn.FnShootings;
+import com.kazurayam.inspectus.zest.TestOutputOrganizerFactory;
 import com.kazurayam.materialstore.core.FileType;
 import com.kazurayam.materialstore.core.JobName;
 import com.kazurayam.materialstore.core.JobNameNotFoundException;
@@ -14,7 +14,8 @@ import com.kazurayam.materialstore.core.MaterialstoreException;
 import com.kazurayam.materialstore.core.Metadata;
 import com.kazurayam.materialstore.core.Store;
 import com.kazurayam.materialstore.core.Stores;
-import org.junit.jupiter.api.BeforeEach;
+import com.kazurayam.unittest.TestOutputOrganizer;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -26,11 +27,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AbstractServiceTest {
 
-    private Store store;
+    private static final TestOutputOrganizer too =
+            TestOutputOrganizerFactory.create(AbstractServiceTest.class);
+    private static Store store;
 
-    @BeforeEach
-    public void beforeEach() throws IOException {
-        Path testClassOutputDir = TestHelper.createTestClassOutputDir(AbstractServiceTest.class);
+    @BeforeAll
+    public static void beforeAll() throws IOException {
+        too.cleanClassOutputDirectory();
+        Path testClassOutputDir = too.getClassOutputDirectory();
         store = Stores.newInstance(testClassOutputDir.resolve("store"));
     }
 

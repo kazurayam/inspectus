@@ -5,7 +5,7 @@ import com.kazurayam.inspectus.core.Inspectus;
 import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;
 import com.kazurayam.inspectus.core.Parameters;
-import com.kazurayam.inspectus.TestHelper;
+import com.kazurayam.inspectus.zest.TestOutputOrganizerFactory;
 import com.kazurayam.materialstore.core.FileType;
 import com.kazurayam.materialstore.core.JobName;
 import com.kazurayam.materialstore.core.JobNameNotFoundException;
@@ -16,7 +16,8 @@ import com.kazurayam.materialstore.core.Metadata;
 import com.kazurayam.materialstore.core.SortKeys;
 import com.kazurayam.materialstore.core.Store;
 import com.kazurayam.materialstore.core.Stores;
-import org.junit.jupiter.api.BeforeEach;
+import com.kazurayam.unittest.TestOutputOrganizer;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -29,14 +30,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FnTwinsDiffTest {
 
-    private Path baseDir;
-    private Store store;
+    private static final TestOutputOrganizer too =
+            TestOutputOrganizerFactory.create(FnTwinsDiffTest.class);
+    private static Path baseDir;
+    private static Store store;
 
-    @BeforeEach
-    public void beforeEach() throws IOException {
-        baseDir = TestHelper.getCWD();
-        Path testClassOutputDir = TestHelper.createTestClassOutputDir(FnTwinsDiffTest.class);
-        store = Stores.newInstance(testClassOutputDir.resolve("store"));
+    @BeforeAll
+    public static void beforeAll() throws IOException {
+        baseDir = too.getProjectDir();
+        Path storePath = too.getClassOutputDirectory().resolve("store");
+        store = Stores.newInstance(storePath);
     }
 
     @Test

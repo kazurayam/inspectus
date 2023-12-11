@@ -1,6 +1,5 @@
 package issues.issue108;
 
-import com.kazurayam.inspectus.TestOutputOrganizerFactory;
 import com.kazurayam.inspectus.core.Environment;
 import com.kazurayam.inspectus.core.Inspectus;
 import com.kazurayam.inspectus.core.InspectusException;
@@ -12,6 +11,7 @@ import com.kazurayam.inspectus.materialize.discovery.SitemapLoader;
 import com.kazurayam.inspectus.materialize.discovery.Target;
 import com.kazurayam.inspectus.materialize.selenium.WebDriverFormulas;
 import com.kazurayam.inspectus.materialize.selenium.WebElementMaterializingFunctions;
+import com.kazurayam.inspectus.zest.TestOutputOrganizerFactory;
 import com.kazurayam.materialstore.core.JobName;
 import com.kazurayam.materialstore.core.JobTimestamp;
 import com.kazurayam.materialstore.core.Material;

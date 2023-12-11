@@ -1,6 +1,7 @@
 package com.kazurayam.inspectus.materialize.discovery;
 
-import com.kazurayam.inspectus.materialize.TestHelper;
+import com.kazurayam.inspectus.zest.TestOutputOrganizerFactory;
+import com.kazurayam.unittest.TestOutputOrganizer;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFTable;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -15,7 +16,10 @@ import java.util.stream.Collectors;
 
 public class ReadingXlsxTest {
 
-    Path fixtureDir = TestHelper.getFixturesDirectory().resolve("com/kazurayam/inspectus/materialize/discovery/ReadingXlsxTest");
+    private static final TestOutputOrganizer too =
+            TestOutputOrganizerFactory.create(ReadingXlsxTest.class);
+    Path fixturesDir = too.getProjectDir().resolve("src/test/fixtures");
+    Path fixtureDir = fixturesDir.resolve("com/kazurayam/inspectus/materialize/discovery/ReadingXlsxTest");
 
     @Test
     public void test_read_XSLS_file() throws IOException {

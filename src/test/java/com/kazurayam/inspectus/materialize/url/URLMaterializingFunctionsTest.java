@@ -1,8 +1,8 @@
 package com.kazurayam.inspectus.materialize.url;
 
 import com.kazurayam.inspectus.core.InspectusException;
-import com.kazurayam.inspectus.materialize.TestHelper;
 import com.kazurayam.inspectus.materialize.discovery.Target;
+import com.kazurayam.inspectus.zest.TestOutputOrganizerFactory;
 import com.kazurayam.materialstore.core.FileType;
 import com.kazurayam.materialstore.core.JobName;
 import com.kazurayam.materialstore.core.JobTimestamp;
@@ -11,22 +11,25 @@ import com.kazurayam.materialstore.core.MaterialstoreException;
 import com.kazurayam.materialstore.core.QueryOnMetadata;
 import com.kazurayam.materialstore.core.Store;
 import com.kazurayam.materialstore.core.Stores;
+import com.kazurayam.unittest.TestOutputOrganizer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class URLMaterializingFunctionsTest {
 
+    private static final TestOutputOrganizer too =
+            TestOutputOrganizerFactory.create(URLMaterializingFunctionsTest.class);
     private static Store store;
 
     @BeforeAll
-    public static void beforeAll() {
-        Path testCaseOutputDir =
-                TestHelper.createTestClassOutputDir(URLMaterializingFunctionsTest.class);
-        Path root = testCaseOutputDir.resolve("store");
+    public static void beforeAll() throws IOException {
+        too.cleanClassOutputDirectory();
+        Path root = too.getClassOutputDirectory().resolve("store");
         store = Stores.newInstance(root);
     }
 

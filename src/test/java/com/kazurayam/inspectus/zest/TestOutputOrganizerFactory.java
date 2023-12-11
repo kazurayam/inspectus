@@ -1,4 +1,4 @@
-package com.kazurayam.inspectus;
+package com.kazurayam.inspectus.zest;
 
 import com.kazurayam.unittest.TestOutputOrganizer;
 

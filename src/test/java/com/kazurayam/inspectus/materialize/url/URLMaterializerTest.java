@@ -1,6 +1,6 @@
 package com.kazurayam.inspectus.materialize.url;
 
-import com.kazurayam.inspectus.materialize.TestHelper;
+import com.kazurayam.inspectus.zest.TestOutputOrganizerFactory;
 import com.kazurayam.materialstore.core.FileType;
 import com.kazurayam.materialstore.core.JobName;
 import com.kazurayam.materialstore.core.JobTimestamp;
@@ -8,9 +8,9 @@ import com.kazurayam.materialstore.core.Material;
 import com.kazurayam.materialstore.core.MaterialstoreException;
 import com.kazurayam.materialstore.core.Store;
 import com.kazurayam.materialstore.core.Stores;
+import com.kazurayam.unittest.TestOutputOrganizer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -20,18 +20,15 @@ import java.nio.file.Path;
 
 public class URLMaterializerTest {
 
+    private static final TestOutputOrganizer too =
+            TestOutputOrganizerFactory.create(URLMaterializerTest.class);
     private static Store store;
 
     @BeforeAll
     public static void beforeAll() throws IOException {
-        Path outputDir =
-                TestHelper.createTestClassOutputDir(URLDownloaderTest.class);
-        Path root = outputDir.resolve("root");
+        too.cleanClassOutputDirectory();
+        Path root = too.getClassOutputDirectory().resolve("root");
         store = Stores.newInstance(root);
-    }
-
-    @BeforeEach
-    public void setup() {
     }
 
     @Test
@@ -47,6 +44,4 @@ public class URLMaterializerTest {
         Assertions.assertTrue(Files.exists(file));
         Assertions.assertTrue(file.toFile().length() > 0);
     }
-
-
 }

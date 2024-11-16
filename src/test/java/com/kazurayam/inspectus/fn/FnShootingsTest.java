@@ -30,8 +30,7 @@ public class FnShootingsTest {
 
     @BeforeAll
     public static void beforeAll() throws IOException {
-        too.cleanClassOutputDirectory();
-        Path storePath = too.getClassOutputDirectory().resolve("store");
+        Path storePath = too.cleanClassOutputDirectory().resolve("store");
         store = Stores.newInstance(storePath);
     }
 

@@ -19,8 +19,7 @@ public class URLDownloaderTest {
 
     @BeforeAll
     public static void beforeAll() throws IOException {
-        too.cleanClassOutputDirectory();
-        classOutputDir = too.getClassOutputDirectory();
+        classOutputDir = too.cleanClassOutputDirectory();
     }
 
     @Test

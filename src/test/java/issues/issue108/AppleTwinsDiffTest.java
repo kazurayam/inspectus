@@ -61,9 +61,8 @@ public class AppleTwinsDiffTest extends AbstractMaterializingTest {
 
     @BeforeAll
     static void setupClass() throws IOException {
-        too.cleanClassOutputDirectory();
-        classOutputDir = too.getClassOutputDirectory();
-        fixturesDir = too.getProjectDir().resolve("src/test/fixtures");
+        classOutputDir = too.cleanClassOutputDirectory();
+        fixturesDir = too.getProjectDirectory().resolve("src/test/fixtures");
         WebDriverManager.chromedriver().setup();
 
         // change the log level to monitor the MaterialProductGroup object that is

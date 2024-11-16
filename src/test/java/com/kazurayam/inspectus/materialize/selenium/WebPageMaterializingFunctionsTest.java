@@ -43,8 +43,7 @@ public class WebPageMaterializingFunctionsTest {
 
     @BeforeAll
     public static void beforeAll() throws IOException {
-        too.cleanClassOutputDirectory();
-        Path classOutputDir = too.getClassOutputDirectory();
+        Path classOutputDir = too.cleanClassOutputDirectory();
         Path root = classOutputDir.resolve("store");
         store = Stores.newInstance(root);
         WebDriverManager.chromedriver().setup();

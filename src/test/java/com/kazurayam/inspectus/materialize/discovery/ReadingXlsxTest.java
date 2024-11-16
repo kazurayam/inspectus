@@ -18,7 +18,7 @@ public class ReadingXlsxTest {
 
     private static final TestOutputOrganizer too =
             TestOutputOrganizerFactory.create(ReadingXlsxTest.class);
-    Path fixturesDir = too.getProjectDir().resolve("src/test/fixtures");
+    Path fixturesDir = too.getProjectDirectory().resolve("src/test/fixtures");
     Path fixtureDir = fixturesDir.resolve("com/kazurayam/inspectus/materialize/discovery/ReadingXlsxTest");
 
     @Test

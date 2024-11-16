@@ -16,7 +16,7 @@ public class ReadingCSVTest {
     private static final TestOutputOrganizer too =
             TestOutputOrganizerFactory.create(ReadingCSVTest.class);
     private static final Path fixturesDir =
-            too.getProjectDir().resolve("src/test/fixtures");
+            too.getProjectDirectory().resolve("src/test/fixtures");
     private static final Path fixtureDir =
             fixturesDir.resolve("com/kazurayam/inspectus/materialize/discovery/ReadingCSVTest");
 

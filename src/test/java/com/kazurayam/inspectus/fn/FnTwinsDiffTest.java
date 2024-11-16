@@ -37,8 +37,8 @@ public class FnTwinsDiffTest {
 
     @BeforeAll
     public static void beforeAll() throws IOException {
-        baseDir = too.getProjectDir();
-        Path storePath = too.getClassOutputDirectory().resolve("store");
+        baseDir = too.getProjectDirectory();
+        Path storePath = too.cleanClassOutputDirectory().resolve("store");
         store = Stores.newInstance(storePath);
     }
 

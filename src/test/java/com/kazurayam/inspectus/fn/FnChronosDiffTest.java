@@ -40,14 +40,14 @@ public class FnChronosDiffTest {
     private static final TestOutputOrganizer too =
             TestOutputOrganizerFactory.create(FnChronosDiffTest.class);
     private static final Path fixturesDirectory =
-            too.getProjectDir().resolve("src/test/fixtures");
+            too.getProjectDirectory().resolve("src/test/fixtures");
     private static Path baseDir;
     private static Store store;
 
     @BeforeAll
     public static void beforeAll() throws IOException {
-        baseDir = too.getProjectDir();
-        Path storePath = too.getClassOutputDirectory().resolve("store");
+        baseDir = too.getProjectDirectory();
+        Path storePath = too.cleanClassOutputDirectory().resolve("store");
         store = Stores.newInstance(storePath);
     }
 

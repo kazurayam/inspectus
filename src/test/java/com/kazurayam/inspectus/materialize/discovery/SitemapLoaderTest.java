@@ -22,7 +22,8 @@ public class SitemapLoaderTest {
     private static final Logger logger = LoggerFactory.getLogger(SitemapLoaderTest.class);
     private static final TestOutputOrganizer too =
             TestOutputOrganizerFactory.create(SitemapLoaderTest.class);
-    private static final Path fixturesDir = too.getProjectDir().resolve("src/test/fixtures");
+    private static final Path fixturesDir =
+            too.getProjectDirectory().resolve("src/test/fixtures");
     private static final Path fixtureDir =
             fixturesDir.resolve("com/kazurayam/inspectus/materialize/discovery/SitemapLoaderTest");
 

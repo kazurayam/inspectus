@@ -39,7 +39,7 @@ dependencyResolutionManagement {
             version('materialstore', '0.17.3')
             library('materialstore', 'com.kazurayam', 'materialstore').versionRef('materialstore')
 
-            version('unittesthelper', '0.3.0')
+            version('unittesthelper', '0.5.1')
             library('unittesthelper', 'com.kazurayam', 'unittest-helper').versionRef('unittesthelper')
 
             version('poi', '5.2.3')

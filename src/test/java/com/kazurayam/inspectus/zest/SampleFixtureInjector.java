@@ -20,7 +20,7 @@ public class SampleFixtureInjector {
     private static final TestOutputOrganizer too =
             TestOutputOrganizerFactory.create(SampleFixtureInjector.class);
     private static final Path fixturesDir =
-            too.getProjectDir().resolve("src/test/fixtures");
+            too.getProjectDirectory().resolve("src/test/fixtures");
 
     private SampleFixtureInjector() {}
 

@@ -31,8 +31,7 @@ public class ChronosDiffTest {
 
     @BeforeAll
     public static void beforeAll() throws IOException {
-        too.cleanClassOutputDirectory();
-        Path testCaseOutputDir = too.getClassOutputDirectory();
+        Path testCaseOutputDir = too.cleanClassOutputDirectory();
         Path storeRoot = testCaseOutputDir.resolve("store");
         Path storeBackupRoot = testCaseOutputDir.resolve("store-backup");
         store = Stores.newInstance(storeRoot);

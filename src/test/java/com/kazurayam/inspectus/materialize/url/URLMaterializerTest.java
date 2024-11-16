@@ -26,8 +26,7 @@ public class URLMaterializerTest {
 
     @BeforeAll
     public static void beforeAll() throws IOException {
-        too.cleanClassOutputDirectory();
-        Path root = too.getClassOutputDirectory().resolve("root");
+        Path root = too.cleanClassOutputDirectory().resolve("root");
         store = Stores.newInstance(root);
     }
 

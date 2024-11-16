@@ -33,8 +33,7 @@ public class AbstractServiceTest {
 
     @BeforeAll
     public static void beforeAll() throws IOException {
-        too.cleanClassOutputDirectory();
-        Path testClassOutputDir = too.getClassOutputDirectory();
+        Path testClassOutputDir = too.cleanClassOutputDirectory();
         store = Stores.newInstance(testClassOutputDir.resolve("store"));
     }
 

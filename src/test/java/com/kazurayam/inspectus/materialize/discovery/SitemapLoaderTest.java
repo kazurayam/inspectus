@@ -1,8 +1,9 @@
 package com.kazurayam.inspectus.materialize.discovery;
 
 import com.kazurayam.inspectus.core.InspectusException;
-import com.kazurayam.inspectus.materialize.TestHelper;
-import org.junit.jupiter.api.BeforeEach;
+import com.kazurayam.inspectus.zest.TestOutputOrganizerFactory;
+import com.kazurayam.unittest.TestOutputOrganizer;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,16 +19,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SitemapLoaderTest {
 
-    private static Logger logger = LoggerFactory.getLogger(SitemapLoaderTest.class);
-    private final Path fixtureDir =
-            TestHelper.getFixturesDirectory()
-                    .resolve("com/kazurayam/inspectus/materialize/discovery/SitemapLoaderTest");
+    private static final Logger logger = LoggerFactory.getLogger(SitemapLoaderTest.class);
+    private static final TestOutputOrganizer too =
+            TestOutputOrganizerFactory.create(SitemapLoaderTest.class);
+    private static final Path fixturesDir =
+            too.getProjectDirectory().resolve("src/test/fixtures");
+    private static final Path fixtureDir =
+            fixturesDir.resolve("com/kazurayam/inspectus/materialize/discovery/SitemapLoaderTest");
 
-    @BeforeEach
-    public void setup() {
+    @BeforeAll
+    public static void beforeAll() {
         assert Files.exists(fixtureDir) :
-                String.format("fixtureDir=%s not present",
-                        fixtureDir.toAbsolutePath().toString());
+                String.format("fixtureDir=%s not present", fixtureDir.toAbsolutePath().toString());
     }
 
     @Test

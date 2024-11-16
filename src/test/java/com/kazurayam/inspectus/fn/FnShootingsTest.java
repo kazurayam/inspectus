@@ -4,8 +4,8 @@ import com.kazurayam.inspectus.core.Inspectus;
 import com.kazurayam.inspectus.core.InspectusException;
 import com.kazurayam.inspectus.core.Intermediates;
 import com.kazurayam.inspectus.core.Parameters;
-import com.kazurayam.inspectus.TestHelper;
 import com.kazurayam.inspectus.core.StdStepListener;
+import com.kazurayam.inspectus.zest.TestOutputOrganizerFactory;
 import com.kazurayam.materialstore.core.FileType;
 import com.kazurayam.materialstore.core.JobName;
 import com.kazurayam.materialstore.core.JobTimestamp;
@@ -14,7 +14,8 @@ import com.kazurayam.materialstore.core.MaterialstoreException;
 import com.kazurayam.materialstore.core.Metadata;
 import com.kazurayam.materialstore.core.Store;
 import com.kazurayam.materialstore.core.Stores;
-import org.junit.jupiter.api.BeforeEach;
+import com.kazurayam.unittest.TestOutputOrganizer;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -23,12 +24,14 @@ import java.util.function.BiFunction;
 
 public class FnShootingsTest {
 
-    private Store store;
+    private static final TestOutputOrganizer too =
+            TestOutputOrganizerFactory.create(FnShootingsTest.class);
+    private static Store store;
 
-    @BeforeEach
-    public void beforeEach() throws IOException {
-        Path testClassOutputDir = TestHelper.createTestClassOutputDir(FnShootingsTest.class);
-        store = Stores.newInstance(testClassOutputDir.resolve("store"));
+    @BeforeAll
+    public static void beforeAll() throws IOException {
+        Path storePath = too.cleanClassOutputDirectory().resolve("store");
+        store = Stores.newInstance(storePath);
     }
 
     @Test

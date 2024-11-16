@@ -1,4 +1,4 @@
-package com.kazurayam.inspectus;
+package com.kazurayam.inspectus.zest;
 
 import com.kazurayam.materialstore.core.FileType;
 import com.kazurayam.materialstore.core.JobName;
@@ -7,6 +7,7 @@ import com.kazurayam.materialstore.core.Material;
 import com.kazurayam.materialstore.core.MaterialstoreException;
 import com.kazurayam.materialstore.core.Metadata;
 import com.kazurayam.materialstore.core.Store;
+import com.kazurayam.unittest.TestOutputOrganizer;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -14,9 +15,14 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class TestFixtureSupport {
+public class SampleFixtureInjector {
 
-    private TestFixtureSupport() {}
+    private static final TestOutputOrganizer too =
+            TestOutputOrganizerFactory.create(SampleFixtureInjector.class);
+    private static final Path fixturesDir =
+            too.getProjectDirectory().resolve("src/test/fixtures");
+
+    private SampleFixtureInjector() {}
 
     public static JobTimestamp create3TXTs(Store store,
                                            JobName jobName,
@@ -32,13 +38,12 @@ public class TestFixtureSupport {
                                            JobName jobName,
                                            JobTimestamp jobTimestamp)
             throws MaterialstoreException {
-        Path fixtures = TestHelper.getFixturesDirectory();
         Material apple = writePNG(store, jobName, jobTimestamp,
-                fixtures.resolve("apple_mikan_money/apple.png"), "01", "it is red");
+                fixturesDir.resolve("apple_mikan_money/apple.png"), "01", "it is red");
         Material mikan = writePNG(store, jobName, jobTimestamp,
-                fixtures.resolve("apple_mikan_money/mikan.png"), "02", "it is orange");
+                fixturesDir.resolve("apple_mikan_money/mikan.png"), "02", "it is orange");
         Material money = writePNG(store, jobName, jobTimestamp,
-                fixtures.resolve("apple_mikan_money/money.png"), "03", "it is green");
+                fixturesDir.resolve("apple_mikan_money/money.png"), "03", "it is green");
         return jobTimestamp;
     }
 
@@ -73,7 +78,7 @@ public class TestFixtureSupport {
      * https://stackoverflow.com/questions/2736320/write-text-onto-image-in-java
      */
     public static BufferedImage createAppleImage(JobTimestamp jobTimestamp) throws IOException {
-        Path images = TestHelper.getFixturesDirectory().resolve("images");
+        Path images = fixturesDir.resolve("images");
         Path apple = images.resolve("apple.png");
         BufferedImage bufferedImage = ImageIO.read(apple.toFile());
         Graphics g = bufferedImage.getGraphics();

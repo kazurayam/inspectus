@@ -1,9 +1,9 @@
 package com.kazurayam.inspectus.materialize.selenium;
 
 import com.kazurayam.inspectus.core.InspectusException;
-import com.kazurayam.inspectus.materialize.TestHelper;
 import com.kazurayam.inspectus.materialize.discovery.Handle;
 import com.kazurayam.inspectus.materialize.discovery.Target;
+import com.kazurayam.inspectus.zest.TestOutputOrganizerFactory;
 import com.kazurayam.materialstore.core.FileType;
 import com.kazurayam.materialstore.core.JobName;
 import com.kazurayam.materialstore.core.JobTimestamp;
@@ -12,6 +12,7 @@ import com.kazurayam.materialstore.core.MaterialstoreException;
 import com.kazurayam.materialstore.core.QueryOnMetadata;
 import com.kazurayam.materialstore.core.Store;
 import com.kazurayam.materialstore.core.Stores;
+import com.kazurayam.unittest.TestOutputOrganizer;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -23,9 +24,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Duration;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,15 +35,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class WebElementMaterializingFunctionsTest {
 
-
+    private static final TestOutputOrganizer too =
+            TestOutputOrganizerFactory.create(WebElementMaterializingFunctionsTest.class);
     private static Store store;
     private WebDriver driver;
 
     @BeforeAll
-    public static void beforeAll() {
-        Path testCaseOutputDir =
-                TestHelper.createTestClassOutputDir(WebElementMaterializingFunctionsTest.class);
-        Path root = testCaseOutputDir.resolve("store");
+    public static void beforeAll() throws IOException {
+        Path root = too.cleanClassOutputDirectory().resolve("store");
         store = Stores.newInstance(root);
         WebDriverManager.chromedriver().setup();
     }

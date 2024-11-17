@@ -36,7 +36,7 @@ dependencyResolutionManagement {
             version('log4j', '2.19.0')
             library('log4j-core', 'org.apache.logging.log4j', 'log4j-core').versionRef('log4j')
 
-            version('materialstore', '0.17.3')
+            version('materialstore', '0.18.4')
             library('materialstore', 'com.kazurayam', 'materialstore').versionRef('materialstore')
 
             version('unittesthelper', '0.5.1')

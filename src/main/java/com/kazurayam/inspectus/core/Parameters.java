@@ -1,5 +1,6 @@
 package com.kazurayam.inspectus.core;
 
+import com.kazurayam.materialstore.core.DiffColor;
 import com.kazurayam.materialstore.core.JobName;
 import com.kazurayam.materialstore.core.JobTimestamp;
 import com.kazurayam.materialstore.core.SortKeys;
@@ -24,6 +25,7 @@ public final class Parameters {
     private final IgnoreMetadataKeys ignoreMetadataKeys;
     private final JobTimestamp cleanOlderThan;
     private final Environment environment;
+    private final DiffColor withDiffColor;
 
     public static final String KEY_baseDir = "baseDir";
     public static final String KEY_baselinePriorTo = "baselinePriorTo";
@@ -36,6 +38,7 @@ public final class Parameters {
     public static final String KEY_threshold = "threshold";
     public static final String KEY_ignoreMetadataKeys = "ignoreMetadataKeys";
     public static final String KEY_environment = "environment";
+    public static final String KEY_withDiffColor = "withDiffColor";
 
     public static Builder builder() {
         return new Builder();
@@ -57,6 +60,7 @@ public final class Parameters {
         this.ignoreMetadataKeys = b.ignoreMetadataKeys;
         this.cleanOlderThan = b.cleanOlderThan;
         this.environment = b.environment;
+        this.withDiffColor = b.withDiffColor;
     }
     public Boolean containsBackup() { return backup != Store.NULL_OBJECT;}
     public Boolean containsBaseDir() { return baseDir != null; }
@@ -69,6 +73,7 @@ public final class Parameters {
     public Boolean containsStore() { return store != Store.NULL_OBJECT; }
     public Boolean containsThreshold() { return threshold >= 0.0; }
     public Boolean containsEnvironment() { return environment != Environment.NULL_OBJECT; }
+    public Boolean containsWithDiffColor() { return withDiffColor != null; }
 
     public Store getBackup() { return backup; }
     public Path getBaseDir() { return baseDir; }
@@ -83,6 +88,7 @@ public final class Parameters {
         return threshold;
     }
     public Environment getEnvironment() { return environment; }
+    public DiffColor getWithDiffColor() { return withDiffColor; }
 
     public Map<String, Object> toMap() {
         Map<String, Object> m = new LinkedHashMap<>();
@@ -97,6 +103,7 @@ public final class Parameters {
         m.put(KEY_store, store);
         m.put(KEY_threshold, threshold);
         m.put(KEY_environment, environment);
+        m.put(KEY_withDiffColor, withDiffColor);
         return m;
     }
 
@@ -112,6 +119,7 @@ public final class Parameters {
         private IgnoreMetadataKeys ignoreMetadataKeys;
         private JobTimestamp cleanOlderThan;
         private Environment environment;
+        private DiffColor withDiffColor;
 
         public Builder() {
             this.baseDir = null;
@@ -125,6 +133,7 @@ public final class Parameters {
             this.ignoreMetadataKeys = IgnoreMetadataKeys.NULL_OBJECT;
             this.cleanOlderThan = JobTimestamp.now().minusHours(3);
             this.environment = Environment.NULL_OBJECT;
+            this.withDiffColor = DiffColor.DEFAULT;
         }
         public Builder(Parameters source) {
             this.baseDir = source.baseDir;
@@ -138,6 +147,7 @@ public final class Parameters {
             this.ignoreMetadataKeys = source.ignoreMetadataKeys;
             this.cleanOlderThan = source.cleanOlderThan;
             this.environment = source.environment;
+            this.withDiffColor = source.withDiffColor;
         }
         public Builder baseDir(Path baseDir) {
             this.baseDir = baseDir;
@@ -208,6 +218,10 @@ public final class Parameters {
         }
         public Builder environment(Environment environment) {
             this.environment = environment;
+            return this;
+        }
+        public Builder withDiffColor(DiffColor diffColor) {
+            this.withDiffColor = diffColor;
             return this;
         }
 

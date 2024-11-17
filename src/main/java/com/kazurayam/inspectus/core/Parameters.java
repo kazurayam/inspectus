@@ -1,6 +1,6 @@
 package com.kazurayam.inspectus.core;
 
-import com.kazurayam.materialstore.base.reduce.zipper.DiffColor;
+import com.kazurayam.materialstore.core.DiffColor;
 import com.kazurayam.materialstore.core.JobName;
 import com.kazurayam.materialstore.core.JobTimestamp;
 import com.kazurayam.materialstore.core.SortKeys;

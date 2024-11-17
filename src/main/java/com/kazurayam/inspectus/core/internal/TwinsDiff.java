@@ -150,6 +150,7 @@ public abstract class TwinsDiff extends AbstractDiffService {
                             .ignoreKeys(parameters.getIgnoreMetadataKeys())
                             .labelLeft(environmentLeft.getValue())
                             .labelRight(environmentRight.getValue())
+                            .withDiffColor(parameters.getWithDiffColor())
                             .build();
 
             logger.debug("============= MaterialProductGroup just after built ==========================\n" +

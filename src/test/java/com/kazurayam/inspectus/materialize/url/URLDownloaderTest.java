@@ -24,8 +24,8 @@ public class URLDownloaderTest {
 
     @Test
     public void test_download() throws IOException {
-        URL url = new URL("https://www.data.jma.go.jp/rss/jma.rss");
-        Path out = classOutputDir.resolve("jma.rss");
+        URL url = new URL("https://www.data.jma.go.jp/developer/xml/feed/regular.xml");
+        Path out = classOutputDir.resolve("regular.xml");
         URLDownloader.download(url, out);
         Assertions.assertTrue(Files.exists(out));
         Assertions.assertTrue(out.toFile().length() > 0);
